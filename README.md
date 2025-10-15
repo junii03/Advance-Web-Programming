@@ -111,7 +111,7 @@ Advance Web Programming/
 ## 🚀 Progress Tracker
 
 - [✅] Week 1 – HTML/CSS/JS Revision
-- [ ] Week 2 – React Basics + Vite Setup
+- [✅] Week 2 – React Basics + Vite Setup
 - [ ] Week 3 – Virtual DOM, JSX, Styling
 - [ ] Week 4 – Components, useState, Events
 - [ ] Week 5 – Forms & Props
