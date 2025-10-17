@@ -9,6 +9,20 @@
     font-display: swap;
 }
 
+
+body {
+    height: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #111827;
+    color-scheme: dark;
+}
+
+/* Ensure safe area coverage for iOS */
+body {
+    min-height: calc(100vh + env(safe-area-inset-bottom));
+}
+
 /* stylelint-disable-next-line */
 @theme {
     /* Colors */
