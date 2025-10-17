@@ -15,7 +15,7 @@ const Hero = () => {
                     if (element) {
                         element.scrollIntoView({ behavior: 'smooth' });
                     }
-                }} className="inline-block bg-primary text-white px-6 py-3 rounded-lg text-lg font-body font-bold hover:bg-primary/70 transition-colors hover:scale-105 ">
+                }} className="inline-flex items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/70 transition-colors shadow-lg cursor-pointer">
                     View My Work
                 </div>
                 <div onClick={() => {
@@ -23,7 +23,7 @@ const Hero = () => {
                     if (element) {
                         element.scrollIntoView({ behavior: 'smooth' });
                     }
-                }} className="glassmorphic inline-block px-6 py-3 rounded-lg text-lg font-body font-bold hover:scale-105 transition-transform">
+                }} className="inline-flex items-center justify-center rounded-lg h-12 px-6 bg-white/10 text-white text-base font-bold border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
                     Get in Touch
                 </div>
             </div>
