@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Load local font from src/assets */
+@font-face {
+    font-family: 'Geof';
+    src: url('./assets/Geof-BF68c0d79200580.otf') format('opentype');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* stylelint-disable-next-line */
 @theme {
     /* Colors */
@@ -8,8 +17,11 @@
     --color-background-dark: #111827;
 
     /* Fonts */
+    /* Prefer the bundled Geof font for headings, fall back to system fonts */
+    --font-heading: 'Geof', "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-display: "Josefin Slab", serif;
-    --font-body: "Noto Sans", sans-serif;
+    --font-medium: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
     /* Border radius */
     --radius: 0.5rem;
