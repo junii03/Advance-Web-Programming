@@ -1,5 +1,5 @@
 import gmail from "../assets/gmail-svgrepo-com.svg";
-import github from "../assets/github-repo-git-octocat-svgrepo-com.svg";
+import github from "../assets/github-mark-white.svg";
 
 const Footer = () => {
     return (
@@ -16,7 +16,10 @@ const Footer = () => {
                     </h2>
 
                     <p className="text-lg text-gray-400 font-display max-w-md">
-                        I'm currently open to new opportunities. Feel free to reach out.
+                        I'm currently open to new opportunities.
+                    </p>
+                    <p className="text-lg text-gray-400 font-display max-w-md">
+                        Connect with me on LinkedIn or send me an email.
                     </p>
 
                     {/* Social Icons */}
@@ -33,7 +36,7 @@ const Footer = () => {
                             />
                         </a>
                         <a
-                            href="https://github.com/junaiddev"
+                            href="https://github.com/junii03"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
