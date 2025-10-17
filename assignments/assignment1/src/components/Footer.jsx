@@ -1,5 +1,5 @@
-import gmail from "../assets/gmail-svgrepo-com.svg";
-import github from "../assets/github-mark-white.svg";
+import gmail from "../assets/icons/gmail-svgrepo-com.svg";
+import github from "../assets/icons/github-mark-white.svg";
 
 const Footer = () => {
     return (

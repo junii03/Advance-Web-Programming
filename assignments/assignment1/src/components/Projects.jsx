@@ -1,10 +1,10 @@
-import portfolio from "../assets/Screenshot 2025-10-18 at 1.46.26 AM.png";
-import firebase from "../assets/firebase.svg";
-import flutter from '../assets/flutter.svg'
-import seafarer from "../assets/connecting-seafarer.jpeg";
-import zakis from "../assets/Screenshot 2025-10-18 at 2.11.42 AM.png";
-import react from "../assets/react-svgrepo-com.svg";
-import tailwind from '../assets/tailwind-svgrepo-com.svg'
+import portfolio from "../assets/projects/Screenshot 2025-10-18 at 1.46.26 AM.png";
+import firebase from "../assets/icons/firebase.svg";
+import flutter from '../assets/icons/flutter.svg'
+import seafarer from "../assets/projects/connecting-seafarer.jpeg";
+import zakis from "../assets/projects/Screenshot 2025-10-18 at 2.11.42 AM.png";
+import react from "../assets/icons/react-svgrepo-com.svg";
+import tailwind from '../assets/icons/tailwind-svgrepo-com.svg'
 import ProjectCard from "./ProjectCard";
 const Projects = () => {
     return (
@@ -13,7 +13,7 @@ const Projects = () => {
                 <h2 className="text-3xl font-bold tracking-tight font-heading">My Projects</h2>
                 <p className="mt-2 text-lg text-gray-400 font-display">A selection of my recent work.</p>
             </div>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
                 <ProjectCard
                     image={portfolio}
                     title="Portfolio App"

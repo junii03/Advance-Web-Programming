@@ -1,17 +1,17 @@
-import firebase from "../assets/firebase.svg";
-import flutter from '../assets/flutter.svg'
-import node from "../assets/nodejs-icon-logo-svgrepo-com.svg";
-import react from "../assets/react-svgrepo-com.svg";
-import tailwind from '../assets/tailwind-svgrepo-com.svg'
-import mongo from '../assets/mongo-svgrepo-com.svg'
+import firebase from "../assets/icons/firebase.svg";
+import flutter from '../assets/icons/flutter.svg'
+import node from "../assets/icons/nodejs-icon-logo-svgrepo-com.svg";
+import react from "../assets/icons/react-svgrepo-com.svg";
+import tailwind from '../assets/icons/tailwind-svgrepo-com.svg'
+import mongo from '../assets/icons/mongo-svgrepo-com.svg'
 const About = () => {
     return (
-        <section className="flex flex-col items-center justify-center text-center px-4" id="about">
+        <section className="flex flex-col items-center justify-center  px-4" id="about">
             <div className="text-center">
                 <h2 className="text-3xl font-bold tracking-tight font-heading">About Me</h2>
                 <p className="mt-2 text-lg text-gray-400 font-display">A glimpse into my journey and skills.</p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 mt-12">
                 <div className=" glassmorphic rounded-xl shadow-lg p-6 sm:p-10 flex-2  text-left  self-center ">
                     <p className="font-medium">I am a software engineering student and developer specializing in Flutter, Dart, and modern web technologies. I build high-performance cross-platform apps with Flutter, ensuring a seamless experience across iOS, Android, and Web.
                     </p>
