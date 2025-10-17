@@ -6,8 +6,8 @@ import tailwind from '../assets/icons/tailwind-svgrepo-com.svg'
 import mongo from '../assets/icons/mongo-svgrepo-com.svg'
 const About = () => {
     return (
-        <section className="flex flex-col items-center justify-center  px-4" id="about">
-            <div className="text-center">
+        <section className="flex flex-col items-center justify-center px-4" id="about">
+            <div className="text-center mt-30">
                 <h2 className="text-3xl font-bold tracking-tight font-heading">About Me</h2>
                 <p className="mt-2 text-lg text-gray-400 font-display">A glimpse into my journey and skills.</p>
             </div>

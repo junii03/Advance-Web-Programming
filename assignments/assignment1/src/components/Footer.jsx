@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <section
             id="contact"
-            className="mt-32 border-t border-white/10 pt-16"
+            className="mt-32 border-t border-white/10 pt-16 pb-5"
         >
             <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center md:items-start text-center md:text-left gap-10">
 

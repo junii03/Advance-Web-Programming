@@ -8,12 +8,12 @@ import tailwind from '../assets/icons/tailwind-svgrepo-com.svg'
 import ProjectCard from "./ProjectCard";
 const Projects = () => {
     return (
-        <section className="mt-32" id="projects">
+        <section className="mt-32 px-4" id="projects">
             <div className="text-center">
                 <h2 className="text-3xl font-bold tracking-tight font-heading">My Projects</h2>
                 <p className="mt-2 text-lg text-gray-400 font-display">A selection of my recent work.</p>
             </div>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
                 <ProjectCard
                     image={portfolio}
                     title="Portfolio App"
