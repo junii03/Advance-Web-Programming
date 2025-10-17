@@ -41,7 +41,7 @@ const Header = () => {
                                 }
                             }}>Contact</div>
                     </nav>
-                    <div className="hidden md:inline-flex items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors font-displaycursor-pointer"
+                    <div className="hidden md:inline-flex items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold hover:bg-primary/70 transition-colors font-body cursor-pointer"
                         onClick={() => {
                             const element = document.getElementById('contact');
                             if (element) {

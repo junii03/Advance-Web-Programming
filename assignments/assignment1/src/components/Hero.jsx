@@ -2,19 +2,30 @@ import J from '../assets/J.png'
 const Hero = () => {
     return (
         <section className="flex flex-col items-center justify-center text-center  px-4" id="home">
-            <img src={J} alt="Junaid Afzal" className="w-40 h-40 mb-12 rounded-full" />
+            <img src={J} alt="Junaid Afzal" className="w-40 h-40 mb-12 rounded-full mt-30" />
             <h1 className="text-4xl sm:text-5xl font-bold mb-4 font-heading">Software Engineer & Developer</h1>
             <p className="mt-2  text-gray-400 text-lg sm:text-xl max-w-2xl mb-6 font-display">
-                Building scalable apps from mobile to web
-                where design meets performance
+                From mobile apps to web platforms,
+                I craft digital solutions that
+                blend creativity and performance.
             </p>
             <div className="flex justify-center gap-3 mt-6">
-                <a href="#projects" className="inline-block bg-primary text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-primary/90 transition-colors ">
+                <div onClick={() => {
+                    const element = document.getElementById('projects');
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }} className="inline-block bg-primary text-white px-6 py-3 rounded-lg text-lg font-body font-bold hover:bg-primary/70 transition-colors hover:scale-105 ">
                     View My Work
-                </a>
-                <a href="#contact" className="glassmorphic inline-block px-6 py-3 rounded-lg text-lg font-medium">
+                </div>
+                <div onClick={() => {
+                    const element = document.getElementById('contact');
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }} className="glassmorphic inline-block px-6 py-3 rounded-lg text-lg font-body font-bold hover:scale-105 transition-transform">
                     Get in Touch
-                </a>
+                </div>
             </div>
             {/* <div className="mt-15 cursor-pointer font-display flex items-center gap-2" onClick={() => {
                 const element = document.getElementById('about');
