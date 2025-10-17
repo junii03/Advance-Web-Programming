@@ -7,13 +7,13 @@ import Projects from "./components/Projects"
 function App() {
 
     return (
-        <body className="bg-background-light dark:bg-background-dark text-gray-900 dark:text-white font-body relative">
+        <div className="bg-background-light dark:bg-background-dark text-gray-900 dark:text-white font-body relative">
             <Header />
             <Hero />
             <About />
             <Projects />
             <Footer />
-        </body>
+        </div>
     )
 }
 
