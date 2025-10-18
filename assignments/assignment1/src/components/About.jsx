@@ -12,7 +12,7 @@ const About = () => {
                 <p className="mt-2 text-lg text-gray-400 font-display">A glimpse into my journey and skills.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 mt-12">
-                <div className=" glassmorphic rounded-xl shadow-lg p-6 sm:p-10 flex-2  text-left  self-center ">
+                <div className=" glassmorphic rounded-xl shadow-lg p-6 sm:p-10 flex-2  text-left  self-center hover:scale-[1.02] transition-transform duration-300 cursor-pointer  hover:shadow-2xl hover:shadow-primary/10">
                     <p className="font-medium">I am a software engineering student and developer specializing in Flutter, Dart, and modern web technologies. I build high-performance cross-platform apps with Flutter, ensuring a seamless experience across iOS, Android, and Web.
                     </p>
                     <p className="mt-4 font-medium">
@@ -25,7 +25,7 @@ const About = () => {
                     </p>
                 </div>
 
-                <div className="glassmorphic rounded-xl shadow-lg p-6 sm:p-10 flex-1">
+                <div className="glassmorphic rounded-xl shadow-lg p-6 sm:p-10 flex-1 hover:scale-[1.02] transition-transform duration-300 cursor-pointer hover:shadow-2xl hover:shadow-primary/10">
                     <h3 className="text-xl font-bold mb-4 font-display text-left">Core Technologies</h3>
                     <div className="grid grid-cols-2 gap-5 mt-10">
                         <div className="flex items-center gap-3">
