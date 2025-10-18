@@ -12,7 +12,7 @@ function App() {
                 <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full filter blur-[150px] opacity-20"></div>
                 <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-teal-500 via-cyan-500 to-sky-500 rounded-full filter blur-[150px] opacity-20"></div>
             </div>
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-auto pt-20">
                 <Header />
                 <Hero />
                 <About />
