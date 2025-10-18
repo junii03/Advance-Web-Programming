@@ -5,7 +5,8 @@ import seafarer from "../assets/projects/connecting-seafarer.jpeg";
 import zakis from "../assets/projects/Screenshot 2025-10-18 at 2.11.42 AM.png";
 import react from "../assets/icons/react-svgrepo-com.svg";
 import tailwind from '../assets/icons/tailwind-svgrepo-com.svg'
-
+import node from "../assets/icons/nodejs-icon-logo-svgrepo-com.svg";
+import mongo from '../assets/icons/mongo-svgrepo-com.svg'
 const projects = [
     {
         title: "Portfolio App",
@@ -43,4 +44,13 @@ const projects = [
 
 ]
 
-export default projects;
+const skills = [
+    { src: flutter, alt: "Flutter Logo", name: "Flutter" },
+    { src: firebase, alt: "Firebase Logo", name: "Firebase" },
+    { src: react, alt: "React Logo", name: "React" },
+    { src: tailwind, alt: "Tailwind Logo", name: "Tailwind" },
+    { src: node, alt: "NodeJS Logo", name: "NodeJS" },
+    { src: mongo, alt: "MongoDB Logo", name: "MongoDB" },
+]
+
+export { projects, skills };

@@ -1,9 +1,5 @@
-import firebase from "../assets/icons/firebase.svg";
-import flutter from '../assets/icons/flutter.svg'
-import node from "../assets/icons/nodejs-icon-logo-svgrepo-com.svg";
-import react from "../assets/icons/react-svgrepo-com.svg";
-import tailwind from '../assets/icons/tailwind-svgrepo-com.svg'
-import mongo from '../assets/icons/mongo-svgrepo-com.svg'
+import { skills } from "../constants/constants";
+import Skills from "./Skills";
 const About = () => {
     return (
         <section className="flex flex-col items-center justify-center px-4" id="about">
@@ -28,30 +24,10 @@ const About = () => {
                 <div className="glassmorphic rounded-xl shadow-lg p-6 sm:p-10 flex-1 hover:scale-[1.02] transition-transform duration-300 cursor-pointer hover:shadow-2xl hover:shadow-primary/10">
                     <h3 className="text-xl font-bold mb-4 font-display text-left">Core Technologies</h3>
                     <div className="grid grid-cols-2 gap-5 mt-10">
-                        <div className="flex items-center gap-3">
-                            <img src={flutter} alt="Flutter Logo" className="w-5 h-5" />
-                            <span>Flutter</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <img src={firebase} alt="Firebase Logo" className="w-5 h-5" />
-                            <span>Firebase</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <img src={node} alt="Node Logo" className="w-5 h-5" />
-                            <span>NodeJS</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <img src={react} alt="React Logo" className="w-5 h-5" />
-                            <span>React</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <img src={tailwind} alt="Tailwind Logo" className="w-5 h-5" />
-                            <span>TailwindCSS</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <img src={mongo} alt="MongoDB Logo" className="w-5 h-5" />
-                            <span>MongoDB</span>
-                        </div>
+
+                        {skills.map((skill, index) => (
+                            <Skills key={index} image={skill.src} name={skill.name} alt={skill.alt} />
+                        ))}
 
                     </div>
                 </div>

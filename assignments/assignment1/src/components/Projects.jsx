@@ -1,4 +1,4 @@
-import projects from "../constants/constants";
+import { projects } from "../constants/constants";
 import ProjectCard from "./ProjectCard";
 const Projects = () => {
 
