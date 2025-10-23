@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/* Load local font from src/assets */
+@font-face {
+    font-family: 'Geof';
+    src: url('./assets/fonts/Geof-BF68c0d79200580.otf') format('opentype');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+body {
+    height: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #111827;
+    color-scheme: dark;
+}
+
+/* Ensure safe area coverage for iOS */
+body {
+    min-height: calc(100vh + env(safe-area-inset-bottom));
+}
+
+/* stylelint-disable-next-line */
+@theme {
+    /* Colors */
+    --color-primary: #4f46e5;
+    --color-background-light: #f3f4f6;
+    --color-background-dark: #111827;
+
+    /* Fonts */
+    /* Prefer the bundled Geof font for headings, fall back to system fonts */
+    --font-heading: 'Geof', "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-display: "Josefin Slab", serif;
+    --font-medium: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    /* Border radius */
+    --radius: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-full: 9999px;
+
+    /* Blur scale */
+    --blur-xl: 24px;
+}
+
+.glassmorphic {
+    background: rgba(31, 41, 55, 0.3);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glassmorphic {
+    background: rgba(31, 41, 55, 0.3);
+}
+
+.light .glassmorphic {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.select-none {
+    user-select: none;
+}
