@@ -113,8 +113,8 @@ Advance Web Programming/
 - [✅] Week 1 – HTML/CSS/JS Revision
 - [✅] Week 2 – React Basics + Vite Setup
 - [✅] Week 3 – Virtual DOM, JSX, Styling
-- [ ] Week 4 – Components, useState, Events
-- [ ] Week 5 – Forms & Props
+- [✅] Week 4 – Components, useState, Events
+- [✅] Week 5 – Forms & Props
 - [ ] Week 6 – API Integration & React Router
 - [ ] Week 7 – Hooks & Context API
 - [ ] Week 8 – Midterm Exam
