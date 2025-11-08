@@ -17,9 +17,9 @@
 
 /* Dark theme overrides */
 [data-theme="dark"] {
-    --color-primary: #137fec;
+    --color-primary: #0b1220;
     --bg: #24364a;
-    --surface: #0b1220;
+    --surface: #3a4a5c;
     --text: #e6eef8;
     --muted: #9ca3af;
     --border: rgba(255, 255, 255, 0.06);
@@ -31,7 +31,7 @@
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
         --bg: #1d2b3b;
-        --surface: #0b1220;
+        --surface: #3a4a5c;
         --text: #e6eef8;
         --muted: #9ca3af;
         --border: rgba(255, 255, 255, 0.06);
@@ -227,6 +227,7 @@ button {
     font-family: "Lato", sans-serif;
     font-weight: 600;
     border-radius: 0.5rem;
+    box-shadow: var(--card-shadow);
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
