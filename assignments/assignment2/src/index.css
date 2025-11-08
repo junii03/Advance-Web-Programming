@@ -1,1 +1,141 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
+
+/* Theme tokens (CSS custom properties) - light by default, override with [data-theme="dark"] */
+:root {
+    --color-primary: #137fec;
+    --bg: #f6f7f8;
+    /* background-light */
+    --surface: #ffffff;
+    --text: #0f1724;
+    /* deep slate for readable text on light bg */
+    --muted: #6b7280;
+    --border: rgba(15, 23, 42, 0.08);
+    --card-shadow: 0 4px 10px rgba(2, 6, 23, 0.06);
+}
+
+/* Dark theme overrides (when you set data-theme="dark" on <html> or <body>) */
+[data-theme="dark"] {
+    --color-primary: #137fec;
+    /* keep primary consistent */
+    --bg: #121212;
+    /* background-dark */
+    --surface: #0b1220;
+    --text: #e6eef8;
+    --muted: #9ca3af;
+    --border: rgba(255, 255, 255, 0.06);
+    --card-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+    color-scheme: dark;
+}
+
+/* Respect OS-level preference when no explicit theme is set */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --bg: #121212;
+        --surface: #0b1220;
+        --text: #e6eef8;
+        --muted: #9ca3af;
+        --border: rgba(255, 255, 255, 0.06);
+        color-scheme: dark;
+    }
+}
+
+/* Small helpers */
+html,
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.theme-transition {
+    transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.lato-thin {
+    font-family: "Lato", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.lato-light {
+    font-family: "Lato", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.lato-regular {
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.lato-bold {
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.lato-black {
+    font-family: "Lato", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+.lato-thin-italic {
+    font-family: "Lato", sans-serif;
+    font-weight: 100;
+    font-style: italic;
+}
+
+.lato-light-italic {
+    font-family: "Lato", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.lato-regular-italic {
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.lato-bold-italic {
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.lato-black-italic {
+    font-family: "Lato", sans-serif;
+    font-weight: 900;
+    font-style: italic;
+}
+
+
+.merriweather-regular {
+    font-family: "Merriweather", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.merriweather-bold {
+    font-family: "Merriweather", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.merriweather-regular-italic {
+    font-family: "Merriweather", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    font-variation-settings:
+        "wdth" 100;
+}
