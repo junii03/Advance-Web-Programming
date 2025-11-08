@@ -18,7 +18,7 @@
 /* Dark theme overrides */
 [data-theme="dark"] {
     --color-primary: #137fec;
-    --bg: #1d2b3b;
+    --bg: #24364a;
     --surface: #0b1220;
     --text: #e6eef8;
     --muted: #9ca3af;
