@@ -7,8 +7,8 @@
 /* Light theme (default) */
 :root {
     --color-primary: #137fec;
-    --bg: #f6f7f8;
-    --surface: #ffffff;
+    --bg: #f5ecdb;
+    --surface: #f5ecdb;
     --text: #0f1724;
     --muted: #6b7280;
     --border: rgba(15, 23, 42, 0.08);
@@ -18,7 +18,7 @@
 /* Dark theme overrides */
 [data-theme="dark"] {
     --color-primary: #137fec;
-    --bg: #121212;
+    --bg: #1d2b3b;
     --surface: #0b1220;
     --text: #e6eef8;
     --muted: #9ca3af;
@@ -30,7 +30,7 @@
 /* Respect OS-level preference if no explicit theme set */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
-        --bg: #121212;
+        --bg: #1d2b3b;
         --surface: #0b1220;
         --text: #e6eef8;
         --muted: #9ca3af;
@@ -253,4 +253,10 @@ button.primary:hover {
 
 .shadow-card {
     box-shadow: var(--card-shadow);
+}
+
+/* Gradients based on theme color */
+.linear-gradient {
+
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
 }
