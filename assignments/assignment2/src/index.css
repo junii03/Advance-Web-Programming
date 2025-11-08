@@ -1,24 +1,24 @@
 @import 'tailwindcss';
 
-/* Theme tokens (CSS custom properties) - light by default, override with [data-theme="dark"] */
+/* --------------------------------------------------------------
+   THEME VARIABLES
+   -------------------------------------------------------------- */
+
+/* Light theme (default) */
 :root {
     --color-primary: #137fec;
     --bg: #f6f7f8;
-    /* background-light */
     --surface: #ffffff;
     --text: #0f1724;
-    /* deep slate for readable text on light bg */
     --muted: #6b7280;
     --border: rgba(15, 23, 42, 0.08);
     --card-shadow: 0 4px 10px rgba(2, 6, 23, 0.06);
 }
 
-/* Dark theme overrides (when you set data-theme="dark" on <html> or <body>) */
+/* Dark theme overrides */
 [data-theme="dark"] {
     --color-primary: #137fec;
-    /* keep primary consistent */
     --bg: #121212;
-    /* background-dark */
     --surface: #0b1220;
     --text: #e6eef8;
     --muted: #9ca3af;
@@ -27,7 +27,7 @@
     color-scheme: dark;
 }
 
-/* Respect OS-level preference when no explicit theme is set */
+/* Respect OS-level preference if no explicit theme set */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
         --bg: #121212;
@@ -39,49 +39,111 @@
     }
 }
 
-/* Small helpers */
+/* --------------------------------------------------------------
+   GLOBAL BASE STYLES
+   -------------------------------------------------------------- */
+
 html,
 body {
     background-color: var(--bg);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-family: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 .theme-transition {
-    transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+    transition:
+        background-color 160ms ease,
+        color 160ms ease,
+        border-color 160ms ease;
 }
 
+/* --------------------------------------------------------------
+   TYPOGRAPHY
+   -------------------------------------------------------------- */
+
+/* Headings use Merriweather */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Merriweather", Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text);
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+/* Paragraphs and small text use Lato */
+p,
+li,
+span,
+a,
+small {
+    font-family: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--text);
+}
+
+/* Muted text */
+.text-muted {
+    color: var(--muted);
+}
+
+/* Theme-aware text helper that uses CSS variables from :root or [data-theme] */
+.theme-text {
+    color: var(--text);
+}
+
+/* Link helper that uses theme variables and a hover state */
+.theme-link {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.theme-link:hover,
+.theme-link:focus {
+    color: var(--text);
+}
+
+/* --------------------------------------------------------------
+   FONT WEIGHT HELPERS
+   -------------------------------------------------------------- */
+
+/* Lato Weights */
 .lato-thin {
     font-family: "Lato", sans-serif;
     font-weight: 100;
-    font-style: normal;
 }
 
 .lato-light {
     font-family: "Lato", sans-serif;
     font-weight: 300;
-    font-style: normal;
 }
 
 .lato-regular {
     font-family: "Lato", sans-serif;
     font-weight: 400;
-    font-style: normal;
 }
 
 .lato-bold {
     font-family: "Lato", sans-serif;
     font-weight: 700;
-    font-style: normal;
 }
 
 .lato-black {
     font-family: "Lato", sans-serif;
     font-weight: 900;
-    font-style: normal;
 }
 
+/* Lato Italics */
 .lato-thin-italic {
     font-family: "Lato", sans-serif;
     font-weight: 100;
@@ -112,14 +174,13 @@ body {
     font-style: italic;
 }
 
-
+/* Merriweather Weights */
 .merriweather-regular {
     font-family: "Merriweather", serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    font-variation-settings:
-        "wdth" 100;
+    font-variation-settings: "wdth" 100;
 }
 
 .merriweather-bold {
@@ -127,8 +188,7 @@ body {
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
-    font-variation-settings:
-        "wdth" 100;
+    font-variation-settings: "wdth" 100;
 }
 
 .merriweather-regular-italic {
@@ -136,6 +196,61 @@ body {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: italic;
-    font-variation-settings:
-        "wdth" 100;
+    font-variation-settings: "wdth" 100;
+}
+
+/* --------------------------------------------------------------
+   ELEMENTS
+   -------------------------------------------------------------- */
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+a:hover {
+    color: #0e6bc8;
+}
+
+/* Cards and containers */
+.card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+}
+
+/* Buttons */
+button {
+    font-family: "Lato", sans-serif;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+button.primary {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+button.primary:hover {
+    background-color: #0e6bc8;
+}
+
+/* --------------------------------------------------------------
+   UTILITIES
+   -------------------------------------------------------------- */
+
+.border-theme {
+    border-color: var(--border);
+}
+
+.bg-surface {
+    background-color: var(--surface);
+}
+
+.shadow-card {
+    box-shadow: var(--card-shadow);
 }
