@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
+import sun from '../assets/icons8-sun.apng'
+import moon from '../assets/icons8-moon.apng'
+import cart from '../assets/icons8-shopping-cart.apng'
 
 const Header = () => {
     const [theme, setTheme] = useState('')
@@ -74,34 +77,19 @@ const Header = () => {
     return (
         <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-theme px-4 py-4 md:px-6">
             <div className="flex items-center gap-4 theme-text">
-                <div className="size-6" aria-hidden>
-                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <g clipPath="url(#clip0_6_330)">
-                            <path clipRule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fillRule="evenodd"></path>
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_6_330">
-                                <rect fill="white" height="48" width="48"></rect>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </div>
-                <h2 className="theme-text text-xl font-bold leading-tight tracking-[-0.015em]">BRAND NAME</h2>
+                <img src={cart} alt="" srcset="" />
+                <h2 className="theme-text text-xl font-bold leading-tight tracking-[-0.015em]">Products Store</h2>
             </div>
 
             <button
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
-                className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0"
-                style={{
-                    backgroundColor: 'transparent',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)'
-                }}
+                className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 gap-2s leading-normal tracking-[0.015em] min-w-0"
             >
-                <span className="material-symbols-outlined" style={{ color: 'var(--text)' }}>
-                    {theme === 'dark' ? 'light_mode' : 'dark_mode'}
-                </span>
+                <img
+                    className=' object-contain'
+                    src={theme !== 'dark' ? moon : sun}
+                    alt="" />
             </button>
         </header>
     )
