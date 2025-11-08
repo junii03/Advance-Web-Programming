@@ -3,15 +3,21 @@ import React, { useState } from 'react'
 
 const Contact = () => {
     const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [name, setName] = useState('');
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (!email.trim()) {
-            alert('Please enter a valid email address.');
+        if (!email.trim() || !name.trim() || !message.trim()) {
+            alert('Please fill in all fields.');
             return;
         }
         alert('Thank you for subscribing!');
+        console.log({ email, name, message });
         setEmail('');
+        setName('');
+        setMessage('');
     };
 
     return (
@@ -21,15 +27,31 @@ const Contact = () => {
                 <p className="text-muted mb-6">Have questions about a product or need help? Send us a message and we’ll respond within 24 hours.</p>
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+                    className="flex flex-col gap-4 "
+                >
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="rounded-lg
-                     p-3 w-full sm:w-auto flex-1 bg-surface border border-theme theme-text" placeholder="Your email"
+                        className="rounded-lg p-3 w-full sm:w-auto flex-1 bg-surface border border-theme theme-text"
+                        placeholder="Your email"
                         aria-label="Your email" />
-                    <button type="submit" className="primary shadow-md py-3 px-6 rounded-lg cursor-pointer" >Subscribe</button>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="rounded-lg p-3 w-full sm:w-auto flex-1 bg-surface border border-theme theme-text"
+                        placeholder="Your Name"
+                        aria-label="Your Name" />
+                    <textarea
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        rows="4"
+                        className="rounded-lg p-3 w-full sm:w-auto flex-1 bg-surface border border-theme theme-text"
+                        placeholder="Your message"
+                        aria-label="Your message"
+                    ></textarea>
+                    <button type="submit" className="primary max-w-md mx-auto shadow-md py-3 px-6 rounded-lg cursor-pointer" >Subscribe</button>
                 </form>
             </div>
         </section>

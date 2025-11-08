@@ -77,7 +77,7 @@ const Header = () => {
     return (
         <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-theme px-4 py-4 md:px-6">
             <div className="flex items-center gap-4 theme-text">
-                <img src={cart} alt="" srcset="" />
+                <img src={cart} alt="" />
                 <h2 className="theme-text text-xl font-bold leading-tight tracking-[-0.015em]">Products Store</h2>
             </div>
 
