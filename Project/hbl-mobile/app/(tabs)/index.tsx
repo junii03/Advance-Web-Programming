@@ -1,98 +1,236 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { Card } from '@/components/ui/card';
+import { Colors } from '@/constants/theme';
+import { useAuth } from '@/contexts/auth';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
+  const { user } = useAuth();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const quickActions = [
+    { id: 1, label: 'Transfer', icon: 'send', color: colors.info },
+    { id: 2, label: 'Pay Bills', icon: 'receipt', color: colors.warning },
+    { id: 3, label: 'Cards', icon: 'credit-card', color: colors.primary },
+    { id: 4, label: 'Loans', icon: 'file-document', color: colors.success },
+  ];
+
+  const accountSummary = [
+    { label: 'Total Accounts', value: '3', icon: 'bank' },
+    { label: 'Total Balance', value: 'PKR 250,000', icon: 'cash-multiple' },
+    { label: 'Pending', value: '1', icon: 'clock-outline' },
+  ];
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header Section */}
+        <View
+          style={{
+            backgroundColor: colors.primary,
+            paddingHorizontal: 16,
+            paddingVertical: 20,
+            paddingBottom: 24,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 16,
+            }}
+          >
+            <View>
+              <Text style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>Welcome Back</Text>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: '#FFFFFF', marginTop: 4 }}>
+                {user?.name || 'User'}
+              </Text>
+            </View>
+            <Pressable onPress={() => router.push('/profile')}>
+              <View
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 22,
+                  backgroundColor: 'rgba(255,255,255,0.3)',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <MaterialCommunityIcons name="account-circle" size={24} color="#FFFFFF" />
+              </View>
+            </Pressable>
+          </View>
+
+          {/* Account Balance Card */}
+          <Card
+            style={{
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              borderColor: 'rgba(255,255,255,0.2)',
+              borderWidth: 1,
+            }}
+          >
+            <Text style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', marginBottom: 4 }}>
+              Total Balance
+            </Text>
+            <Text style={{ fontSize: 28, fontWeight: '700', color: '#FFFFFF' }}>PKR 250,000</Text>
+            <Text style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: 8 }}>
+              Account • 0910-460815
+            </Text>
+          </Card>
+        </View>
+
+        {/* Quick Actions */}
+        <View style={{ padding: 16, gap: 12 }}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text }}>Quick Actions</Text>
+          <View style={{ flexDirection: 'row', gap: 12, flexWrap: 'wrap' }}>
+            {quickActions.map((action) => (
+              <Pressable
+                key={action.id}
+                onPress={() => {
+                  if (action.label === 'Transfer') router.push('/transfer');
+                  if (action.label === 'Cards') router.push('/cards');
+                }}
+                style={{
+                  flex: 1,
+                  minWidth: '48%',
+                  paddingVertical: 16,
+                  paddingHorizontal: 12,
+                  borderRadius: 12,
+                  backgroundColor: colors.surface,
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <View
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 22,
+                    backgroundColor: action.color,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <MaterialCommunityIcons name={action.icon as any} size={20} color="#FFFFFF" />
+                </View>
+                <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>
+                  {action.label}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        {/* Account Summary */}
+        <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginBottom: 12 }}>
+            Account Summary
+          </Text>
+          <Card>
+            {accountSummary.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingVertical: 12,
+                  borderBottomWidth: index < accountSummary.length - 1 ? 1 : 0,
+                  borderBottomColor: colors.border,
+                }}
+              >
+                <View
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 18,
+                    backgroundColor: colors.surfaceAlt,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: 12,
+                  }}
+                >
+                  <MaterialCommunityIcons name={item.icon as any} size={18} color={colors.primary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 12, color: colors.textSecondary }}>{item.label}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginTop: 2 }}>
+                    {item.value}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </Card>
+        </View>
+
+        {/* Recent Transactions */}
+        <View style={{ paddingHorizontal: 16, marginBottom: 24 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 12,
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text }}>
+              Recent Transactions
+            </Text>
+            <Text
+              style={{ fontSize: 12, fontWeight: '600', color: colors.primary }}
+              onPress={() => router.push('/transactions')}
+            >
+              View All
+            </Text>
+          </View>
+
+          <Card>
+            {[1, 2, 3].map((item) => (
+              <View
+                key={item}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingVertical: 12,
+                  borderBottomWidth: item < 3 ? 1 : 0,
+                  borderBottomColor: colors.border,
+                }}
+              >
+                <View
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 18,
+                    backgroundColor: colors.info,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: 12,
+                  }}
+                >
+                  <MaterialCommunityIcons name="arrow-right" size={18} color="#FFFFFF" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 13, fontWeight: '500', color: colors.text }}>
+                    Transfer to Account
+                  </Text>
+                  <Text style={{ fontSize: 11, color: colors.textSecondary, marginTop: 2 }}>
+                    Today at 2:30 PM
+                  </Text>
+                </View>
+                <Text style={{ fontSize: 13, fontWeight: '600', color: colors.error }}>
+                  -PKR 5,000
+                </Text>
+              </View>
+            ))}
+          </Card>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
