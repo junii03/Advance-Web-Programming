@@ -1,18 +1,11 @@
-import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 import { Button } from '@/src/components/ui/button';
 import { Card } from '@/src/components/ui/card';
-import { Header } from '@/src/components/ui/header';
 import { Input } from '@/src/components/ui/input';
-import { Colors } from '@/src/constants/theme';
-import { useColorScheme } from '@/src/hooks/use-color-scheme';
 
 export default function TransferScreen() {
-  const router = useRouter();
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
 
   const [formData, setFormData] = useState({
     fromAccount: '',
@@ -26,53 +19,41 @@ export default function TransferScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <Header
-        title="Money Transfer"
-        subtitle="Send money instantly"
-        onBackPress={() => router.back()}
-      />
-
-      <ScrollView showsVerticalScrollIndicator={false} style={{ padding: 16 }}>
-        <Text style={{ fontSize: 14, color: colors.textSecondary, marginBottom: 16 }}>
+    <SafeAreaView className="safe-area">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="flex-1 p-4"
+      >
+        <Text className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Transfer money between accounts or to other users
         </Text>
 
         {/* Transfer Type Selection */}
-        <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginBottom: 12 }}>
+        <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
           Transfer Type
         </Text>
-        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 20 }}>
+        <View className="flex-row gap-3 mb-6">
           {[
             { id: 'own-account', label: 'Own Account' },
             { id: 'other-account', label: 'Other Account' },
           ].map((type) => (
-            <Card
+            <Pressable
               key={type.id}
-              style={{
-                flex: 1,
-                paddingHorizontal: 12,
-                paddingVertical: 12,
-                borderWidth: 2,
-                borderColor:
-                  formData.transferType === type.id ? colors.primary : colors.border,
-                backgroundColor:
-                  formData.transferType === type.id
-                    ? `${colors.primary}10`
-                    : colors.surface,
-              }}
+              onPress={() => setFormData({ ...formData, transferType: type.id })}
+              className={`flex-1 py-3 px-3 rounded-lg border-2 active:opacity-70 ${
+                formData.transferType === type.id
+                  ? 'border-hbl-red bg-hbl-red/10'
+                  : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-surface-dark'
+              }`}
             >
-              <Text
-                style={{
-                  fontSize: 13,
-                  fontWeight: '600',
-                  color: colors.text,
-                  textAlign: 'center',
-                }}
-              >
+              <Text className={`text-sm font-semibold text-center ${
+                formData.transferType === type.id
+                  ? 'text-hbl-red'
+                  : 'text-gray-900 dark:text-white'
+              }`}>
                 {type.label}
               </Text>
-            </Card>
+            </Pressable>
           ))}
         </View>
 
@@ -100,16 +81,16 @@ export default function TransferScreen() {
         />
 
         {/* Fee Information */}
-        <Card style={{ marginVertical: 20 }}>
-          <View style={{ marginBottom: 8 }}>
-            <Text style={{ fontSize: 12, color: colors.textSecondary }}>Estimated Fee</Text>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: colors.text, marginTop: 2 }}>
+        <Card className="my-6">
+          <View className="mb-3">
+            <Text className="text-xs text-gray-600 dark:text-gray-400">Estimated Fee</Text>
+            <Text className="text-lg font-bold text-gray-900 dark:text-white mt-1">
               Free
             </Text>
           </View>
-          <View style={{ paddingTop: 8, borderTopWidth: 1, borderTopColor: colors.border }}>
-            <Text style={{ fontSize: 12, color: colors.textSecondary }}>Total Amount</Text>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: colors.primary, marginTop: 2 }}>
+          <View className="pt-3 border-t border-gray-200 dark:border-gray-700">
+            <Text className="text-xs text-gray-600 dark:text-gray-400">Total Amount</Text>
+            <Text className="text-lg font-bold text-hbl-red mt-1">
               PKR {formData.amount || '0'}
             </Text>
           </View>
@@ -119,7 +100,7 @@ export default function TransferScreen() {
           title="Proceed Transfer"
           onPress={handleTransfer}
           size="lg"
-          style={{ marginBottom: 24 }}
+          className="mb-6"
         />
       </ScrollView>
     </SafeAreaView>

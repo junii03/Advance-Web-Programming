@@ -1,9 +1,6 @@
 import { Button } from '@/src/components/ui/button';
-import { Header } from '@/src/components/ui/header';
 import { Input } from '@/src/components/ui/input';
-import { Colors } from '@/src/constants/theme';
 import { useAuth } from '@/src/contexts/auth';
-import { useColorScheme } from '@/src/hooks/use-color-scheme';
 import { SignupData } from '@/src/types';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -11,8 +8,6 @@ import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 export default function SignupScreen() {
   const router = useRouter();
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
   const { signup } = useAuth();
 
   const [formData, setFormData] = useState<SignupData>({
@@ -51,7 +46,7 @@ export default function SignupScreen() {
     setLoading(true);
     try {
       await signup(formData);
-      router.replace('/(tabs)');
+      router.replace('/(tabs)' as any);
     } catch {
       setError('Signup failed. Please try again.');
     } finally {
@@ -64,43 +59,35 @@ export default function SignupScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <Header
-        title="Create Account"
-        onBackPress={() => router.back()}
-      />
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={{ paddingHorizontal: 20, paddingVertical: 24 }}>
+    <SafeAreaView className="safe-area">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        className="flex-1"
+      >
+        <View className="flex-1 px-5 py-6">
           {/* Title */}
-          <Text style={{ fontSize: 20, fontWeight: '700', color: colors.text, marginBottom: 8 }}>
+          <Text className="text-xl font-bold text-gray-900 dark:text-white mb-2">
             Create Your Account
           </Text>
-          <Text style={{ fontSize: 14, color: colors.textSecondary, marginBottom: 24 }}>
+          <Text className="text-sm text-gray-600 dark:text-gray-400 mb-6">
             Join HBL for digital banking
           </Text>
 
           {/* Error Message */}
           {error && (
-            <View
-              style={{
-                backgroundColor: colors.error,
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                borderRadius: 8,
-                marginBottom: 16,
-              }}
-            >
-              <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: '500' }}>{error}</Text>
+            <View className="mb-4 rounded-lg bg-red-500 px-4 py-3">
+              <Text className="text-sm font-medium text-white">{error}</Text>
             </View>
           )}
 
           {/* Personal Information Section */}
-          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginBottom: 12 }}>
+          <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
             Personal Information
           </Text>
 
-          <View style={{ flexDirection: 'row', gap: 12, marginBottom: 8 }}>
-            <View style={{ flex: 1 }}>
+          <View className="flex-row gap-3 mb-4">
+            <View className="flex-1">
               <Input
                 label="First Name"
                 placeholder="First name"
@@ -108,7 +95,7 @@ export default function SignupScreen() {
                 onChangeText={(text) => updateFormData('firstName', text)}
               />
             </View>
-            <View style={{ flex: 1 }}>
+            <View className="flex-1">
               <Input
                 label="Last Name"
                 placeholder="Last name"
@@ -156,7 +143,7 @@ export default function SignupScreen() {
           />
 
           {/* Address Information Section */}
-          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginBottom: 12, marginTop: 20 }}>
+          <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3 mt-6">
             Address Information
           </Text>
 
@@ -167,8 +154,8 @@ export default function SignupScreen() {
             onChangeText={(text) => updateFormData('address', text)}
           />
 
-          <View style={{ flexDirection: 'row', gap: 12, marginBottom: 8 }}>
-            <View style={{ flex: 1 }}>
+          <View className="flex-row gap-3 mb-4">
+            <View className="flex-1">
               <Input
                 label="City"
                 placeholder="City"
@@ -176,7 +163,7 @@ export default function SignupScreen() {
                 onChangeText={(text) => updateFormData('city', text)}
               />
             </View>
-            <View style={{ flex: 1 }}>
+            <View className="flex-1">
               <Input
                 label="State"
                 placeholder="State"
@@ -187,7 +174,7 @@ export default function SignupScreen() {
           </View>
 
           {/* Password Section */}
-          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginBottom: 12, marginTop: 20 }}>
+          <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3 mt-6">
             Security
           </Text>
 
@@ -208,17 +195,17 @@ export default function SignupScreen() {
             loading={loading}
             disabled={loading}
             size="lg"
-            style={{ marginTop: 24, marginBottom: 16 }}
+            className="mt-6 mb-4"
           />
 
           {/* Login Link */}
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 24 }}>
-            <Text style={{ fontSize: 14, color: colors.textSecondary }}>
+          <View className="flex-row items-center justify-center mb-6">
+            <Text className="text-sm text-gray-600 dark:text-gray-400">
               Already have an account?{' '}
             </Text>
             <Text
-              style={{ fontSize: 14, color: colors.primary, fontWeight: '600' }}
-              onPress={() => router.push('/login')}
+              className="text-sm font-semibold text-hbl-red active:opacity-70"
+              onPress={() => router.push('/(auth)/login' as any)}
             >
               Sign In
             </Text>

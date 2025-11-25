@@ -1,12 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 import { Card } from '@/src/components/ui/card';
-import { Header } from '@/src/components/ui/header';
-import { Colors } from '@/src/constants/theme';
-import { useColorScheme } from '@/src/hooks/use-color-scheme';
 
 interface BankCard {
   id: string;
@@ -19,10 +15,6 @@ interface BankCard {
 }
 
 export default function CardsScreen() {
-  const router = useRouter();
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
-
   const cards: BankCard[] = [
     {
       id: '1',
@@ -56,94 +48,87 @@ export default function CardsScreen() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return colors.success;
+        return 'bg-success/10';
       case 'blocked':
-        return colors.error;
+        return 'bg-error/10';
       case 'expired':
-        return colors.warning;
+        return 'bg-warning/10';
       default:
-        return colors.textSecondary;
+        return 'bg-gray-100 dark:bg-surface-alt-dark';
+    }
+  };
+
+  const getStatusTextColor = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'text-success';
+      case 'blocked':
+        return 'text-error';
+      case 'expired':
+        return 'text-warning';
+      default:
+        return 'text-gray-600';
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <Header
-        title="My Cards"
-        onBackPress={() => router.back()}
-        rightAction={{
-          icon: 'plus',
-          onPress: () => {},
-        }}
-      />
-
-      <ScrollView showsVerticalScrollIndicator={false} style={{ padding: 16 }}>
-        <Text style={{ fontSize: 14, color: colors.textSecondary, marginBottom: 16 }}>
+    <SafeAreaView className="safe-area">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="flex-1 p-4"
+      >
+        <Text className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Manage and monitor all your cards
         </Text>
 
-        {cards.map((card, index) => (
-          <Card key={card.id} style={{ marginBottom: 12, paddingHorizontal: 16, paddingVertical: 12 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <View style={{ flex: 1 }}>
+        {cards.map((card) => (
+          <Card key={card.id} padding="md" className="mb-3">
+            <View className="flex-row justify-between items-start">
+              <View className="flex-1">
                 {/* Card Header */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <View className="flex-row justify-between items-center mb-3">
+                  <View className="flex-row items-center gap-2">
                     <MaterialCommunityIcons
                       name="credit-card"
                       size={20}
-                      color={card.type === 'credit' ? colors.primary : colors.info}
+                      color={card.type === 'credit' ? '#DC143C' : '#3B82F6'}
                     />
-                    <Text style={{ fontSize: 13, fontWeight: '600', color: colors.text, textTransform: 'capitalize' }}>
+                    <Text className="text-sm font-semibold text-gray-900 dark:text-white capitalize">
                       {card.type} Card
                     </Text>
                   </View>
-                  <View
-                    style={{
-                      paddingHorizontal: 8,
-                      paddingVertical: 4,
-                      borderRadius: 4,
-                      backgroundColor: `${getStatusColor(card.status)}20`,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 11,
-                        fontWeight: '600',
-                        color: getStatusColor(card.status),
-                        textTransform: 'capitalize',
-                      }}
-                    >
+                  <View className={`px-2 py-1 rounded ${getStatusColor(card.status)}`}>
+                    <Text className={`text-xs font-semibold capitalize ${getStatusTextColor(card.status)}`}>
                       {card.status}
                     </Text>
                   </View>
                 </View>
 
                 {/* Card Number */}
-                <View style={{ marginBottom: 12 }}>
-                  <Text style={{ fontSize: 12, color: colors.textSecondary, marginBottom: 2 }}>
+                <View className="mb-3">
+                  <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                     Card Number
                   </Text>
-                  <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text }}>
+                  <Text className="text-sm font-semibold text-gray-900 dark:text-white">
                     4532 •••• •••• {card.lastFour}
                   </Text>
                 </View>
 
                 {/* Card Holder & Expiry */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 2 }}>
+                <View className="flex-row justify-between">
+                  <View className="flex-1">
+                    <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                       Cardholder
                     </Text>
-                    <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>
+                    <Text className="text-xs font-semibold text-gray-900 dark:text-white">
                       {card.holderName}
                     </Text>
                   </View>
                   <View>
-                    <Text style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 2 }}>
+                    <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                       Expires
                     </Text>
-                    <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>
+                    <Text className="text-xs font-semibold text-gray-900 dark:text-white">
                       {card.expiryDate}
                     </Text>
                   </View>
@@ -151,11 +136,11 @@ export default function CardsScreen() {
 
                 {/* Balance */}
                 {card.balance && (
-                  <View style={{ marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.border }}>
-                    <Text style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 2 }}>
+                  <View className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                       Available Balance
                     </Text>
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: colors.primary }}>
+                    <Text className="text-sm font-bold text-hbl-red">
                       {card.balance}
                     </Text>
                   </View>
@@ -163,53 +148,42 @@ export default function CardsScreen() {
               </View>
 
               {/* Action Menu */}
-              <Pressable style={{ marginLeft: 12 }}>
-                <MaterialCommunityIcons name="dots-vertical" size={20} color={colors.textSecondary} />
+              <Pressable className="ml-3 active:opacity-70">
+                <MaterialCommunityIcons name="dots-vertical" size={20} color="#9CA3AF" />
               </Pressable>
             </View>
           </Card>
         ))}
 
         {/* Card Services */}
-        <View style={{ marginTop: 24, marginBottom: 24 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginBottom: 12 }}>
+        <View className="mt-6 mb-6">
+          <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
             Card Services
           </Text>
 
-          <Card style={{ paddingHorizontal: 16, paddingVertical: 12 }}>
+          <Card padding="md">
             {[
-              { icon: 'lock', label: 'Block Card', color: colors.error },
-              { icon: 'reload', label: 'Replace Card', color: colors.warning },
-              { icon: 'cog', label: 'Card Settings', color: colors.info },
+              { icon: 'lock', label: 'Block Card', color: 'text-red-500', bgColor: 'bg-red-500/10' },
+              { icon: 'reload', label: 'Replace Card', color: 'text-warning', bgColor: 'bg-warning/10' },
+              { icon: 'cog', label: 'Card Settings', color: 'text-info', bgColor: 'bg-info/10' },
             ].map((service, index) => (
               <Pressable
                 key={service.label}
-                onPress={() => {}}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingVertical: 12,
-                  borderBottomWidth: index < 2 ? 1 : 0,
-                  borderBottomColor: colors.border,
-                }}
+                className={`flex-row items-center py-3 active:opacity-70 ${
+                  index < 2 ? 'border-b border-gray-200 dark:border-gray-700' : ''
+                }`}
               >
-                <View
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 8,
-                    backgroundColor: `${service.color}20`,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: 12,
-                  }}
-                >
-                  <MaterialCommunityIcons name={service.icon as any} size={18} color={service.color} />
+                <View className={`h-9 w-9 flex-center mr-3 rounded-lg ${service.bgColor}`}>
+                  <MaterialCommunityIcons
+                    name={service.icon as any}
+                    size={18}
+                    color={service.color === 'text-red-500' ? '#EF4444' : service.color === 'text-warning' ? '#F59E0B' : '#3B82F6'}
+                  />
                 </View>
-                <Text style={{ flex: 1, fontSize: 14, fontWeight: '500', color: colors.text }}>
+                <Text className="flex-1 text-sm font-medium text-gray-900 dark:text-white">
                   {service.label}
                 </Text>
-                <MaterialCommunityIcons name="chevron-right" size={20} color={colors.textTertiary} />
+                <MaterialCommunityIcons name="chevron-right" size={20} color="#9CA3AF" />
               </Pressable>
             ))}
           </Card>

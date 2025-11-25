@@ -25,7 +25,7 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await login(email, password);
-      router.replace('/(tabs)');
+      router.replace('/(tabs)' as any);
     } catch {
       setError('Login failed. Please try again.');
     } finally {
@@ -34,7 +34,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="safe-area">
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
@@ -46,17 +46,17 @@ export default function LoginScreen() {
             <View className="h-20 w-20 items-center justify-center rounded-full bg-hbl-red">
               <Text className="text-4xl font-bold text-white">HBL</Text>
             </View>
-            <Text className="mt-4 text-2xl font-bold text-gray-900">
+            <Text className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">
               Welcome Back
             </Text>
-            <Text className="mt-2 text-sm text-gray-600">
+            <Text className="mt-2 text-sm text-gray-600 dark:text-gray-400">
               Sign in to your HBL account
             </Text>
           </View>
 
           {/* Error Message */}
           {error && (
-            <View className="mb-4 rounded-lg bg-red-500 px-3 py-2">
+            <View className="mb-4 rounded-lg bg-red-500 px-4 py-3">
               <Text className="text-sm font-medium text-white">{error}</Text>
             </View>
           )}
@@ -82,7 +82,7 @@ export default function LoginScreen() {
 
           {/* Forgot Password Link */}
           <Text
-            className="mb-6 text-right text-sm font-semibold text-hbl-red"
+            className="mb-6 text-right text-sm font-semibold text-hbl-red active:opacity-70"
             onPress={() => {}}
           >
             Forgot Password?
@@ -100,12 +100,12 @@ export default function LoginScreen() {
 
           {/* Sign Up Link */}
           <View className="flex-row items-center justify-center">
-            <Text className="text-sm text-gray-600">
+            <Text className="text-sm text-gray-600 dark:text-gray-400">
               {`Don't have an account? `}
             </Text>
             <Text
-              className="text-sm font-semibold text-hbl-red"
-              onPress={() => router.push('/signup')}
+              className="text-sm font-semibold text-hbl-red active:opacity-70"
+              onPress={() => router.push('/(auth)/signup' as any)}
             >
               Sign Up
             </Text>

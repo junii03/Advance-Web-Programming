@@ -34,15 +34,17 @@ export const Input: React.FC<InputProps> = ({
   const [focused, setFocused] = React.useState(false);
 
   return (
-    <View className={`w-full mb-3 ${className}`}>
+    <View className={`w-full mb-4 ${className}`}>
       {label && (
-        <Text className="mb-1.5 text-sm font-semibold text-gray-900">
+        <Text className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">
           {label}
         </Text>
       )}
       <View
-        className={`flex-row items-center rounded-lg border-2 bg-gray-50 px-3 py-2.5 ${
-          focused ? 'border-hbl-red' : 'border-gray-200'
+        className={`flex-row items-center rounded-md border-2 bg-gray-50 px-4 py-3 transition-colors dark:bg-surface-dark ${
+          focused
+            ? 'border-hbl-red dark:border-hbl-red-light'
+            : 'border-gray-200 dark:border-gray-600'
         } ${disabled ? 'opacity-50' : ''}`}
       >
         <TextInput
@@ -54,17 +56,25 @@ export const Input: React.FC<InputProps> = ({
           keyboardType={keyboardType}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          className="flex-1 text-base text-gray-900"
-          placeholderTextColor="#999"
+          className="flex-1 text-base text-gray-900 dark:text-white"
+          placeholderTextColor="#9CA3AF"
           testID={testID}
         />
         {rightIcon && (
-          <Pressable onPress={onRightIconPress} disabled={disabled} className="ml-2">
-            <MaterialCommunityIcons name={rightIcon as any} size={20} color="#666" />
+          <Pressable onPress={onRightIconPress} disabled={disabled} className="ml-3 active:opacity-70">
+            <MaterialCommunityIcons
+              name={rightIcon as any}
+              size={20}
+              color={disabled ? '#D1D5DB' : '#666'}
+            />
           </Pressable>
         )}
       </View>
-      {error && <Text className="mt-1 text-xs font-medium text-red-500">{error}</Text>}
+      {error && (
+        <Text className="mt-2 text-xs font-medium text-red-500 dark:text-error-light">
+          {error}
+        </Text>
+      )}
     </View>
   );
 };

@@ -46,7 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
-      className={`flex-row items-center justify-center rounded-lg ${sizeClasses} ${variantClasses} ${disabled ? 'opacity-50' : ''} ${className || ''}`}
+      className={`flex-row items-center justify-center rounded-md ${sizeClasses} ${variantClasses} ${disabled ? 'opacity-50' : ''} ${className || ''}`}
       testID={testID}
     >
       {loading && <ActivityIndicator size="small" color="white" className="mr-2" />}
