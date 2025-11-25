@@ -34,11 +34,11 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView className="safe-area">
+    <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
-        className="flex-1"
+        style={{ flex: 1 }}
       >
         <View className="flex-1 justify-center px-5 py-6">
           {/* Logo */}

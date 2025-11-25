@@ -72,10 +72,11 @@ export default function CardsScreen() {
   };
 
   return (
-    <SafeAreaView className="safe-area">
+    <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="flex-1 p-4"
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 16 }}
       >
         <Text className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Manage and monitor all your cards

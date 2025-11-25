@@ -25,10 +25,11 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView className="safe-area">
+    <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="flex-1 p-4"
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 16 }}
       >
         {/* Profile Header */}
         <Card className="mb-6 flex-col items-center">
