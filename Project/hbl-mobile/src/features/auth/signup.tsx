@@ -204,7 +204,7 @@ export default function SignupScreen() {
               Already have an account?{' '}
             </Text>
             <Text
-              className="text-sm font-semibold text-hbl-red active:opacity-70"
+              className="text-sm font-semibold text-hbl-green active:opacity-70"
               onPress={() => router.push('/(auth)/login' as any)}
             >
               Sign In

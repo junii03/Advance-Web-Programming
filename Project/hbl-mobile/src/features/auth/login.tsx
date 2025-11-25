@@ -43,7 +43,7 @@ export default function LoginScreen() {
         <View className="flex-1 justify-center px-5 py-6">
           {/* Logo */}
           <View className="mb-8 items-center">
-            <View className="h-20 w-20 items-center justify-center rounded-full bg-hbl-red">
+            <View className="h-20 w-20 items-center justify-center rounded-full bg-hbl-green">
               <Text className="text-4xl font-bold text-white">HBL</Text>
             </View>
             <Text className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">
@@ -82,7 +82,7 @@ export default function LoginScreen() {
 
           {/* Forgot Password Link */}
           <Text
-            className="mb-6 text-right text-sm font-semibold text-hbl-red active:opacity-70"
+            className="mb-6 text-right text-sm font-semibold text-hbl-green active:opacity-70"
             onPress={() => {}}
           >
             Forgot Password?
@@ -104,7 +104,7 @@ export default function LoginScreen() {
               {`Don't have an account? `}
             </Text>
             <Text
-              className="text-sm font-semibold text-hbl-red active:opacity-70"
+              className="text-sm font-semibold text-hbl-green active:opacity-70"
               onPress={() => router.push('/(auth)/signup' as any)}
             >
               Sign Up

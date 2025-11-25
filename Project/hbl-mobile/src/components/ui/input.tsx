@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({
       <View
         className={`flex-row items-center rounded-md border-2 bg-gray-50 px-4 py-3 transition-colors dark:bg-surface-dark ${
           focused
-            ? 'border-hbl-red dark:border-hbl-red-light'
+            ? 'border-hbl-green dark:border-hbl-green-light'
             : 'border-gray-200 dark:border-gray-600'
         } ${disabled ? 'opacity-50' : ''}`}
       >

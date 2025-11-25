@@ -12,7 +12,7 @@
  * Use for: Primary buttons, links, active states, important CTAs
  *
  * Example:
- * className="bg-hbl-red text-white"
+ * className="bg-hbl-green text-white"
  */
 export const HBL_RED = '#DC143C';
 
@@ -21,7 +21,7 @@ export const HBL_RED = '#DC143C';
  * Use for: Hover states, disabled backgrounds, light backgrounds
  *
  * Example:
- * className="dark:text-hbl-red-light"
+ * className="dark:text-hbl-green-light"
  */
 export const HBL_RED_LIGHT = '#FF6B6B';
 
@@ -30,7 +30,7 @@ export const HBL_RED_LIGHT = '#FF6B6B';
  * Use for: Pressed states, text accents, emphasis
  *
  * Example:
- * className="text-hbl-red-dark"
+ * className="text-hbl-green-dark"
  */
 export const HBL_RED_DARK = '#9C0E2E';
 
@@ -121,7 +121,7 @@ export const DARK_MODE = {
 /**
  * Example 1: Primary Button with HBL Red
  *
- * <Pressable className="bg-hbl-red px-4 py-3 rounded-lg active:opacity-70">
+ * <Pressable className="bg-hbl-green px-4 py-3 rounded-lg active:opacity-70">
  *   <Text className="text-white font-semibold text-base">
  *     Sign In
  *   </Text>
@@ -172,7 +172,7 @@ export const DARK_MODE = {
  * const [focused, setFocused] = useState(false);
  *
  * <View className={`rounded-lg border-2 bg-gray-50 dark:bg-surface-alt-dark px-3 py-2.5 ${
- *   focused ? 'border-hbl-red' : 'border-gray-200 dark:border-gray-600'
+ *   focused ? 'border-hbl-green' : 'border-gray-200 dark:border-gray-600'
  * }`}>
  *   <TextInput
  *     className="text-base text-text-primary dark:text-text-dark-primary"
@@ -220,9 +220,9 @@ export const DARK_MODE = {
 export const colorMap = {
   // Brand
   brand: {
-    primary: 'hbl-red',
-    primaryLight: 'hbl-red-light',
-    primaryDark: 'hbl-red-dark',
+    primary: 'hbl-green',
+    primaryLight: 'hbl-green-light',
+    primaryDark: 'hbl-green-dark',
     secondary: 'hbl-blue',
     accent: 'hbl-gold',
   },

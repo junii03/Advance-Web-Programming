@@ -43,13 +43,13 @@ export default function TransferScreen() {
               onPress={() => setFormData({ ...formData, transferType: type.id })}
               className={`flex-1 py-3 px-3 rounded-lg border-2 active:opacity-70 ${
                 formData.transferType === type.id
-                  ? 'border-hbl-red bg-hbl-red/10'
+                  ? 'border-hbl-green bg-hbl-green/10'
                   : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-surface-dark'
               }`}
             >
               <Text className={`text-sm font-semibold text-center ${
                 formData.transferType === type.id
-                  ? 'text-hbl-red'
+                  ? 'text-hbl-green'
                   : 'text-gray-900 dark:text-white'
               }`}>
                 {type.label}
@@ -91,7 +91,7 @@ export default function TransferScreen() {
           </View>
           <View className="pt-3 border-t border-gray-200 dark:border-gray-700">
             <Text className="text-xs text-gray-600 dark:text-gray-400">Total Amount</Text>
-            <Text className="text-lg font-bold text-hbl-red mt-1">
+            <Text className="text-lg font-bold text-hbl-green mt-1">
               PKR {formData.amount || '0'}
             </Text>
           </View>

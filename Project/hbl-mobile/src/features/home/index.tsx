@@ -12,7 +12,7 @@ export default function HomeScreen() {
   const quickActions = [
     { id: 1, label: 'Transfer', icon: 'send', color: 'bg-info' },
     { id: 2, label: 'Pay Bills', icon: 'receipt', color: 'bg-warning' },
-    { id: 3, label: 'Cards', icon: 'credit-card', color: 'bg-hbl-red' },
+    { id: 3, label: 'Cards', icon: 'credit-card', color: 'bg-hbl-green' },
     { id: 4, label: 'Loans', icon: 'file-document', color: 'bg-success' },
   ];
 
@@ -26,7 +26,7 @@ export default function HomeScreen() {
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header Section */}
-        <View className="bg-hbl-red px-4 py-5 pb-6">
+        <View className="bg-hbl-green px-4 py-5 pb-6">
           <View className="flex-row justify-between items-center mb-4">
             <View>
               <Text className="text-xs text-white/80">Welcome Back</Text>
@@ -117,7 +117,7 @@ export default function HomeScreen() {
               Recent Transactions
             </Text>
             <Text
-              className="text-xs font-semibold text-hbl-red active:opacity-70"
+              className="text-xs font-semibold text-hbl-green active:opacity-70"
               onPress={() => router.push('/(transactions)/history')}
             >
               View All

@@ -13,7 +13,7 @@ export default function ModalScreen() {
     <View className="flex-1 items-center justify-center bg-white dark:bg-background-dark">
       <Pressable
         onPress={() => setVisible(true)}
-        className="rounded-md bg-hbl-red px-6 py-3 active:opacity-70"
+        className="rounded-md bg-hbl-green px-6 py-3 active:opacity-70"
       >
         <Text className="text-base font-semibold text-white">
           Open Modal
@@ -40,7 +40,7 @@ export default function ModalScreen() {
               </Pressable>
               <Pressable
                 onPress={() => setVisible(false)}
-                className="rounded-md bg-hbl-red px-4 py-2 active:opacity-70"
+                className="rounded-md bg-hbl-green px-4 py-2 active:opacity-70"
               >
                 <Text className="text-white font-semibold">
                   Confirm

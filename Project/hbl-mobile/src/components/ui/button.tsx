@@ -29,13 +29,13 @@ export const Button: React.FC<ButtonProps> = ({
   }[size];
 
   const variantClasses = {
-    primary: `${disabled ? 'bg-gray-400' : 'bg-hbl-red'} active:opacity-70`,
+    primary: `${disabled ? 'bg-gray-400' : 'bg-hbl-green'} active:opacity-70`,
     secondary: 'bg-hbl-blue active:opacity-70',
     danger: 'bg-red-500 active:opacity-70',
-    outline: 'bg-transparent border-2 border-hbl-red active:opacity-70',
+    outline: 'bg-transparent border-2 border-hbl-green active:opacity-70',
   }[variant];
 
-  const textColorClass = variant === 'outline' ? 'text-hbl-red' : 'text-white';
+  const textColorClass = variant === 'outline' ? 'text-hbl-green' : 'text-white';
   const textSizeClass = {
     sm: 'text-sm',
     md: 'text-base',

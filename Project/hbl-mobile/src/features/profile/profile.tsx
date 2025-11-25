@@ -33,7 +33,7 @@ export default function ProfileScreen() {
       >
         {/* Profile Header */}
         <Card className="mb-6 flex-col items-center">
-          <View className="h-20 w-20 flex-center mb-3 rounded-full bg-hbl-red">
+          <View className="h-20 w-20 flex-center mb-3 rounded-full bg-hbl-green">
             <MaterialCommunityIcons name="account-circle" size={60} color="#FFFFFF" />
           </View>
           <Text className="text-lg font-bold text-gray-900 dark:text-white">

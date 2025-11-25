@@ -17,7 +17,7 @@ export const surfaces = {
   card: 'rounded-lg border border-gray-200 bg-white shadow-md dark:bg-surface-dark dark:border-gray-700',
   section: 'rounded-xl bg-surface-light dark:bg-surface-dark p-4 mb-4',
   input: 'rounded-lg border-2 border-gray-200 bg-gray-50 px-3 py-2.5 dark:bg-surface-alt-dark dark:border-gray-600',
-  focusedInput: 'border-hbl-red dark:border-hbl-red-light',
+  focusedInput: 'border-hbl-green dark:border-hbl-green-light',
 };
 
 // Text Utilities
@@ -34,10 +34,10 @@ export const typography = {
 
 // Button Utilities
 export const buttons = {
-  primary: 'bg-hbl-red active:opacity-70 disabled:bg-gray-400 disabled:opacity-50',
+  primary: 'bg-hbl-green active:opacity-70 disabled:bg-gray-400 disabled:opacity-50',
   secondary: 'bg-hbl-blue active:opacity-70 disabled:opacity-50',
   danger: 'bg-error active:opacity-70 disabled:opacity-50',
-  outline: 'bg-transparent border-2 border-hbl-red active:opacity-70',
+  outline: 'bg-transparent border-2 border-hbl-green active:opacity-70',
   small: 'px-3 py-2 min-h-8',
   medium: 'px-4 py-3 min-h-11',
   large: 'px-5 py-3.5 min-h-13',

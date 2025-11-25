@@ -30,7 +30,7 @@ export default function ExploreScreen() {
       title: 'Credit Cards',
       description: 'Various credit card offers and benefits',
       icon: 'credit-card',
-      color: 'bg-hbl-red',
+      color: 'bg-hbl-green',
     },
     {
       id: 5,
@@ -44,7 +44,7 @@ export default function ExploreScreen() {
       title: 'Forex Services',
       description: 'Currency exchange and international transfers',
       icon: 'globe',
-      color: 'bg-hbl-red',
+      color: 'bg-hbl-green',
     },
   ];
 
@@ -67,7 +67,7 @@ export default function ExploreScreen() {
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View className="bg-hbl-red px-4 py-5 pb-6">
+        <View className="bg-hbl-green px-4 py-5 pb-6">
           <Text className="text-2xl font-bold text-white mb-2">Explore Services</Text>
           <Text className="text-sm text-white/80">
             Discover financial solutions tailored for you
@@ -113,7 +113,7 @@ export default function ExploreScreen() {
                 'bg-success': '#10b981',
                 'bg-warning': '#f59e0b',
                 'bg-info': '#0ea5e9',
-                'bg-hbl-red': '#DC143C',
+                'bg-hbl-green': '#DC143C',
                 'bg-error': '#ef4444',
               };
               const iconColor = colorMap[service.color] || '#DC143C';
@@ -144,7 +144,7 @@ export default function ExploreScreen() {
           </View>
 
           {/* Info Section */}
-          <View className="bg-hbl-red/15 rounded-lg p-4 mt-6 mb-6 border-l-4 border-hbl-red">
+          <View className="bg-hbl-green/15 rounded-lg p-4 mt-6 mb-6 border-l-4 border-hbl-green">
             <View className="flex-row items-start">
               <MaterialCommunityIcons name="information" size={20} color="#DC143C" className="mr-3" />
               <View className="flex-1">

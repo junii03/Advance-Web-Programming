@@ -53,7 +53,7 @@
 
     /* Button Utilities */
     .btn-primary {
-        @apply flex-center rounded-md bg-hbl-red px-4 py-3 active:opacity-70;
+        @apply flex-center rounded-md bg-hbl-green px-4 py-3 active:opacity-70;
     }
 
     .btn-secondary {
@@ -65,7 +65,7 @@
     }
 
     .btn-outline {
-        @apply flex-center rounded-md border-2 border-hbl-red px-4 py-3 active:opacity-70;
+        @apply flex-center rounded-md border-2 border-hbl-green px-4 py-3 active:opacity-70;
     }
 
     /* Status Badges */
@@ -91,7 +91,7 @@
     }
 
     .form-input-focused {
-        @apply border-hbl-red dark:border-hbl-red-light;
+        @apply border-hbl-green dark:border-hbl-green-light;
     }
 
     /* Divider */

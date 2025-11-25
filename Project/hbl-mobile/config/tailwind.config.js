@@ -13,9 +13,9 @@ module.exports = {
         extend: {
             colors: {
                 // HBL Primary Brand Colors
-                'hbl-red': '#DC143C',
-                'hbl-red-light': '#FF6B6B',
-                'hbl-red-dark': '#9C0E2E',
+                'hbl-green': '#00C09A',
+                'hbl-green-light': '#FF6B6B',
+                'hbl-green-dark': '#9C0E2E',
                 'hbl-blue': '#003366',
                 'hbl-gold': '#FFB81C',
 

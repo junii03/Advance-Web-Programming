@@ -141,7 +141,7 @@ export default function CardsScreen() {
                     <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                       Available Balance
                     </Text>
-                    <Text className="text-sm font-bold text-hbl-red">
+                    <Text className="text-sm font-bold text-hbl-green">
                       {card.balance}
                     </Text>
                   </View>
