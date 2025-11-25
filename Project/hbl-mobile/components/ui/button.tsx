@@ -1,7 +1,5 @@
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
-import { ActivityIndicator, Pressable, StyleProp, Text, ViewStyle } from 'react-native';
+import { ActivityIndicator, Pressable, Text } from 'react-native';
 
 interface ButtonProps {
   onPress: () => void;
@@ -10,7 +8,7 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   disabled?: boolean;
-  style?: StyleProp<ViewStyle>;
+  className?: string;
   testID?: string;
 }
 
@@ -21,70 +19,40 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   loading = false,
   disabled = false,
-  style,
+  className,
   testID,
 }) => {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
+  const sizeClasses = {
+    sm: 'px-3 py-2 min-h-8',
+    md: 'px-4 py-3 min-h-11',
+    lg: 'px-5 py-3.5 min-h-13',
+  }[size];
 
-  const getButtonStyle = () => {
-    const baseStyle = {
-      borderRadius: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'row',
-    } as StyleProp<ViewStyle>;
+  const variantClasses = {
+    primary: `${disabled ? 'bg-gray-400' : 'bg-hbl-red'} active:opacity-70`,
+    secondary: 'bg-hbl-blue active:opacity-70',
+    danger: 'bg-red-500 active:opacity-70',
+    outline: 'bg-transparent border-2 border-hbl-red active:opacity-70',
+  }[variant];
 
-    const sizeStyle = {
-      sm: { paddingVertical: 8, paddingHorizontal: 12, minHeight: 32 },
-      md: { paddingVertical: 12, paddingHorizontal: 16, minHeight: 44 },
-      lg: { paddingVertical: 14, paddingHorizontal: 20, minHeight: 52 },
-    }[size];
-
-    const variantStyle =
-      variant === 'primary'
-        ? { backgroundColor: disabled ? colors.textTertiary : colors.primary }
-        : variant === 'secondary'
-          ? { backgroundColor: colors.secondary }
-          : variant === 'danger'
-            ? { backgroundColor: colors.error }
-            : {
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                borderColor: colors.primary,
-              };
-
-    return [baseStyle, sizeStyle, variantStyle, style];
-  };
-
-  const getTextStyle = () => {
-    const textSize = {
-      sm: 14,
-      md: 16,
-      lg: 18,
-    }[size];
-
-    return {
-      fontSize: textSize,
-      fontWeight: '600' as const,
-      color: variant === 'outline' ? colors.primary : '#FFFFFF',
-      marginLeft: loading ? 8 : 0,
-    };
-  };
+  const textColorClass = variant === 'outline' ? 'text-hbl-red' : 'text-white';
+  const textSizeClass = {
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+  }[size];
 
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
-      style={({ pressed }) => [
-        getButtonStyle(),
-        pressed && { opacity: 0.7 },
-        disabled && { opacity: 0.5 },
-      ]}
+      className={`flex-row items-center justify-center rounded-lg ${sizeClasses} ${variantClasses} ${disabled ? 'opacity-50' : ''} ${className || ''}`}
       testID={testID}
     >
-      {loading && <ActivityIndicator size="small" color="#FFFFFF" />}
-      <Text style={getTextStyle()}>{title}</Text>
+      {loading && <ActivityIndicator size="small" color="white" className="mr-2" />}
+      <Text className={`font-semibold ${textSizeClass} ${textColorClass} ${loading ? 'ml-2' : ''}`}>
+        {title}
+      </Text>
     </Pressable>
   );
 };

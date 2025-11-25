@@ -1,16 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Colors } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
   const { login } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -38,63 +34,30 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            flex: 1,
-            paddingHorizontal: 20,
-            paddingVertical: 24,
-            justifyContent: 'center',
-          }}
-        >
+    <SafeAreaView className="flex-1 bg-white">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        className="flex-1"
+      >
+        <View className="flex-1 justify-center px-5 py-6">
           {/* Logo */}
-          <View style={{ alignItems: 'center', marginBottom: 32 }}>
-            <View
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 40,
-                backgroundColor: colors.primary,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ fontSize: 32, fontWeight: '700', color: '#FFFFFF' }}>HBL</Text>
+          <View className="mb-8 items-center">
+            <View className="h-20 w-20 items-center justify-center rounded-full bg-hbl-red">
+              <Text className="text-4xl font-bold text-white">HBL</Text>
             </View>
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: '700',
-                color: colors.text,
-                marginTop: 16,
-              }}
-            >
+            <Text className="mt-4 text-2xl font-bold text-gray-900">
               Welcome Back
             </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                color: colors.textSecondary,
-                marginTop: 8,
-              }}
-            >
+            <Text className="mt-2 text-sm text-gray-600">
               Sign in to your HBL account
             </Text>
           </View>
 
           {/* Error Message */}
           {error && (
-            <View
-              style={{
-                backgroundColor: colors.error,
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                borderRadius: 8,
-                marginBottom: 16,
-              }}
-            >
-              <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: '500' }}>{error}</Text>
+            <View className="mb-4 rounded-lg bg-red-500 px-3 py-2">
+              <Text className="text-sm font-medium text-white">{error}</Text>
             </View>
           )}
 
@@ -119,13 +82,8 @@ export default function LoginScreen() {
 
           {/* Forgot Password Link */}
           <Text
-            style={{
-              fontSize: 14,
-              color: colors.primary,
-              fontWeight: '600',
-              marginBottom: 24,
-              textAlign: 'right',
-            }}
+            className="mb-6 text-right text-sm font-semibold text-hbl-red"
+            onPress={() => {}}
           >
             Forgot Password?
           </Text>
@@ -137,16 +95,16 @@ export default function LoginScreen() {
             loading={loading}
             disabled={loading}
             size="lg"
-            style={{ marginBottom: 16 }}
+            className="mb-4"
           />
 
           {/* Sign Up Link */}
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontSize: 14, color: colors.textSecondary }}>
+          <View className="flex-row items-center justify-center">
+            <Text className="text-sm text-gray-600">
               {`Don't have an account? `}
             </Text>
             <Text
-              style={{ fontSize: 14, color: colors.primary, fontWeight: '600' }}
+              className="text-sm font-semibold text-hbl-red"
               onPress={() => router.push('/signup')}
             >
               Sign Up

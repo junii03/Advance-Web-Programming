@@ -1,44 +1,30 @@
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 
 interface CardProps {
   children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
+  className?: string;
   elevated?: boolean;
   padding?: 'sm' | 'md' | 'lg';
 }
 
-export const Card: React.FC<CardProps> = ({ children, style, elevated = true, padding = 'md' }) => {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
+export const Card: React.FC<CardProps> = ({
+  children,
+  className = '',
+  elevated = true,
+  padding = 'md'
+}) => {
+  const paddingClasses = {
+    sm: 'p-2',
+    md: 'p-3',
+    lg: 'p-4',
+  }[padding];
 
-  const paddingValues = {
-    sm: 8,
-    md: 12,
-    lg: 16,
-  };
+  const elevatedClass = elevated ? 'shadow-md' : '';
 
   return (
     <View
-      style={[
-        {
-          backgroundColor: colors.surface,
-          borderRadius: 12,
-          padding: paddingValues[padding],
-          borderWidth: 1,
-          borderColor: colors.border,
-        },
-        elevated && {
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 3,
-          elevation: 3,
-        },
-        style,
-      ]}
+      className={`rounded-lg border border-gray-200 bg-white ${paddingClasses} ${elevatedClass} ${className}`}
     >
       {children}
     </View>

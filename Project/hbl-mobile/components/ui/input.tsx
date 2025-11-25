@@ -1,8 +1,6 @@
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleProp, Text, TextInput, TextStyle, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 
 interface InputProps {
   placeholder?: string;
@@ -15,7 +13,7 @@ interface InputProps {
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
   rightIcon?: string;
   onRightIconPress?: () => void;
-  style?: StyleProp<TextStyle>;
+  className?: string;
   testID?: string;
 }
 
@@ -30,34 +28,22 @@ export const Input: React.FC<InputProps> = ({
   keyboardType = 'default',
   rightIcon,
   onRightIconPress,
-  style,
+  className = '',
   testID,
 }) => {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
   const [focused, setFocused] = React.useState(false);
 
   return (
-    <View style={{ width: '100%', marginBottom: 12 }}>
+    <View className={`w-full mb-3 ${className}`}>
       {label && (
-        <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginBottom: 6 }}>
+        <Text className="mb-1.5 text-sm font-semibold text-gray-900">
           {label}
         </Text>
       )}
       <View
-        style={[
-          {
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderRadius: 8,
-            backgroundColor: colors.surfaceAlt,
-            borderWidth: 1,
-            borderColor: focused ? colors.primary : colors.border,
-            paddingHorizontal: 12,
-            paddingVertical: 10,
-          },
-          disabled && { opacity: 0.5 },
-        ]}
+        className={`flex-row items-center rounded-lg border-2 bg-gray-50 px-3 py-2.5 ${
+          focused ? 'border-hbl-red' : 'border-gray-200'
+        } ${disabled ? 'opacity-50' : ''}`}
       >
         <TextInput
           placeholder={placeholder}
@@ -68,25 +54,17 @@ export const Input: React.FC<InputProps> = ({
           keyboardType={keyboardType}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          style={[
-            {
-              flex: 1,
-              fontSize: 16,
-              color: colors.text,
-              paddingVertical: 2,
-            },
-            style,
-          ]}
-          placeholderTextColor={colors.textTertiary}
+          className="flex-1 text-base text-gray-900"
+          placeholderTextColor="#999"
           testID={testID}
         />
         {rightIcon && (
-          <Pressable onPress={onRightIconPress} disabled={disabled}>
-            <MaterialCommunityIcons name={rightIcon as any} size={20} color={colors.textSecondary} />
+          <Pressable onPress={onRightIconPress} disabled={disabled} className="ml-2">
+            <MaterialCommunityIcons name={rightIcon as any} size={20} color="#666" />
           </Pressable>
         )}
       </View>
-      {error && <Text style={{ fontSize: 12, color: colors.error, marginTop: 4 }}>{error}</Text>}
+      {error && <Text className="mt-1 text-xs font-medium text-red-500">{error}</Text>}
     </View>
   );
 };
