@@ -29,7 +29,7 @@ function RootLayoutNav() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animationEnabled: true,
+          animation: 'slide_from_right',
         }}
       >
         {/* Root index - handles auth-based routing */}
@@ -37,7 +37,7 @@ function RootLayoutNav() {
           name="index"
           options={{
             headerShown: false,
-            animationEnabled: false,
+            animation: 'none',
           }}
         />
 
@@ -46,7 +46,7 @@ function RootLayoutNav() {
           name="(auth)"
           options={{
             headerShown: false,
-            animationEnabled: false,
+            animation: 'none',
             gestureEnabled: false,
           }}
         />
@@ -82,7 +82,7 @@ function RootLayoutNav() {
           options={{
             presentation: 'modal',
             headerShown: false,
-            animationEnabled: true,
+            animation: 'slide_from_bottom',
           }}
         />
       </Stack>

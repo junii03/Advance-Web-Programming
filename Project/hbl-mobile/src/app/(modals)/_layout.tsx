@@ -14,7 +14,7 @@ export default function ModalsLayout() {
       screenOptions={{
         presentation: 'modal',
         headerShown: true,
-        animationEnabled: true,
+        animation: 'slide_from_bottom',
       }}
     >
       <Stack.Screen
