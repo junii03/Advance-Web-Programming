@@ -1,24 +1,30 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  customerId: string;
-  profileImage?: string;
-}
+// Re-export User and SignupData from auth context for backward compatibility
+// These are now defined in contexts/auth.tsx with enhanced properties
+export type { User, SignupData } from '@/src/contexts/auth';
 
-export interface SignupData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  cnic: string;
-  dateOfBirth: string;
-  gender: string;
-  address: string;
-  city: string;
-  state: string;
-  password: string;
-}
+// Legacy User type - kept for reference
+// export interface User {
+//   id: string;
+//   name: string;
+//   email: string;
+//   customerId: string;
+//   profileImage?: string;
+// }
+
+// Legacy SignupData type - kept for reference
+// export interface SignupData {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   phone: string;
+//   cnic: string;
+//   dateOfBirth: string;
+//   gender: string;
+//   address: string;
+//   city: string;
+//   state: string;
+//   password: string;
+// }
 
 export interface Card {
   id: string;

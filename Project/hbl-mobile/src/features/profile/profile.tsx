@@ -40,7 +40,7 @@ export default function ProfileScreen() {
             {user?.name}
           </Text>
           <Text className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-            ID: {user?.customerId}
+            ID: {user?.id}
           </Text>
           <Text className="text-xs text-gray-600 dark:text-gray-400">
             {user?.email}
@@ -74,7 +74,7 @@ export default function ProfileScreen() {
                 Customer ID
               </Text>
               <Text className="text-sm font-semibold text-gray-900 dark:text-white">
-                {user?.customerId}
+                {user?.id}
               </Text>
             </View>
           </View>

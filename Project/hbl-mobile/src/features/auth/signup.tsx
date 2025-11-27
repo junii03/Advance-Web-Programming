@@ -17,10 +17,11 @@ export default function SignupScreen() {
     phone: '',
     cnic: '',
     dateOfBirth: '',
-    gender: '',
+    gender: 'male',
     address: '',
     city: '',
     state: '',
+    postalCode: '',
     password: '',
   });
 
