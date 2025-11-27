@@ -15,6 +15,8 @@ import {
   UpdateDetailsResponse,
   UpdatePasswordRequest,
   UpdatePasswordResponse,
+  ForgotPasswordResponse,
+  ResetPasswordResponse,
   ApiUser,
 } from '../types/api';
 
@@ -107,6 +109,58 @@ class AuthService {
     } catch {
       return false;
     }
+  }
+
+  /**
+   * Request password reset
+   * POST /api/auth/forgotpassword
+   * Returns reset token (shown to user in development)
+   */
+  async forgotPassword(email: string): Promise<ForgotPasswordResponse> {
+    const response = await api.post<ForgotPasswordResponse>(
+      '/auth/forgotpassword',
+      { email }
+    );
+    return response;
+  }
+
+  /**
+   * Reset password using token
+   * PUT /api/auth/resetpassword/:resettoken
+   */
+  async resetPassword(
+    resetToken: string,
+    newPassword: string
+  ): Promise<ResetPasswordResponse> {
+    const response = await api.put<ResetPasswordResponse>(
+      `/auth/resetpassword/${resetToken}`,
+      { password: newPassword }
+    );
+
+    // Store the new token after successful password reset
+    if (response.token) {
+      await api.setToken(response.token);
+    }
+
+    return response;
+  }
+
+  /**
+   * Register new user with FormData (for file uploads)
+   * POST /api/auth/register
+   */
+  async registerWithFiles(formData: FormData): Promise<RegisterResponse> {
+    const response = await api.postFormData<RegisterResponse>(
+      '/auth/register',
+      formData
+    );
+
+    // Store the token
+    if (response.token) {
+      await api.setToken(response.token);
+    }
+
+    return response;
   }
 }
 

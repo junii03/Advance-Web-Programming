@@ -149,3 +149,39 @@ export interface UpdateDetailsResponse {
 export interface UpdatePasswordResponse {
   success: boolean;
 }
+
+/**
+ * Forgot password request payload
+ * POST /api/auth/forgotpassword
+ */
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+/**
+ * Forgot password response
+ * POST /api/auth/forgotpassword
+ */
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+  resetToken?: string; // Only returned in development mode
+}
+
+/**
+ * Reset password request payload
+ * PUT /api/auth/resetpassword/:resettoken
+ */
+export interface ResetPasswordRequest {
+  password: string;
+}
+
+/**
+ * Reset password response
+ * PUT /api/auth/resetpassword/:resettoken
+ */
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+  token: string;
+}

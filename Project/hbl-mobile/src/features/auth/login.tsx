@@ -83,7 +83,7 @@ export default function LoginScreen() {
           {/* Forgot Password Link */}
           <Text
             className="mb-6 text-right text-sm font-semibold text-hbl-green active:opacity-70"
-            onPress={() => {}}
+            onPress={() => router.push('/(auth)/forgot-password' as any)}
           >
             Forgot Password?
           </Text>
