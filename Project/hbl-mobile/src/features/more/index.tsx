@@ -12,6 +12,10 @@ import {
 } from 'react-native';
 
 import { useAuth } from '@/src/contexts/auth';
+import { getProfileImageUrl } from '@/src/utils/helper';
+
+
+
 
 interface MenuItem {
   id: string;
@@ -194,7 +198,7 @@ export default function MoreScreen() {
         >
           {user?.profileImage ? (
             <Image
-              source={{ uri: user.profileImage }}
+              source={{ uri: getProfileImageUrl(user.profileImage) || '' }}
               className="w-16 h-16 rounded-full mr-4"
             />
           ) : (

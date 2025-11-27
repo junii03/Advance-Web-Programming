@@ -16,6 +16,7 @@ import { Card } from '@/src/components/ui/card';
 import { useAuth } from '@/src/contexts/auth';
 import { dashboardService, DashboardData } from '@/src/services';
 import { ApiTransaction } from '@/src/types/api';
+import { getProfileImageUrl } from '@/src/utils/helper';
 
 // Format currency in PKR
 const formatCurrency = (amount: number): string => {
@@ -145,7 +146,7 @@ export default function HomeScreen() {
             <View className="flex-row items-center">
               {dashboardData?.user?.profilePicture ? (
                 <Image
-                  source={{ uri: dashboardData.user.profilePicture }}
+                  source={{ uri: getProfileImageUrl(dashboardData.user.profilePicture) || '' }}
                   className="w-12 h-12 rounded-full mr-3"
                 />
               ) : (

@@ -1,10 +1,11 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, Text, View, Image } from 'react-native';
 
 import { Card } from '@/src/components/ui/card';
 import { useAuth } from '@/src/contexts/auth';
+import { getProfileImageUrl } from '@/src/utils/helper';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -33,9 +34,20 @@ export default function ProfileScreen() {
       >
         {/* Profile Header */}
         <Card className="mb-6 flex-col items-center">
-          <View className="h-20 w-20 flex-center mb-3 rounded-full bg-hbl-green">
-            <MaterialCommunityIcons name="account-circle" size={60} color="#FFFFFF" />
-          </View>
+            {user?.profileImage ? (
+              <Image
+                source={{ uri: getProfileImageUrl(user.profileImage) || '' }}
+                className="w-20 h-20 rounded-full mb-4"
+              />
+            ) : (
+              <View className="w-20 h-20 rounded-full mb-4 bg-gray-200 dark:bg-surface-alt-dark flex-center">
+                <MaterialCommunityIcons
+                  name="account"
+                  size={40}
+                  color="#9CA3AF"
+                />
+              </View>
+            )}
           <Text className="text-lg font-bold text-gray-900 dark:text-white">
             {user?.name}
           </Text>

@@ -4,7 +4,7 @@
  */
 
 import { api } from '../lib/apiClient';
-import { ApiAccount, ApiTransaction, ApiCard, ApiLoan } from '../types/api';
+import { ApiAccount, ApiTransaction, ApiCard, ApiLoan, ProfilePicture } from '../types/api';
 
 // Dashboard data types
 export interface DashboardData {
@@ -14,7 +14,7 @@ export interface DashboardData {
     lastName: string;
     email: string;
     phone: string;
-    profilePicture?: string;
+    profilePicture?: ProfilePicture | string;
     isEmailVerified: boolean;
     isPhoneVerified: boolean;
   };

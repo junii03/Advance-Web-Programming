@@ -62,6 +62,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  * Maps API user response to app User type
  */
 function mapApiUserToUser(apiUser: ApiUser): User {
+  // Extract URL from profilePicture - handle both string and object formats
+  const profileImageUrl =
+    typeof apiUser.profilePicture === 'string'
+      ? apiUser.profilePicture
+      : apiUser.profilePicture?.url;
+
   return {
     id: apiUser._id,
     firstName: apiUser.firstName,
@@ -69,7 +75,7 @@ function mapApiUserToUser(apiUser: ApiUser): User {
     name: `${apiUser.firstName} ${apiUser.lastName}`,
     email: apiUser.email,
     phone: apiUser.phone,
-    profileImage: apiUser.profilePicture,
+    profileImage: profileImageUrl,
     role: apiUser.role,
     isEmailVerified: apiUser.isEmailVerified,
     isPhoneVerified: apiUser.isPhoneVerified,

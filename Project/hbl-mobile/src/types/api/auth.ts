@@ -69,6 +69,15 @@ export interface UpdateDetailsRequest {
 // ============================================
 
 /**
+ * Profile picture object with URL and metadata
+ */
+export interface ProfilePicture {
+  url: string;
+  publicId: string;
+  uploadedAt: string;
+}
+
+/**
  * User object returned from API
  */
 export interface ApiUser {
@@ -91,7 +100,7 @@ export interface ApiUser {
   isActive: boolean;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
-  profilePicture?: string;
+  profilePicture?: ProfilePicture | string;
   createdAt: string;
   updatedAt: string;
 }
