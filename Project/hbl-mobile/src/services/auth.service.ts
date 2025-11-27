@@ -59,7 +59,12 @@ class AuthService {
    */
   async getCurrentUser(): Promise<ApiUser> {
     const response = await api.get<GetMeResponse>('/auth/me');
-    return response.data;
+    // response is GetMeResponse: { success: boolean, user: ApiUser }
+    if (!response?.user) {
+      console.error('Invalid /auth/me response structure:', response);
+      throw new Error('Invalid response structure from /auth/me endpoint');
+    }
+    return response.user;
   }
 
   /**

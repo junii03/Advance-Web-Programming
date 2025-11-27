@@ -176,10 +176,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           // First, try to load cached user for faster startup
           const cachedUser = await loadUserFromStorage();
           if (cachedUser && isMounted) {
+            console.log('Loaded cached user for immediate display');
             setUser(cachedUser);
           }
 
           // Then validate token and refresh user data from server
+          // BUT: Keep cached user if validation fails (for resilience)
           try {
             const apiUser = await authService.getCurrentUser();
             if (isMounted) {
@@ -188,19 +190,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               setUser(freshUser);
               await saveUserToStorage(freshUser);
             }
-          } catch {
-            // Token invalid or expired, clear everything
+          } catch (err) {
+            // Token validation failed
             if (isMounted) {
-              console.log('Token validation failed, clearing auth state');
-              setUser(null);
-              await api.removeToken();
-              await clearUserFromStorage();
+              const isUnauthorized = err instanceof ApiError && err.statusCode === 401;
+
+              if (isUnauthorized) {
+                // Only clear on explicit 401 - token is invalid/expired
+                console.log('Token invalid (401) - clearing auth state');
+                setUser(null);
+                await api.removeToken();
+                await clearUserFromStorage();
+              } else {
+                // For other errors (network, server error), keep cached user
+                // This ensures offline-first experience
+                console.log('Token validation failed (non-401 error), but keeping cached user:', err);
+              }
             }
           }
         } else {
           console.log('No token found, user not authenticated');
         }
-      } catch {
+      } catch (err) {
         // Initialization error, clear everything
         if (isMounted) {
           console.log('Auth initialization failed, clearing token');

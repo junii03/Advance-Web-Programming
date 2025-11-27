@@ -122,7 +122,7 @@ export interface RegisterResponse {
  */
 export interface GetMeResponse {
   success: boolean;
-  data: ApiUser;
+  user: ApiUser;
 }
 
 /**

@@ -45,7 +45,8 @@ const getTransactionStyle = (transaction: ApiTransaction) => {
   const isCredit = transaction.type === 'deposit' || transaction.type === 'interest';
 
   return {
-    icon: isCredit ? 'arrow-down-left' : 'arrow-up-right',
+    icon: isCredit ? 'arrow-bottom-left' : 'arrow-top-right',
+    iconFamily: 'MaterialCommunityIcons',
     color: isCredit ? '#10B981' : '#EF4444',
     bgColor: isCredit ? 'bg-green-100' : 'bg-red-100',
     prefix: isCredit ? '+' : '-',
@@ -294,7 +295,11 @@ export default function HomeScreen() {
                     <View
                       className={`w-10 h-10 rounded-full items-center justify-center mr-3 ${style.bgColor}`}
                     >
-                      <Ionicons name={style.icon as never} size={20} color={style.color} />
+                      {style.iconFamily === 'MaterialCommunityIcons' ? (
+                        <MaterialCommunityIcons name={style.icon as never} size={20} color={style.color} />
+                      ) : (
+                        <Ionicons name={style.icon as never} size={20} color={style.color} />
+                      )}
                     </View>
                     <View className="flex-1">
                       <Text
