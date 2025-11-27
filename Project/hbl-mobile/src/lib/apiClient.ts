@@ -14,6 +14,34 @@ import { API_CONFIG, STORAGE_KEYS, ApiErrorCode } from '../config';
 import { ApiError, ApiErrorResponse } from '../types/api';
 
 // ============================================
+// Auth Event Emitter for 401 handling
+// ============================================
+
+type AuthEventListener = () => void;
+const authEventListeners: AuthEventListener[] = [];
+
+/**
+ * Subscribe to auth events (e.g., 401 unauthorized)
+ * Returns unsubscribe function
+ */
+export function onUnauthorized(listener: AuthEventListener): () => void {
+  authEventListeners.push(listener);
+  return () => {
+    const index = authEventListeners.indexOf(listener);
+    if (index > -1) {
+      authEventListeners.splice(index, 1);
+    }
+  };
+}
+
+/**
+ * Emit unauthorized event to all listeners
+ */
+function emitUnauthorized(): void {
+  authEventListeners.forEach((listener) => listener());
+}
+
+// ============================================
 // Error Mapping
 // ============================================
 
@@ -129,11 +157,12 @@ class ApiClient {
           _retry?: boolean;
         };
 
-        // Handle 401 Unauthorized - could implement token refresh here
+        // Handle 401 Unauthorized - clear tokens and notify listeners
         if (error.response?.status === 401 && !originalRequest._retry) {
-          // For now, just reject - token refresh can be added later
-          // Clear stored tokens on 401
+          originalRequest._retry = true;
           await this.clearTokens();
+          // Emit unauthorized event to trigger logout/redirect
+          emitUnauthorized();
         }
 
         throw mapAxiosError(error);

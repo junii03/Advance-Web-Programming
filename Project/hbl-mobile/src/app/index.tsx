@@ -1,4 +1,5 @@
 import { Redirect } from 'expo-router';
+import { View, ActivityIndicator } from 'react-native';
 
 import { useAuth } from '@/src/contexts/auth';
 
@@ -9,11 +10,15 @@ import { useAuth } from '@/src/contexts/auth';
  * Routes authenticated users to (tabs) and unauthenticated users to (auth)/login
  */
 export default function RootIndex() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isInitialized } = useAuth();
 
-  // Wait for auth state to load
-  if (isLoading) {
-    return null;
+  // Wait for auth state to initialize (checking stored token)
+  if (!isInitialized) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white dark:bg-gray-900">
+        <ActivityIndicator size="large" color="#006747" />
+      </View>
+    );
   }
 
   // Redirect based on auth state
