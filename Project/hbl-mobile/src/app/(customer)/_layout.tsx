@@ -1,11 +1,20 @@
 import { Stack } from 'expo-router';
 import React from 'react';
 
+import { useColorScheme } from '@/src/hooks/use-color-scheme';
+
 export default function CustomerLayout() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
     <Stack
       screenOptions={{
         headerShown: false,
+        contentStyle: {
+          backgroundColor: isDark ? '#121212' : '#f9fafb',
+        },
+        animation: 'default',
       }}
     >
       <Stack.Screen name="transactions" />

@@ -1,5 +1,7 @@
 import { Stack } from 'expo-router';
 
+import { useColorScheme } from '@/src/hooks/use-color-scheme';
+
 /**
  * Auth Group Layout
  *
@@ -10,8 +12,18 @@ import { Stack } from 'expo-router';
  * This group is shown when user is NOT authenticated
  */
 export default function AuthLayout() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {
+          backgroundColor: isDark ? '#121212' : '#f9fafb',
+        },
+      }}
+    >
       <Stack.Screen
         name="login"
         options={{

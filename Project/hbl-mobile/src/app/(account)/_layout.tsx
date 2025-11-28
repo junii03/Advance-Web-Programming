@@ -1,6 +1,8 @@
 import { Stack } from 'expo-router';
 import React from 'react';
 
+import { useColorScheme } from '@/src/hooks/use-color-scheme';
+
 /**
  * Account Group Layout
  *
@@ -13,10 +15,17 @@ import React from 'react';
  * This group is shown when user IS authenticated
  */
 export default function AccountLayout() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
     <Stack
       screenOptions={{
         headerShown: false,
+        contentStyle: {
+          backgroundColor: isDark ? '#121212' : '#f9fafb',
+        },
+        animation: 'default',
       }}
     >
       <Stack.Screen name="profile" />

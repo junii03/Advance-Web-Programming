@@ -9,6 +9,7 @@ import {
   ScrollView,
   Text,
   View,
+  useColorScheme,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,6 +19,7 @@ import { useAuth } from '@/src/contexts/auth';
 import { dashboardService, DashboardData } from '@/src/services';
 import { ApiTransaction } from '@/src/types/api';
 import { getProfileImageUrl } from '@/src/utils/helper';
+import { useColorScheme as useAppColorScheme } from '@/src/hooks/use-color-scheme';
 
 // Format currency in PKR
 const formatCurrency = (amount: number): string => {
@@ -58,6 +60,8 @@ const getTransactionStyle = (transaction: ApiTransaction) => {
 export default function HomeScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const colorScheme = useAppColorScheme();
+  const isDark = colorScheme === 'dark';
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -120,7 +124,10 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-white dark:bg-background-dark items-center justify-center">
+      <SafeAreaView
+        className="flex-1 items-center justify-center"
+        style={{ backgroundColor: isDark ? '#121212' : '#f9fafb' }}
+      >
         <ActivityIndicator size="large" color="#006747" />
         <Text className="text-gray-600 dark:text-gray-400 mt-4">Loading dashboard...</Text>
       </SafeAreaView>
