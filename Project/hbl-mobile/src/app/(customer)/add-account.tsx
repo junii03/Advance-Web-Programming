@@ -59,13 +59,18 @@ const ACCOUNT_TYPES = [
   },
 ];
 
-// Branch type
+// Branch type (matches API response from /api/branches)
 interface Branch {
-  _id: string;
-  branchCode: string;
+  id: string;
+  code: string;
   name: string;
-  city: string;
-  address: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
 }
 
 // Account Type Selection Component
@@ -142,7 +147,7 @@ const BranchSelector = ({
           }`}
         >
           {selectedBranch
-            ? `${selectedBranch.name} (${selectedBranch.branchCode})`
+            ? `${selectedBranch.name} (${selectedBranch.code})`
             : 'Select a branch'}
         </Text>
         <Ionicons
@@ -155,15 +160,15 @@ const BranchSelector = ({
       {showDropdown && (
         <View className="mt-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-dark max-h-64 overflow-hidden">
           <ScrollView showsVerticalScrollIndicator={false}>
-            {branches.map((branch) => (
+            {branches.map((branch, index) => (
               <Pressable
-                key={branch._id}
+                key={branch.id || branch.code || `branch-${index}`}
                 onPress={() => {
                   onSelect(branch);
                   setShowDropdown(false);
                 }}
                 className={`p-4 border-b border-gray-100 dark:border-gray-800 ${
-                  selectedBranch?._id === branch._id
+                  selectedBranch?.id === branch.id
                     ? 'bg-green-50 dark:bg-green-900/20'
                     : ''
                 }`}
@@ -172,7 +177,7 @@ const BranchSelector = ({
                   {branch.name}
                 </Text>
                 <Text className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {branch.city} • Code: {branch.branchCode}
+                  {branch.address.city} • Code: {branch.code}
                 </Text>
               </Pressable>
             ))}
@@ -266,13 +271,20 @@ export default function AddAccountScreen() {
   const handleSubmit = async () => {
     if (!validateStep3()) return;
 
+    if (!selectedBranch) {
+      Alert.alert('Error', 'Please select a branch');
+      return;
+    }
+
     try {
       setLoading(true);
 
       const data = {
         accountType: selectedType as AccountType,
         accountTitle: accountTitle.trim(),
-        currency: 'PKR',
+        branchCode: selectedBranch.code,
+        branchName: selectedBranch.name,
+        initialDeposit: initialDeposit ? parseFloat(initialDeposit) : undefined,
       };
 
       await accountService.createAccount(data);

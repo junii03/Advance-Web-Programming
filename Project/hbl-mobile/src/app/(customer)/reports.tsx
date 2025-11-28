@@ -27,7 +27,11 @@ interface Report {
   status: ReportStatus;
   createdAt: string;
   resolvedAt?: string;
-  resolution?: string;
+  resolution?: string | {
+    resolutionNote?: string;
+    resolvedAt?: string;
+    resolvedBy?: string;
+  };
 }
 
 // Category options
@@ -99,7 +103,11 @@ const ReportItem = ({ report }: { report: Report }) => {
       {report.resolution && (
         <View className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
           <Text className="text-xs font-medium text-gray-500 mb-1">Resolution:</Text>
-          <Text className="text-sm text-green-600">{report.resolution}</Text>
+          <Text className="text-sm text-green-600">
+            {typeof report.resolution === 'string'
+              ? report.resolution
+              : report.resolution.resolutionNote || 'Resolved'}
+          </Text>
         </View>
       )}
     </View>

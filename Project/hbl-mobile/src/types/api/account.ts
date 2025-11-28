@@ -56,6 +56,9 @@ export interface ApiAccount {
 export interface CreateAccountRequest {
   accountType: AccountType;
   accountTitle: string;
+  branchCode: string;
+  branchName: string;
+  initialDeposit?: number;
   currency?: string;
 }
 

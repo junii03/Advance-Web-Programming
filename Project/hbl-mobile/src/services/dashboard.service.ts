@@ -201,21 +201,32 @@ class DashboardService {
    */
   async getBranches(): Promise<
     {
-      _id: string;
-      branchCode: string;
+      id: string;
+      code: string;
       name: string;
-      city: string;
-      address: string;
+      address: {
+        street: string;
+        city: string;
+        state: string;
+        postalCode: string;
+        country: string;
+      };
     }[]
   > {
     const response = await api.get<{
       success: boolean;
+      count: number;
       data: {
-        _id: string;
-        branchCode: string;
+        id: string;
+        code: string;
         name: string;
-        city: string;
-        address: string;
+        address: {
+          street: string;
+          city: string;
+          state: string;
+          postalCode: string;
+          country: string;
+        };
       }[];
     }>('/branches');
     return response.data;
