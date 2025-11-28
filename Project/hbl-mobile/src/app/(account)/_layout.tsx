@@ -1,62 +1,28 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Stack, useRouter } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Stack } from 'expo-router';
+import React from 'react';
 
 /**
  * Account Group Layout
  *
  * Routes:
  * - profile - User profile management
+ * - edit-profile - Edit user profile
+ * - change-password - Change password
  * - cards - User payment cards
  *
  * This group is shown when user IS authenticated
  */
 export default function AccountLayout() {
-  const router = useRouter();
-
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
-        headerBackVisible: true,
-        headerLeft: () => (
-          <Pressable
-            onPress={() => router.back()}
-            className="active:opacity-70"
-          >
-            <View className="flex-row items-center">
-              <Ionicons
-                name="chevron-back"
-                size={24}
-                color="#DC143C"
-              />
-            </View>
-          </Pressable>
-        ),
-        headerStyle: {
-          backgroundColor: '#FFFFFF',
-        },
-        headerTitleStyle: {
-          fontWeight: '600',
-          fontSize: 18,
-          color: '#111827',
-        },
+        headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          gestureEnabled: true,
-        }}
-      />
-      <Stack.Screen
-        name="cards"
-        options={{
-          title: 'My Cards',
-          gestureEnabled: true,
-        }}
-      />
+      <Stack.Screen name="profile" />
+      <Stack.Screen name="edit-profile" />
+      <Stack.Screen name="change-password" />
+      <Stack.Screen name="cards" />
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable,  ScrollView, Text, View, Image } from 'react-native';
@@ -28,6 +28,16 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-background-dark">
+      {/* Header */}
+      <View className="flex-row items-center px-4 py-3 bg-white dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800">
+        <Pressable onPress={() => router.back()} className="mr-3">
+          <Ionicons name="chevron-back" size={28} color="#006747" />
+        </Pressable>
+        <Text className="text-lg font-bold text-gray-900 dark:text-white flex-1">
+          Profile
+        </Text>
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
