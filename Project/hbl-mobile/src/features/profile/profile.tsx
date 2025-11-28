@@ -13,12 +13,12 @@ export default function ProfileScreen() {
   const { user, logout } = useAuth();
 
   const profileOptions = [
-    { icon: 'account-edit', label: 'Edit Profile', onPress: () => {} },
-    { icon: 'lock', label: 'Change Password', onPress: () => {} },
-    { icon: 'bell', label: 'Notifications', onPress: () => {} },
-    { icon: 'security', label: 'Security Settings', onPress: () => {} },
+    { icon: 'account-edit', label: 'Edit Profile', onPress: () => router.push('/(account)/edit-profile' as any) },
+    { icon: 'lock', label: 'Change Password', onPress: () => router.push('/(account)/change-password' as any) },
+    { icon: 'bell', label: 'Notifications', onPress: () => router.push('/(customer)/notifications' as any) },
+    { icon: 'security', label: 'Security Settings', onPress: () => router.push('/(customer)/settings' as any) },
     { icon: 'file-document', label: 'Documents', onPress: () => {} },
-    { icon: 'help-circle', label: 'Help & Support', onPress: () => {} },
+    { icon: 'help-circle', label: 'Help & Support', onPress: () => router.push('/(customer)/help' as any) },
   ];
 
   const handleLogout = () => {
