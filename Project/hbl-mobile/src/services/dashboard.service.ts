@@ -82,17 +82,49 @@ class DashboardService {
   /**
    * Get full dashboard data
    * GET /api/users/dashboard
-   * 
+   *
    * Handles both response formats and normalizes data structure
    * Maps backend card format to ApiCard format with defaults
+   * Also fetches cards and loans separately to complete the dashboard
    */
   async getDashboardData(): Promise<DashboardData> {
     try {
-      const response = await api.get<any>('/users/dashboard');
-      
-      // Normalize the response - handles different response structures
-      const normalized = normalizeDashboardResponse(response);
-      
+      // Fetch dashboard, cards, and loans in parallel for better performance
+      const [dashboardResponse, cardsResponse, loansResponse] = await Promise.allSettled([
+        api.get<any>('/users/dashboard'),
+        api.get<any>('/cards'),
+        api.get<any>('/loans'),
+      ]);
+
+      // Get dashboard data
+      const dashboardData = dashboardResponse.status === 'fulfilled'
+        ? dashboardResponse.value
+        : { data: {} };
+
+      // Normalize the dashboard response
+      const normalized = normalizeDashboardResponse(dashboardData);
+
+      // Add cards if fetch succeeded
+      if (cardsResponse.status === 'fulfilled') {
+        const cardsData = cardsResponse.value.data || cardsResponse.value || [];
+        if (Array.isArray(cardsData)) {
+          // Import dynamically to avoid circular dependency
+          const { mapBackendCardsToApiCards } = await import('../lib/mappers');
+          normalized.cards = mapBackendCardsToApiCards(cardsData);
+          normalized.summary.activeCards = normalized.cards.filter((c: ApiCard) => c.cardStatus === 'active').length;
+        }
+      }
+
+      // Add loans if fetch succeeded
+      if (loansResponse.status === 'fulfilled') {
+        const loansData = loansResponse.value.data || loansResponse.value || [];
+        if (Array.isArray(loansData)) {
+          normalized.loans = loansData;
+          normalized.summary.pendingLoans = loansData.filter((l: ApiLoan) => l.status === 'pending').length;
+          normalized.summary.activeLoans = loansData.filter((l: ApiLoan) => l.status === 'active').length;
+        }
+      }
+
       return {
         user: normalized.user,
         accounts: normalized.accounts,

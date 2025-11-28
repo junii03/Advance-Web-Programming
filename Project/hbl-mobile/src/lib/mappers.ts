@@ -75,25 +75,93 @@ export const mapBackendCardsToApiCards = (backendCards: BackendCard[]): ApiCard[
 /**
  * Normalizes dashboard response to ensure consistent structure
  * Handles both wrapped and unwrapped response formats
+ *
+ * Backend /api/users/dashboard returns:
+ * {
+ *   success: true,
+ *   data: {
+ *     user: { id, fullName, email, customerNumber, profilePicture, ... },
+ *     accounts: [...],
+ *     totalBalance: number,
+ *     recentTransactions: [...],
+ *     quickStats: { totalAccounts, activeAccounts, todayTransactions, pendingTransactions },
+ *     summary: { totalAccounts, activeAccounts, recentTransactionsCount }
+ *   }
+ * }
+ *
+ * Mobile app expects:
+ * {
+ *   user: { _id, firstName, lastName, email, ... },
+ *   accounts: [...],
+ *   cards: [...],
+ *   loans: [...],
+ *   recentTransactions: [...],
+ *   summary: { totalBalance, totalAvailableBalance, accountCount, activeCards, pendingLoans, activeLoans }
+ * }
  */
 export const normalizeDashboardResponse = (response: any): any => {
   // Handle wrapped response format { success: true, data: {...} }
+  let data = response;
   if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
-    response = response.data;
+    data = response.data;
   }
+
+  // Parse user data - backend returns fullName, we need firstName/lastName
+  const backendUser = data.user || {};
+  const fullName = backendUser.fullName || '';
+  const nameParts = fullName.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
+  // Calculate total available balance from accounts
+  const accounts = data.accounts || [];
+  const totalAvailableBalance = accounts.reduce((sum: number, acc: any) => {
+    // Backend may return balance or availableBalance
+    return sum + (acc.availableBalance ?? acc.balance ?? 0);
+  }, 0);
+
+  // Get account count from quickStats or accounts array
+  const accountCount = data.quickStats?.totalAccounts || data.summary?.totalAccounts || accounts.length;
 
   // Ensure response has expected structure
   const normalized: any = {
-    user: response.user || {},
-    accounts: response.accounts || [],
-    cards: [],
-    transactions: response.transactions || [],
-    loans: response.loans || [],
+    user: {
+      _id: backendUser.id || backendUser._id || '',
+      firstName,
+      lastName,
+      email: backendUser.email || '',
+      phone: backendUser.phone || '',
+      profilePicture: backendUser.profilePicture,
+      isEmailVerified: backendUser.isEmailVerified || false,
+      isPhoneVerified: backendUser.isPhoneVerified || false,
+      customerNumber: backendUser.customerNumber,
+      role: backendUser.role,
+    },
+    accounts: accounts,
+    cards: [], // Cards need to be fetched separately via /api/cards
+    loans: [], // Loans need to be fetched separately via /api/loans
+    recentTransactions: data.recentTransactions || [],
+    summary: {
+      totalBalance: data.totalBalance || 0,
+      totalAvailableBalance: totalAvailableBalance,
+      accountCount: accountCount,
+      activeCards: 0, // Will be updated when cards are fetched
+      pendingLoans: 0, // Will be updated when loans are fetched
+      activeLoans: 0, // Will be updated when loans are fetched
+    },
   };
 
-  // Transform cards if present
-  if (response.cards && Array.isArray(response.cards)) {
-    normalized.cards = mapBackendCardsToApiCards(response.cards);
+  // Transform cards if present (in case dashboard starts returning them)
+  if (data.cards && Array.isArray(data.cards)) {
+    normalized.cards = mapBackendCardsToApiCards(data.cards);
+    normalized.summary.activeCards = normalized.cards.filter((c: any) => c.cardStatus === 'active').length;
+  }
+
+  // Handle loans if present
+  if (data.loans && Array.isArray(data.loans)) {
+    normalized.loans = data.loans;
+    normalized.summary.pendingLoans = data.loans.filter((l: any) => l.status === 'pending').length;
+    normalized.summary.activeLoans = data.loans.filter((l: any) => l.status === 'active').length;
   }
 
   return normalized;
