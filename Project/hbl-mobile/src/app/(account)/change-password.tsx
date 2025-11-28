@@ -93,7 +93,7 @@ export default function ChangePasswordScreen() {
       {/* Header */}
       <View className="flex-row items-center px-4 py-3 bg-white dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800">
         <Pressable onPress={() => router.back()} className="mr-3">
-          <Ionicons name="chevron-back" size={28} color="#006747" />
+         <Ionicons name="chevron-back" size={28} color="#006747" />
         </Pressable>
         <Text className="text-lg font-bold text-gray-900 dark:text-white flex-1">
           Change Password

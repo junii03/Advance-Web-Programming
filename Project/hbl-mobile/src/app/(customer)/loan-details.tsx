@@ -123,7 +123,7 @@ export default function LoanDetailsScreen() {
       <SafeAreaView className="flex-1 bg-gray-50 dark:bg-background-dark">
         <View className="flex-row items-center px-4 py-3 bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800">
           <Pressable onPress={() => router.back()} className="mr-3">
-            <Ionicons name="arrow-back" size={24} color="#374151" />
+            <Ionicons name="chevron-back" size={28} color="#006747" />
           </Pressable>
           <Text className="text-xl font-bold text-gray-900 dark:text-white">Loan Details</Text>
         </View>
@@ -158,7 +158,7 @@ export default function LoanDetailsScreen() {
       {/* Header */}
       <View className="flex-row items-center px-4 py-3 bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800">
         <Pressable onPress={() => router.back()} className="mr-3">
-          <Ionicons name="arrow-back" size={24} color="#374151" />
+           <Ionicons name="chevron-back" size={28} color="#006747" />
         </Pressable>
         <Text className="text-xl font-bold text-gray-900 dark:text-white">Loan Details</Text>
       </View>

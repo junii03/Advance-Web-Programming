@@ -214,7 +214,7 @@ HBL Mobile Banking
       <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
         <View className="flex-row items-center px-4 py-3 border-b border-gray-200 dark:border-gray-800">
           <Pressable onPress={() => router.back()} className="mr-3">
-            <Ionicons name="chevron-back" size={28} color="#006747" />
+             <Ionicons name="chevron-back" size={28} color="#006747" />
           </Pressable>
           <Text className="text-xl font-bold text-gray-900 dark:text-white">
             Transaction Details

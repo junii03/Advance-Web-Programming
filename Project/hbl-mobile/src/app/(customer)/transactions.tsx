@@ -277,7 +277,7 @@ export default function TransactionsScreen() {
       <View className="bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800">
         <View className="flex-row items-center px-4 py-3">
           <Pressable onPress={() => router.back()} className="mr-3">
-            <Ionicons name="arrow-back" size={24} color="#374151" />
+             <Ionicons name="chevron-back" size={28} color="#006747" />
           </Pressable>
           <Text className="text-xl font-bold text-gray-900 dark:text-white flex-1">
             Transactions
