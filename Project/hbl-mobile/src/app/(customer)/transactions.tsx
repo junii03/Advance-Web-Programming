@@ -5,12 +5,13 @@ import {
   ActivityIndicator,
   Pressable,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 import { transactionService } from '@/src/services';
 import { ApiTransaction, TransactionType as ApiTransactionType, TransactionStatus as ApiTransactionStatus } from '@/src/types/api';

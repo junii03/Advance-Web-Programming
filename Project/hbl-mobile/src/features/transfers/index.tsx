@@ -7,12 +7,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 import { Button } from '@/src/components/ui/button';
 import { accountService, transactionService, dashboardService } from '@/src/services';

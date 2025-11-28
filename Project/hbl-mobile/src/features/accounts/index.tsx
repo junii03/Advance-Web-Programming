@@ -5,11 +5,12 @@ import {
   ActivityIndicator,
   Pressable,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 import { accountService } from '@/src/services';
 import { ApiAccount } from '@/src/types/api';

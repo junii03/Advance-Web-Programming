@@ -5,11 +5,12 @@ import {
   Alert,
   Image,
   Pressable,
-  SafeAreaView,
+
   ScrollView,
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@/src/contexts/auth';
 import { getProfileImageUrl } from '@/src/utils/helper';

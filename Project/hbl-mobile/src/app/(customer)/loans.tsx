@@ -5,11 +5,11 @@ import {
   ActivityIndicator,
   Pressable,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { loanService } from '@/src/services';
 import { ApiLoan } from '@/src/types/api';

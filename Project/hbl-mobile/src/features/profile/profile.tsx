@@ -1,7 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View, Image } from 'react-native';
+import { Pressable,  ScrollView, Text, View, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card } from '@/src/components/ui/card';
 import { useAuth } from '@/src/contexts/auth';

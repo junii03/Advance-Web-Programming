@@ -2,7 +2,8 @@ import { Colors } from '@/src/constants/theme';
 import { useColorScheme } from '@/src/hooks/use-color-scheme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, SafeAreaView, StyleProp, Text, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface HeaderProps {
   title: string;
