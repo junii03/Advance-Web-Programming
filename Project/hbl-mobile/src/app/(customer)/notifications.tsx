@@ -11,14 +11,17 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { api } from '@/src/lib/apiClient';
+
 // Notification type
 interface Notification {
   _id: string;
   title: string;
   message: string;
   type: 'transaction' | 'account' | 'card' | 'loan' | 'security' | 'promo' | 'system';
-  isRead: boolean;
+  read: boolean;
   createdAt: string;
+  readAt?: string;
   data?: {
     transactionId?: string;
     accountId?: string;
@@ -69,93 +72,41 @@ const formatRelativeTime = (dateString: string): string => {
   });
 };
 
-// Mock notifications data (since backend might not have notifications endpoint)
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    _id: '1',
-    title: 'Money Received',
-    message: 'You received PKR 50,000 from AHMED RAZA via bank transfer.',
-    type: 'transaction',
-    isRead: false,
-    createdAt: new Date(Date.now() - 30 * 60000).toISOString(),
-    data: { transactionId: 'txn1' },
-  },
-  {
-    _id: '2',
-    title: 'Bill Payment Successful',
-    message: 'Your electricity bill of PKR 5,230 has been paid successfully.',
-    type: 'transaction',
-    isRead: false,
-    createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
-    data: { transactionId: 'txn2' },
-  },
-  {
-    _id: '3',
-    title: 'Card Activated',
-    message: 'Your new debit card ending with 4589 has been activated.',
-    type: 'card',
-    isRead: true,
-    createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
-    data: { cardId: 'card1' },
-  },
-  {
-    _id: '4',
-    title: 'Loan Application Update',
-    message: 'Your personal loan application is under review. We will update you soon.',
-    type: 'loan',
-    isRead: true,
-    createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
-    data: { loanId: 'loan1' },
-  },
-  {
-    _id: '5',
-    title: 'Security Alert',
-    message: 'A new device was used to access your account. If this was not you, please contact us.',
-    type: 'security',
-    isRead: true,
-    createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
-  },
-  {
-    _id: '6',
-    title: 'Special Offer',
-    message: 'Get 10% cashback on all online shopping with your HBL credit card. Valid till Dec 31.',
-    type: 'promo',
-    isRead: true,
-    createdAt: new Date(Date.now() - 5 * 86400000).toISOString(),
-  },
-  {
-    _id: '7',
-    title: 'Account Statement Ready',
-    message: 'Your November 2024 account statement is ready for download.',
-    type: 'account',
-    isRead: true,
-    createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
-    data: { accountId: 'acc1' },
-  },
-  {
-    _id: '8',
-    title: 'System Maintenance',
-    message: 'HBL Mobile Banking will be under maintenance on Dec 1st from 2:00 AM to 4:00 AM.',
-    type: 'system',
-    isRead: true,
-    createdAt: new Date(Date.now() - 10 * 86400000).toISOString(),
-  },
-];
+// Response types
+interface NotificationsResponse {
+  success: boolean;
+  data: Notification[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+}
 
 export default function NotificationsScreen() {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchNotifications = useCallback(async () => {
     try {
-      // In real app, call notificationService.getNotifications()
-      // For now, using mock data
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setNotifications(MOCK_NOTIFICATIONS);
-    } catch (err) {
+      setError(null);
+      const response = await api.get<NotificationsResponse>('/notifications');
+
+      if (response?.success && Array.isArray(response.data)) {
+        setNotifications(response.data);
+      } else if (Array.isArray(response)) {
+        setNotifications(response as unknown as Notification[]);
+      } else {
+        setNotifications([]);
+      }
+    } catch (err: unknown) {
       console.error('Failed to fetch notifications:', err);
+      setError('Failed to load notifications');
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -171,18 +122,30 @@ export default function NotificationsScreen() {
     setRefreshing(false);
   };
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
-    );
+  const markAsRead = async (id: string) => {
+    try {
+      await api.put(`/notifications/${id}/read`);
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, read: true } : n))
+      );
+    } catch (err) {
+      console.error('Failed to mark notification as read:', err);
+    }
   };
 
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  const markAllAsRead = async () => {
+    try {
+      await api.put('/notifications/read-all');
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } catch (err) {
+      console.error('Failed to mark all notifications as read:', err);
+    }
   };
 
   const handleNotificationPress = (notification: Notification) => {
-    markAsRead(notification._id);
+    if (!notification.read) {
+      markAsRead(notification._id);
+    }
 
     // Navigate based on notification type
     if (notification.type === 'transaction' && notification.data?.transactionId) {
@@ -196,7 +159,7 @@ export default function NotificationsScreen() {
     }
   };
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   if (loading) {
     return (
@@ -228,7 +191,25 @@ export default function NotificationsScreen() {
         )}
       </View>
 
-      {notifications.length === 0 ? (
+      {error ? (
+        <View className="flex-1 items-center justify-center px-6">
+          <View className="w-20 h-20 rounded-full bg-red-100 dark:bg-red-900/30 items-center justify-center mb-4">
+            <Ionicons name="alert-circle" size={40} color="#EF4444" />
+          </View>
+          <Text className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Error Loading Notifications
+          </Text>
+          <Text className="text-gray-500 dark:text-gray-400 text-center mb-4">
+            {error}
+          </Text>
+          <Pressable
+            onPress={fetchNotifications}
+            className="bg-hbl-green px-6 py-2 rounded-lg"
+          >
+            <Text className="text-white font-medium">Retry</Text>
+          </Pressable>
+        </View>
+      ) : notifications.length === 0 ? (
         <View className="flex-1 items-center justify-center px-6">
           <View className="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-800 items-center justify-center mb-4">
             <Ionicons name="notifications-off" size={40} color="#9CA3AF" />
@@ -282,7 +263,7 @@ export default function NotificationsScreen() {
                           key={notification._id}
                           onPress={() => handleNotificationPress(notification)}
                           className={`px-4 py-4 border-b border-gray-100 dark:border-gray-800 ${
-                            !notification.isRead ? 'bg-hbl-green/5' : 'bg-white dark:bg-surface-dark'
+                            !notification.read ? 'bg-hbl-green/5' : 'bg-white dark:bg-surface-dark'
                           } active:opacity-80`}
                         >
                           <View className="flex-row">
@@ -295,14 +276,14 @@ export default function NotificationsScreen() {
                               <View className="flex-row items-center justify-between mb-1">
                                 <Text
                                   className={`font-semibold ${
-                                    !notification.isRead
+                                    !notification.read
                                       ? 'text-gray-900 dark:text-white'
                                       : 'text-gray-700 dark:text-gray-300'
                                   }`}
                                 >
                                   {notification.title}
                                 </Text>
-                                {!notification.isRead && (
+                                {!notification.read && (
                                   <View className="w-2 h-2 rounded-full bg-hbl-green" />
                                 )}
                               </View>
@@ -332,7 +313,7 @@ export default function NotificationsScreen() {
                           key={notification._id}
                           onPress={() => handleNotificationPress(notification)}
                           className={`px-4 py-4 border-b border-gray-100 dark:border-gray-800 ${
-                            !notification.isRead ? 'bg-hbl-green/5' : 'bg-white dark:bg-surface-dark'
+                            !notification.read ? 'bg-hbl-green/5' : 'bg-white dark:bg-surface-dark'
                           } active:opacity-80`}
                         >
                           <View className="flex-row">
@@ -345,14 +326,14 @@ export default function NotificationsScreen() {
                               <View className="flex-row items-center justify-between mb-1">
                                 <Text
                                   className={`font-semibold ${
-                                    !notification.isRead
+                                    !notification.read
                                       ? 'text-gray-900 dark:text-white'
                                       : 'text-gray-700 dark:text-gray-300'
                                   }`}
                                 >
                                   {notification.title}
                                 </Text>
-                                {!notification.isRead && (
+                                {!notification.read && (
                                   <View className="w-2 h-2 rounded-full bg-hbl-green" />
                                 )}
                               </View>
@@ -382,7 +363,7 @@ export default function NotificationsScreen() {
                           key={notification._id}
                           onPress={() => handleNotificationPress(notification)}
                           className={`px-4 py-4 border-b border-gray-100 dark:border-gray-800 ${
-                            !notification.isRead ? 'bg-hbl-green/5' : 'bg-white dark:bg-surface-dark'
+                            !notification.read ? 'bg-hbl-green/5' : 'bg-white dark:bg-surface-dark'
                           } active:opacity-80`}
                         >
                           <View className="flex-row">
@@ -395,14 +376,14 @@ export default function NotificationsScreen() {
                               <View className="flex-row items-center justify-between mb-1">
                                 <Text
                                   className={`font-semibold ${
-                                    !notification.isRead
+                                    !notification.read
                                       ? 'text-gray-900 dark:text-white'
                                       : 'text-gray-700 dark:text-gray-300'
                                   }`}
                                 >
                                   {notification.title}
                                 </Text>
-                                {!notification.isRead && (
+                                {!notification.read && (
                                   <View className="w-2 h-2 rounded-full bg-hbl-green" />
                                 )}
                               </View>
