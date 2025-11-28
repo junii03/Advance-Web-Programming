@@ -3,7 +3,7 @@ import { Input } from '@/src/components/ui/input';
 import { useAuth } from '@/src/contexts/auth';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {  ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
@@ -44,9 +44,11 @@ export default function LoginScreen() {
         <View className="flex-1 justify-center px-5 py-6">
           {/* Logo */}
           <View className="mb-8 items-center">
-            <View className="h-20 w-20 items-center justify-center rounded-full bg-hbl-green">
-              <Text className="text-4xl font-bold text-white">HBL</Text>
-            </View>
+            <Image
+              source={require('@/src/assets/images/HBL-logo.webp')}
+              style={{ width: 200, height: 80 }}
+              resizeMode="contain"
+            />
             <Text className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">
               Welcome Back
             </Text>
