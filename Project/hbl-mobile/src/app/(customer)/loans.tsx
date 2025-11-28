@@ -73,7 +73,10 @@ const getLoanTypeStyle = (type: string) => {
 const LoanCard = ({ loan, onPress }: { loan: ApiLoan; onPress: () => void }) => {
   const statusStyle = getStatusStyle(loan.status);
   const typeStyle = getLoanTypeStyle(loan.loanType);
-  const progress = loan.amount > 0 ? ((loan.amount - loan.outstandingAmount) / loan.amount) * 100 : 0;
+
+  // Use outstandingAmount if available, otherwise use full amount
+  const outstanding = loan.outstandingAmount > 0 ? loan.outstandingAmount : loan.amount;
+  const progress = loan.amount > 0 ? ((loan.amount - outstanding) / loan.amount) * 100 : 0;
 
   return (
     <Pressable
@@ -124,7 +127,7 @@ const LoanCard = ({ loan, onPress }: { loan: ApiLoan; onPress: () => void }) => 
         </View>
 
         {/* Progress Bar (for active loans) */}
-        {loan.status === 'active' && (
+        {(loan.status === 'active' || loan.status === 'approved') && (
           <View className="mt-2">
             <View className="flex-row justify-between mb-1">
               <Text className="text-xs text-gray-500">Repaid</Text>
@@ -159,7 +162,7 @@ const LoanCard = ({ loan, onPress }: { loan: ApiLoan; onPress: () => void }) => 
         <View className="flex-1 items-end">
           <Text className="text-xs text-gray-500 dark:text-gray-400">Outstanding</Text>
           <Text className="text-sm font-medium text-gray-900 dark:text-white">
-            {formatCurrency(loan.outstandingAmount)}
+            {formatCurrency(outstanding)}
           </Text>
         </View>
       </View>
@@ -179,10 +182,18 @@ const LoanCard = ({ loan, onPress }: { loan: ApiLoan; onPress: () => void }) => 
 
 // Summary Component
 const LoansSummary = ({ loans }: { loans: ApiLoan[] }) => {
-  const activeLoans = loans.filter((l) => l.status === 'active');
+  // Include both active and approved loans for calculations
+  const activeLoans = loans.filter((l) => l.status === 'active' || l.status === 'approved');
   const pendingLoans = loans.filter((l) => l.status === 'pending');
-  const totalOutstanding = activeLoans.reduce((sum, l) => sum + l.outstandingAmount, 0);
-  const totalMonthlyEMI = activeLoans.reduce((sum, l) => sum + l.monthlyInstallment, 0);
+
+  // Calculate total outstanding - use outstandingAmount if available, otherwise use amount
+  const totalOutstanding = activeLoans.reduce((sum, l) => {
+    const outstanding = l.outstandingAmount > 0 ? l.outstandingAmount : l.amount;
+    return sum + outstanding;
+  }, 0);
+
+  // Calculate total monthly EMI
+  const totalMonthlyEMI = activeLoans.reduce((sum, l) => sum + (l.monthlyInstallment || 0), 0);
 
   return (
     <View className="mx-4 mb-4">

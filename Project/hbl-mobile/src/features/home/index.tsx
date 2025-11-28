@@ -131,7 +131,21 @@ export default function HomeScreen() {
   const totalAvailable = dashboardData?.summary?.totalAvailableBalance ?? 0;
   const accountCount = dashboardData?.summary?.accountCount ?? 0;
   const activeCards = dashboardData?.summary?.activeCards ?? 0;
+  let  activeLoans =  0;
+  const pendingLoans = dashboardData?.summary?.pendingLoans ?? 0;
   const recentTransactions = dashboardData?.recentTransactions ?? [];
+
+  // Calculate total outstanding loan amount - use outstandingAmount if available, otherwise use amount
+  const totalOutstandingLoan = dashboardData?.loans?.reduce((sum, loan) => {
+    if (loan.status === 'active' || loan.status === 'approved') {
+        activeLoans= activeLoans+ 1;
+      const outstanding = loan.outstandingAmount > 0 ? loan.outstandingAmount : loan.amount;
+      return sum + outstanding;
+    }
+    return sum;
+  }, 0) ?? 0;
+
+
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-background-dark">
@@ -259,6 +273,44 @@ export default function HomeScreen() {
                 {activeCards}
               </Text>
               <Text className="text-xs text-gray-500 dark:text-gray-400">Active Cards</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Loans Summary */}
+        <View className="px-4 mt-4">
+          <View className="flex-row justify-between items-center mb-3">
+            <Text className="text-base font-semibold text-gray-900 dark:text-white">
+              Loans Overview
+            </Text>
+            <Pressable onPress={() => router.push('/(customer)/loans' as never)}>
+              <Text className="text-sm font-medium text-hbl-green">View All</Text>
+            </Pressable>
+          </View>
+          <View className="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-sm">
+            <View className="flex-row justify-between items-center mb-3">
+              <View className="flex-row items-center">
+                <View className="w-10 h-10 rounded-full bg-amber-100 items-center justify-center mr-3">
+                  <Ionicons name="document-text" size={20} color="#F59E0B" />
+                </View>
+                <View>
+                  <Text className="text-sm text-gray-500 dark:text-gray-400">Outstanding Amount</Text>
+                  <Text className="text-lg font-bold text-gray-900 dark:text-white">
+                    {showBalance ? formatCurrency(totalOutstandingLoan) : '••••••••'}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View className="flex-row pt-3 border-t border-gray-100 dark:border-gray-700">
+              <View className="flex-1 items-center">
+                <Text className="text-2xl font-bold text-hbl-green">{activeLoans}</Text>
+                <Text className="text-xs text-gray-500 dark:text-gray-400">Active</Text>
+              </View>
+              <View className="w-px bg-gray-100 dark:bg-gray-700" />
+              <View className="flex-1 items-center">
+                <Text className="text-2xl font-bold text-amber-500">{pendingLoans}</Text>
+                <Text className="text-xs text-gray-500 dark:text-gray-400">Pending</Text>
+              </View>
             </View>
           </View>
         </View>
