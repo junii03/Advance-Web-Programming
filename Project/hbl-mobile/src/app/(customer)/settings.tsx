@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@/src/contexts/auth';
+import { useTheme } from '@/src/contexts/theme';
 
 // Settings section type
 interface SettingItem {
@@ -28,6 +29,7 @@ interface SettingItem {
 export default function SettingsScreen() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { isDark, toggleDarkMode } = useTheme();
 
   // Settings state
   const [settings, setSettings] = useState({
@@ -37,7 +39,6 @@ export default function SettingsScreen() {
     biometricLogin: false,
     transactionAlerts: true,
     marketingEmails: false,
-    darkMode: false,
   });
 
   const toggleSetting = (key: keyof typeof settings) => {
@@ -166,9 +167,9 @@ export default function SettingsScreen() {
           label: 'Dark Mode',
           icon: 'moon',
           type: 'toggle',
-          value: settings.darkMode,
+          value: isDark,
           description: 'Use dark theme throughout the app',
-          onPress: () => toggleSetting('darkMode'),
+          onPress: toggleDarkMode,
         },
       ],
     },

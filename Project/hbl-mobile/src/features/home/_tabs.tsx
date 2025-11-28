@@ -5,16 +5,15 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { HapticTab } from '@/src/components/haptic-tab';
 import { Colors } from '@/src/constants/theme';
-import { useColorScheme } from '@/src/hooks/use-color-scheme';
+import { useTheme } from '@/src/contexts/theme';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { colorScheme, isDark } = useTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#006747', // HBL Green
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].primary,
         tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].tabIconDefault,
         headerShown: false,
         tabBarButton: HapticTab,

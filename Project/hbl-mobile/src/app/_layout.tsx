@@ -1,11 +1,11 @@
-import { DarkTheme, DefaultTheme, ThemeProvider, Theme } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider as NavigationThemeProvider, Theme } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import '@/global.css';
 import { AuthProvider } from '@/src/contexts/auth';
-import { useColorScheme } from '@/src/hooks/use-color-scheme';
+import { ThemeProvider, useTheme } from '@/src/contexts/theme';
 
 // Custom themes with proper background colors to prevent white flash during navigation
 const CustomLightTheme: Theme = {
@@ -41,11 +41,10 @@ export const unstable_settings = {
 };
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
 
   return (
-    <ThemeProvider value={isDark ? CustomDarkTheme : CustomLightTheme}>
+    <NavigationThemeProvider value={isDark ? CustomDarkTheme : CustomLightTheme}>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -117,15 +116,17 @@ function RootLayoutNav() {
           }}
         />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+    </NavigationThemeProvider>
   );
 }
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <RootLayoutNav />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <RootLayoutNav />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

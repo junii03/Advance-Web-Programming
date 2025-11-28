@@ -6,9 +6,9 @@
 import { Platform } from 'react-native';
 
 // HBL Brand Colors
-const primaryColor = '#DC143C'; // HBL Red
-const primaryLight = '#FF6B6B';
-const primaryDark = '#9C0E2E';
+const primaryColor = '#00C09A'; // HBL Green
+const primaryLight = '#33D6AA'; // Light Green
+const primaryDark = '#9C0E2E'; // Dark Red
 
 const secondaryColor = '#003366'; // Dark Blue
 const accentColor = '#FFB81C'; // Gold

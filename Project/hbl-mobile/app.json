@@ -30,13 +30,13 @@
             [
                 "expo-splash-screen",
                 {
-                    "image": "./src/assets/images/HBL-logo.webp",
+                    "image": "./src/assets/images/logo.png",
                     "imageWidth": 200,
                     "resizeMode": "contain",
                     "backgroundColor": "#f9fafb",
                     "dark": {
                         "backgroundColor": "#121212",
-                        "image": "./src/assets/images/HBL-logo.webp"
+                        "image": "./src/assets/images/logo.png"
                     }
                 }
             ]
