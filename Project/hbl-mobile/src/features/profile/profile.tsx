@@ -27,7 +27,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-background-dark">
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}

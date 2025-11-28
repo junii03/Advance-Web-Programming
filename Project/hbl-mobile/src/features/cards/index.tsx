@@ -365,12 +365,17 @@ export default function CardsScreen() {
                 key={card._id}
                 card={card}
                 showDetails={showDetails}
-                onPress={() =>
+                onPress={() => {
+                  // Pass card data as JSON string to optimize - only fetch if not available
+                  const cardDataJson = JSON.stringify(card);
                   router.push({
                     pathname: '/(customer)/card-details' as never,
-                    params: { id: card._id },
-                  })
-                }
+                    params: { 
+                      id: card._id,
+                      cardData: cardDataJson,
+                    },
+                  });
+                }}
               />
             ))
           )}

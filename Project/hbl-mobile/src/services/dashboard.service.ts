@@ -4,6 +4,7 @@
  */
 
 import { api } from '../lib/apiClient';
+import { normalizeDashboardResponse } from '../lib/mappers';
 import { ApiAccount, ApiTransaction, ApiCard, ApiLoan, ProfilePicture } from '../types/api';
 
 // Dashboard data types
@@ -81,12 +82,29 @@ class DashboardService {
   /**
    * Get full dashboard data
    * GET /api/users/dashboard
+   * 
+   * Handles both response formats and normalizes data structure
+   * Maps backend card format to ApiCard format with defaults
    */
   async getDashboardData(): Promise<DashboardData> {
-    const response = await api.get<{ success: boolean; data: DashboardData }>(
-      '/users/dashboard'
-    );
-    return response.data;
+    try {
+      const response = await api.get<any>('/users/dashboard');
+      
+      // Normalize the response - handles different response structures
+      const normalized = normalizeDashboardResponse(response);
+      
+      return {
+        user: normalized.user,
+        accounts: normalized.accounts,
+        cards: normalized.cards,
+        loans: normalized.loans,
+        recentTransactions: normalized.recentTransactions,
+        summary: normalized.summary,
+      };
+    } catch (error) {
+      console.error('Dashboard API error:', error);
+      throw error;
+    }
   }
 
   /**

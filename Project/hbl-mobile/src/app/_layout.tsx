@@ -76,6 +76,14 @@ function RootLayoutNav() {
           }}
         />
 
+        {/* Customer Group */}
+        <Stack.Screen
+          name="(customer)"
+          options={{
+            headerShown: false,
+          }}
+        />
+
         {/* Modals */}
         <Stack.Screen
           name="(modals)"
