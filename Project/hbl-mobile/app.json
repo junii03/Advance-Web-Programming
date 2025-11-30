@@ -1,6 +1,6 @@
 {
     "expo": {
-        "name": "hbl-mobile",
+        "name": "HBL Mobile",
         "slug": "hbl-mobile",
         "version": "1.0.0",
         "orientation": "portrait",
@@ -33,9 +33,9 @@
                     "image": "./src/assets/images/logo.png",
                     "imageWidth": 200,
                     "resizeMode": "contain",
-                    "backgroundColor": "#f9fafb",
+                    "backgroundColor": "#006747",
                     "dark": {
-                        "backgroundColor": "#121212",
+                        "backgroundColor": "#006747",
                         "image": "./src/assets/images/logo.png"
                     }
                 }
