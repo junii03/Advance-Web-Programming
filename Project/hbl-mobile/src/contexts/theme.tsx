@@ -65,10 +65,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const isDark = colorScheme === 'dark';
 
-  // Update NativeWind/Appearance when color scheme changes
+  // Update theme class on root element when color scheme changes
   useEffect(() => {
     if (isInitialized) {
-      Appearance.setColorScheme(colorScheme);
+      // For web: update the document root class
+      if (typeof document !== 'undefined') {
+        const htmlElement = document.documentElement;
+        htmlElement.classList.remove('light', 'dark');
+        htmlElement.classList.add(colorScheme);
+      }
     }
   }, [colorScheme, isInitialized]);
 
