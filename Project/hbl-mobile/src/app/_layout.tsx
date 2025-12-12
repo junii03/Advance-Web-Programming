@@ -6,6 +6,8 @@ import 'react-native-reanimated';
 import '@/global.css';
 import { AuthProvider } from '@/src/contexts/auth';
 import { ThemeProvider, useTheme } from '@/src/contexts/theme';
+import { ToastProvider } from '@/src/components/Toast';
+import { WebSocketInitializer } from '@/src/components/WebSocketInitializer';
 
 // Custom themes with proper background colors to prevent white flash during navigation
 const CustomLightTheme: Theme = {
@@ -124,9 +126,13 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <RootLayoutNav />
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <WebSocketInitializer>
+            <RootLayoutNav />
+          </WebSocketInitializer>
+        </AuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

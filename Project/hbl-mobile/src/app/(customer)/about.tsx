@@ -31,17 +31,17 @@ export default function AboutScreen() {
     {
       icon: 'globe' as const,
       title: 'Visit Website',
-      onPress: () => Linking.openURL('https://www.hbl.com'),
+      onPress: () => Linking.openURL('https://hbl-clone-project.vercel.app/'),
     },
     {
       icon: 'document-text' as const,
       title: 'Terms of Service',
-      onPress: () => Linking.openURL('https://www.hbl.com/terms'),
+      onPress: () => Linking.openURL('https://hbl-clone-project.vercel.app'),
     },
     {
       icon: 'shield-checkmark' as const,
       title: 'Privacy Policy',
-      onPress: () => Linking.openURL('https://www.hbl.com/privacy'),
+      onPress: () => Linking.openURL('https://hbl-clone-project.vercel.app'),
     },
     {
       icon: 'information-circle' as const,
