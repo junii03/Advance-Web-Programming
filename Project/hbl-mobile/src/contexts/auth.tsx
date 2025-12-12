@@ -7,7 +7,7 @@ import React, {
   useCallback,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter, useSegments } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { authService } from '@/src/services';
 import { ApiUser, RegisterRequest, ApiError } from '@/src/types/api';
 import { api, onUnauthorized } from '@/src/lib/apiClient';
@@ -107,7 +107,6 @@ function mapSignupDataToRequest(data: SignupData): RegisterRequest {
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter();
-  const segments = useSegments();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -217,7 +216,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } else {
           console.log('No token found, user not authenticated');
         }
-      } catch (err) {
+      } catch {
         // Initialization error, clear everything
         if (isMounted) {
           console.log('Auth initialization failed, clearing token');
@@ -247,22 +246,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return unsubscribe;
   }, [handleUnauthorized]);
 
-  /**
-   * Protect routes - redirect based on auth state
-   */
-  useEffect(() => {
-    if (!isInitialized) return;
 
-    const inAuthGroup = segments[0] === '(auth)';
-
-    if (!user && !inAuthGroup) {
-      // User is not signed in and not on auth screen - redirect to login
-      router.replace('/(auth)/login');
-    } else if (user && inAuthGroup) {
-      // User is signed in but on auth screen - redirect to home
-      router.replace('/(tabs)');
-    }
-  }, [user, segments, isInitialized, router]);
 
   /**
    * Login with email and password
