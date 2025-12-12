@@ -6,7 +6,7 @@
 // API Configuration
 export const API_CONFIG = {
   /** Base URL for all API requests */
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:5000/api',
+  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8000/api',
 
   /** Request timeout in milliseconds */
   TIMEOUT: Number(process.env.EXPO_PUBLIC_API_TIMEOUT) || 30000,

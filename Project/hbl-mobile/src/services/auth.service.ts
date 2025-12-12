@@ -27,6 +27,7 @@ class AuthService {
    */
   async login(payload: LoginRequest): Promise<LoginResponse> {
     const response = await api.post<LoginResponse>('/auth/login', payload);
+    console.log('Login response:', response);
 
     // Store the token
     if (response.token) {
