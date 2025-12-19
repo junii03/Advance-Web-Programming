@@ -23,8 +23,7 @@ const Profile = () => {
   const handleTrackLive = () => {};
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
+         {/* Header */}
         <View style={styles.headerSection}>
           <Pressable
           onPress={()=>router.back()}
@@ -36,7 +35,7 @@ const Profile = () => {
             <Ionicons name="settings" size={24} color="#FFFFFF" />
           </Pressable>
         </View>
-
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Profile Card */}
         <View style={styles.profileCard}>
           {/* Avatar Section */}

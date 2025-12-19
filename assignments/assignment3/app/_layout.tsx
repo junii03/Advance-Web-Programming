@@ -5,8 +5,8 @@ export default function RootLayout() {
             screenOptions={{
                 headerShown: false,
                 animation: 'default',
-                statusBarAnimation: 'fade',
-                statusBarStyle: 'light',
+                // statusBarAnimation: 'fade',
+                // statusBarStyle: 'light',
                 animationMatchesGesture: true,
           }}
 
