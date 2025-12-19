@@ -1,7 +1,8 @@
+import { View } from "react-native"
 
 const Profile = () => {
   return (
-    <div>profile</div>
+    <View></View>
   )
 }
 

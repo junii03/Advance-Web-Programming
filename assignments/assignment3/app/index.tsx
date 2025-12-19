@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons, Ionicons, Feather } from '@expo/vector-icons';
+import { router } from "expo-router";
 
 export default function Welcome() {
   return (
@@ -87,7 +88,9 @@ export default function Welcome() {
         </View>
 
         {/* Button */}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={()=>{
+            router.push('/services');
+        }}>
           <Feather name="grid" size={20} color="#FFFFFF" style={styles.buttonIcon} />
           <Text style={styles.buttonText}>View Campus Services</Text>
         </TouchableOpacity>

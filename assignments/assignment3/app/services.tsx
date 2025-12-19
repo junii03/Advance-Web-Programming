@@ -1,8 +1,11 @@
+import { View } from "react-native"
 
 
 const Services = () => {
   return (
-    <div>services</div>
+    <View>
+
+    </View>
   )
 }
 
