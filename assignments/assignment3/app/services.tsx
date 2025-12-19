@@ -43,13 +43,15 @@ const Services = () => {
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </Pressable>
         <Text style={styles.headerTitle}>Campus Services</Text>
-        <View style={styles.profileAvatar}>
-          <Image source={require("../assets/images/J.png")} style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
-          }} />
-        </View>
+        <Pressable onPress={()=>router.push('/profile')}>
+            <View style={styles.profileAvatar}>
+            <Image source={require("../assets/images/J.png")} style={{
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+            }} />
+            </View>
+        </Pressable>
       </View>
 
       {/* Student Hub Section */}
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(59, 130, 246, 0.1)',
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: '700',
     color: '#FFFFFF',
   },

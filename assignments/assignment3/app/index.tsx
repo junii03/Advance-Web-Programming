@@ -34,7 +34,10 @@ export default function Welcome() {
           {/* Card Content */}
           <View style={styles.card}>
             {/* Profile Section */}
-            <View style={styles.profileSection}>
+            <Pressable onPress={()=>{
+                router.push('/profile')
+            }}>
+                <View style={styles.profileSection}>
               <View style={styles.profileImageContainer}>
                 {/* Avatar Circle */}
                 <View style={styles.avatar}>
@@ -48,6 +51,7 @@ export default function Welcome() {
                 <View style={styles.statusIndicator} />
               </View>
             </View>
+            </Pressable>
 
             {/* Student Info */}
             <Text style={styles.studentName}>Junaid Afzal</Text>
