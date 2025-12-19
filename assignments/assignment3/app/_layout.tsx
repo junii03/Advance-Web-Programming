@@ -4,6 +4,11 @@ export default function RootLayout() {
   return <Stack
             screenOptions={{
                 headerShown: false,
+                animation: 'default',
+                statusBarAnimation: 'fade',
+                statusBarStyle: 'light',
+                animationMatchesGesture: true,
+          }}
 
-            }}/>;
+        />;
 }
