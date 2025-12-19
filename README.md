@@ -115,9 +115,9 @@ Advance Web Programming/
 - [✅] Week 3 – Virtual DOM, JSX, Styling
 - [✅] Week 4 – Components, useState, Events
 - [✅] Week 5 – Forms & Props
-- [ ] Week 6 – API Integration & React Router
-- [ ] Week 7 – Hooks & Context API
-- [ ] Week 8 – Midterm Exam
+- [✅] Week 6 – API Integration & React Router
+- [✅] Week 7 – Hooks & Context API
+- [✅] Week 8 – Midterm Exam
 - [ ] Week 9–12 – React Native Development
 - [ ] Week 13 – Mini Project
 - [ ] Week 14 – Project Viva
