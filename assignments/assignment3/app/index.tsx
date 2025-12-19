@@ -9,7 +9,7 @@ export default function Welcome() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <MaterialCommunityIcons name="school-outline" size={24} color="#3b82f6" />
+            <MaterialCommunityIcons name="school-outline" size={24} color="#de7973" />
             <Text style={styles.headerLabel}>L1S23BSSE0001</Text>
           </View>
           <Ionicons name="notifications-outline" size={24} color="#94a3b8" />
@@ -36,7 +36,11 @@ export default function Welcome() {
               <View style={styles.profileImageContainer}>
                 {/* Avatar Circle */}
                 <View style={styles.avatar}>
-                  <Text style={styles.avatarText}>JA</Text>
+                  <Image source={require("../assets/images/J.png")} style={{
+                    width: 90,
+                    height: 90,
+                    borderRadius: 40,
+                  }} />
                 </View>
                 {/* Online Status */}
                 <View style={styles.statusIndicator} />
@@ -54,7 +58,10 @@ export default function Welcome() {
                 <Text style={styles.registrationId}>L1S23BSSE0001</Text>
               </View>
               <View style={styles.qrCodePlaceholder}>
-                <Image source={{uri:"https://github.com/junii03/Advance-Web-Programming/blob/main/assignments/assignment3/assets/images/qr.png"}}></Image>
+                <Image source={require("../assets/images/qr.png")} style={{
+                    width: 40,
+                    height: 40,
+                }} />
               </View>
             </View>
 
@@ -62,7 +69,7 @@ export default function Welcome() {
             <View style={styles.statsContainer}>
               <View style={styles.statBox}>
                 <View style={styles.statContent}>
-                  <MaterialCommunityIcons name="star" size={20} color="#3b82f6" />
+                  <MaterialCommunityIcons name="star" size={20} color="#de7973" />
                   <Text style={styles.statValue}>3.95</Text>
                 </View>
                 <Text style={styles.statLabel}>CGPA</Text>
@@ -70,7 +77,7 @@ export default function Welcome() {
 
               <View style={styles.statBox}>
                 <View style={styles.statContent}>
-                  <Ionicons name="calendar-outline" size={20} color="#3b82f6" />
+                  <Ionicons name="calendar-outline" size={20} color="#de7973" />
                   <Text style={styles.statValue}>06</Text>
                 </View>
                 <Text style={styles.statLabel}>Semester</Text>
@@ -110,7 +117,7 @@ const styles = StyleSheet.create({
   headerLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#3b82f6',
+    color: '#de7973',
     letterSpacing: 1.5,
   },
   greetingSection: {
@@ -118,14 +125,14 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: 'bold',
     color: '#FFFFFF',
     marginBottom: 4,
   },
   name: {
     fontSize: 40,
-    fontWeight: '700',
-    color: '#3b82f6',
+    fontWeight: 'bold',
+    color: '#de7973',
     marginBottom: 16,
   },
   subtitle: {
@@ -140,7 +147,7 @@ const styles = StyleSheet.create({
   },
   cardTopBorder: {
     height: 4,
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#de7973',
   },
   card: {
     backgroundColor: 'rgba(30, 41, 59, 0.8)',
@@ -166,7 +173,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#f97a6f',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
@@ -183,8 +189,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#10b981',
     position: 'absolute',
-    bottom: 0,
-    right: 0,
+    bottom: 10,
+    right: 10,
     borderWidth: 3,
     borderColor: 'rgba(30, 41, 59, 0.8)',
   },
@@ -267,7 +273,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   button: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#de7973',
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 20,
