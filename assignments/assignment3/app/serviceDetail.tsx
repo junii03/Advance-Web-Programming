@@ -40,7 +40,7 @@ const ServiceDetail = () => {
         {/* Service Image - extends behind header */}
         <View style={styles.imageContainer}>
           <Image
-            source={service.image}
+            source={{ uri: service.image }}
             style={styles.serviceImage}
           />
         </View>
