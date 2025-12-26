@@ -1,0 +1,444 @@
+@import "tailwindcss";
+
+/* Global CSS Variables for Theme */
+:root {
+    /* Light theme colors */
+    --color-background: #ffffff;
+    --color-background-rgb: 255, 255, 255;
+    --color-surface: #f8f9fa;
+    --color-card: #ffffff;
+    --color-border: #e5e7eb;
+    --color-border-rgb: 229, 231, 235;
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #9ca3af;
+    --color-accent: #14b8a6;
+    --color-accent-hover: #0f766e;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+}
+
+/* Dark theme colors */
+.dark {
+    --color-background: rgb(18, 18, 18);
+    --color-background-rgb: 18, 18, 18;
+    --color-surface: #1f2937;
+    --color-card: #374151;
+    --color-border: #4b5563;
+    --color-border-rgb: 75, 85, 99;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-muted: #9ca3af;
+    --color-accent: #2dd4bf;
+    --color-accent-hover: #14b8a6;
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-error: #f87171;
+}
+
+/* Global theme classes */
+.theme-bg {
+    background-color: var(--color-background);
+}
+
+.theme-surface {
+    background-color: var(--color-surface);
+}
+
+.theme-card {
+    background-color: var(--color-card);
+}
+
+.theme-border {
+    border-color: var(--color-border);
+}
+
+.theme-text {
+    color: var(--color-text-primary);
+}
+
+.theme-text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.theme-text-muted {
+    color: var(--color-text-muted);
+}
+
+.theme-accent {
+    color: var(--color-accent);
+}
+
+.theme-accent-bg {
+    background-color: var(--color-accent);
+}
+
+.theme-accent-bg:hover {
+    background-color: var(--color-accent-hover);
+}
+
+/* Enhanced Global Theme System - Comprehensive utility classes */
+
+/* Layout & Container Classes */
+.theme-container {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-header {
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+}
+
+.theme-footer {
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+}
+
+/* Navigation Classes */
+.theme-nav-link {
+    color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+}
+
+.theme-nav-link:hover {
+    color: var(--color-accent);
+}
+
+.theme-nav-link-active {
+    color: var(--color-accent);
+}
+
+.theme-nav-underline {
+    background-color: var(--color-accent);
+}
+
+/* Button Classes */
+.theme-btn-primary {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.theme-btn-primary:hover {
+    background-color: var(--color-accent-hover);
+}
+
+.theme-btn-secondary {
+    background-color: transparent;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    transition: all 0.3s ease;
+}
+
+.theme-btn-secondary:hover {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+.theme-btn-ghost {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.theme-btn-ghost:hover {
+    background-color: var(--color-surface);
+}
+
+/* Card & Surface Classes */
+.theme-card-elevated {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    transition: all 0.3s ease;
+}
+
+.theme-card-elevated:hover {
+    background-color: var(--color-surface);
+}
+
+.theme-surface-elevated {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+}
+
+/* Icon Classes */
+.theme-icon {
+    color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+}
+
+.theme-icon:hover {
+    color: var(--color-accent);
+}
+
+.theme-icon-accent {
+    color: var(--color-accent);
+}
+
+/* Input & Form Classes */
+.theme-input {
+    background-color: var(--color-background);
+    border: 2px solid var(--color-border);
+    color: var(--color-text-primary);
+    transition: border-color 0.3s ease;
+}
+
+.theme-input:focus {
+    border-color: var(--color-accent);
+    outline: none;
+}
+
+.theme-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* Status Classes */
+.theme-success {
+    color: var(--color-success);
+}
+
+.theme-warning {
+    color: var(--color-warning);
+}
+
+.theme-error {
+    color: var(--color-error);
+}
+
+.theme-success-bg {
+    background-color: var(--color-success);
+    color: white;
+}
+
+.theme-warning-bg {
+    background-color: var(--color-warning);
+    color: white;
+}
+
+.theme-error-bg {
+    background-color: var(--color-error);
+    color: white;
+}
+
+/* Carousel & Animation Classes */
+.theme-carousel-dot {
+    background-color: var(--color-text-muted);
+    transition: all 0.3s ease;
+}
+
+.theme-carousel-dot:hover {
+    background-color: var(--color-text-secondary);
+}
+
+.theme-carousel-dot-active {
+    background-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(var(--color-accent), 0.3);
+}
+
+/* Mobile Menu Classes */
+.theme-mobile-menu {
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+}
+
+.theme-menu-item {
+    color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+}
+
+.theme-menu-item:hover {
+    color: var(--color-accent);
+}
+
+/* Modal & Overlay Classes */
+.theme-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.dark .theme-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.theme-modal-card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.dark .theme-modal-card {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Utility Classes for Common Patterns */
+.theme-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.theme-hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.theme-focus-ring:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Responsive Text Classes */
+.theme-heading-1 {
+    color: var(--color-text-primary);
+    font-weight: bold;
+}
+
+.theme-heading-2 {
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+.theme-heading-3 {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.theme-body {
+    color: var(--color-text-primary);
+}
+
+.theme-caption {
+    color: var(--color-text-muted);
+}
+
+/* Special Component Classes */
+.theme-logo-container {
+    color: var(--color-text-primary);
+}
+
+.theme-whatsapp-btn {
+    background-color: #25d366;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.theme-whatsapp-btn:hover {
+    background-color: #128c7e;
+    transform: scale(1.1);
+}
+
+/* Scrollbar Theming */
+.theme-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.theme-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-surface);
+}
+
+.theme-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-text-muted);
+    border-radius: 4px;
+}
+
+.theme-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary);
+}
+
+/* Navigation Scroll Behavior */
+.navbar-hidden {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-visible {
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-scrolled {
+    backdrop-filter: blur(10px);
+    background-color: rgba(var(--color-background-rgb), 0.95);
+    border-bottom: 1px solid rgba(var(--color-border-rgb), 0.3);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+/* Theme transition for root element */
+:root {
+    transition: background-color 0.3s ease;
+}
+
+/* Enhanced carousel animations with theme support */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 1s ease-out forwards;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 1s ease-out forwards;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 640px) {
+    .animate-slide-in-left {
+        animation: slideInLeft 0.6s ease-out forwards;
+    }
+
+    .animate-slide-in-right {
+        animation: slideInRight 0.6s ease-out forwards;
+    }
+}
+
+/* Smooth transitions for responsive changes */
+.transition-theme {
+    transition-property: background-color, border-color, color;
+    transition-duration: 2.5s;
+    transition-timing-function: ease-in;
+}
