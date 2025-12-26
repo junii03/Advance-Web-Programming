@@ -1,0 +1,587 @@
+openapi: 3.0.0
+info:
+    title: 'HBL Banking API'
+    version: 1.0.0
+    description: 'A comprehensive banking API for HBL Clone application'
+    contact:
+        name: 'Muhammad Junaid Afzal'
+        email: me@junaidafzal.dev
+    license:
+        name: ISC
+        url: 'https://opensource.org/licenses/ISC'
+servers:
+    -
+        url: 'http://localhost:8000'
+        description: 'Development server'
+    -
+        url: 'https://your-production-url.com'
+        description: 'Production server'
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
+        User:
+            type: object
+            required: [email, password, firstName, lastName]
+            properties: {_id: {type: string, description: 'Auto-generated MongoDB ObjectId'}, email: {type: string, format: email, description: 'User email address'}, firstName: {type: string, description: 'User first name'}, lastName: {type: string, description: 'User last name'}, phoneNumber: {type: string, description: 'User phone number'}, role: {type: string, enum: [customer, admin], default: customer}, isActive: {type: boolean, default: true}, createdAt: {type: string, format: date-time}}
+        Account:
+            type: object
+            properties: {_id: {type: string}, accountNumber: {type: string, description: 'Unique account number'}, accountType: {type: string, enum: [savings, checking, credit]}, balance: {type: number, description: 'Account balance'}, userId: {type: string, description: 'Reference to User'}, isActive: {type: boolean, default: true}}
+        Transaction:
+            type: object
+            properties: {_id: {type: string}, fromAccount: {type: string, description: 'Source account ID'}, toAccount: {type: string, description: 'Destination account ID'}, amount: {type: number, description: 'Transaction amount'}, type: {type: string, enum: [transfer, deposit, withdrawal, payment]}, status: {type: string, enum: [pending, completed, failed]}, description: {type: string}, createdAt: {type: string, format: date-time}}
+        Loan:
+            type: object
+            properties: {_id: {type: string, description: 'Loan ID'}, userId: {type: string, description: 'User ID'}, loanType: {type: string, enum: [personal, home, car, business]}, amount: {type: number}, tenure: {type: integer}, interestRate: {type: number}, monthlyInstallment: {type: number}, status: {type: string, enum: [pending, approved, rejected, active, closed]}, applicationDate: {type: string, format: date-time}, approvedDate: {type: string, format: date-time, nullable: true}, disbursedDate: {type: string, format: date-time, nullable: true}, purpose: {type: string}, collateral: {type: string}, outstandingAmount: {type: number}, rejectionReason: {type: string, description: 'Reason for loan rejection'}, rejectedDate: {type: string, format: date-time, description: 'Date when loan was rejected'}, createdAt: {type: string, format: date-time}, updatedAt: {type: string, format: date-time}}
+        Error:
+            type: object
+            properties: {success: {type: boolean, example: false}, message: {type: string, description: 'Error message'}, error: {type: string, description: 'Detailed error information'}}
+        RegisterRequest:
+            type: object
+            required: [firstName, lastName, email, password, phone, cnic, dateOfBirth, gender, address, profilePicture, cnicFront, cnicBack]
+            properties: {firstName: {type: string, example: John}, lastName: {type: string, example: Doe}, email: {type: string, format: email, example: john.doe@example.com}, password: {type: string, minLength: 8, example: SecurePass123}, phone: {type: string, pattern: '^(\+92|0)?[0-9]{10}$', example: '03001234567'}, cnic: {type: string, pattern: '^[0-9]{5}-[0-9]{7}-[0-9]$', example: 42101-1234567-1}, dateOfBirth: {type: string, format: date, example: '1990-01-01'}, gender: {type: string, enum: [male, female, other], example: male}, address: {type: object, properties: {street: {type: string, example: '123 Main Street'}, city: {type: string, example: Karachi}, state: {type: string, example: Sindh}, postalCode: {type: string, example: '75500'}}}, profilePicture: {type: string, format: binary, description: 'Profile picture image file (Required)'}, cnicFront: {type: string, format: binary, description: 'Front side of CNIC image file (Required)'}, cnicBack: {type: string, format: binary, description: 'Back side of CNIC image file (Required)'}}
+        LoginRequest:
+            type: object
+            required: [email, password]
+            properties: {email: {type: string, format: email, example: john.doe@example.com}, password: {type: string, example: SecurePass123}}
+        AuthResponse:
+            type: object
+            properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Login successful'}, token: {type: string, example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...}, user: {type: object, properties: {id: {type: string, example: 60f7b3b3e1b3c12a3c4d5e6f}, firstName: {type: string, example: John}, lastName: {type: string, example: Doe}, email: {type: string, example: john.doe@example.com}, phone: {type: string, example: '03001234567'}, customerNumber: {type: string, example: HBL123456789}, role: {type: string, example: customer}, profilePicture: {type: string, nullable: true, example: 'https://res.cloudinary.com/yourcloud/image/upload/v1234567890/profile_pictures/profile_123_456.jpg', description: 'URL of the user''s profile picture'}}}}
+        Branch:
+            type: object
+            properties: {id: {type: string, description: 'Unique branch identifier', example: '1001'}, name: {type: string, description: 'Branch name', example: 'HBL Main Branch Karachi'}, code: {type: string, description: 'Branch code', example: '1001'}, address: {type: object, properties: {street: {type: string, example: 'I.I. Chundrigar Road'}, city: {type: string, example: Karachi}, state: {type: string, example: Sindh}, postalCode: {type: string, example: '74000'}, country: {type: string, example: Pakistan}}}, contact: {type: object, properties: {phone: {type: string, example: +92-21-111-111-425}, email: {type: string, format: email, example: main.karachi@hbl.com}}}, coordinates: {type: object, properties: {latitude: {type: number, format: float, example: 24.8607}, longitude: {type: number, format: float, example: 67.0011}}}, services: {type: array, items: {type: string, enum: [account_opening, loans, cash_deposit, cash_withdrawal, foreign_exchange]}, example: [account_opening, loans, cash_deposit]}, workingHours: {type: object, properties: {monday: {type: string, example: '9:00 AM - 5:00 PM'}, tuesday: {type: string, example: '9:00 AM - 5:00 PM'}, wednesday: {type: string, example: '9:00 AM - 5:00 PM'}, thursday: {type: string, example: '9:00 AM - 5:00 PM'}, friday: {type: string, example: '9:00 AM - 5:00 PM'}, saturday: {type: string, example: '9:00 AM - 1:00 PM'}, sunday: {type: string, example: Closed}}}, isActive: {type: boolean, description: 'Whether the branch is currently active', example: true}, distance: {type: number, format: float, description: 'Distance from user location in kilometers (only in nearby search)', example: 2.5}}
+        ATM:
+            type: object
+            properties: {id: {type: string, description: 'Unique ATM identifier', example: ATM001}, location: {type: string, description: 'ATM location name', example: 'Dolmen Mall Clifton'}, address: {type: string, description: 'Full address of the ATM', example: 'HC-3, Block-4, Marine Drive, Clifton, Karachi'}, coordinates: {type: object, properties: {latitude: {type: number, format: float, example: 24.8138}, longitude: {type: number, format: float, example: 67.0299}}}, services: {type: array, items: {type: string, enum: [cash_withdrawal, balance_inquiry, mini_statement, cash_deposit]}, example: [cash_withdrawal, balance_inquiry, mini_statement]}, isOperational: {type: boolean, description: 'Whether the ATM is currently operational', example: true}, cashAvailable: {type: boolean, description: 'Whether cash is currently available', example: true}, distance: {type: number, format: float, description: 'Distance from user location in kilometers (only in nearby search)', example: 1.2}}
+        Card:
+            type: object
+            properties: {_id: {type: string, description: 'Card ID'}, cardNumber: {type: string, description: 'Masked card number', example: '4532-****-****-1234'}, maskedCardNumber: {type: string, description: 'Masked card number', example: '4532-****-****-1234'}, cardType: {type: string, enum: [debit, credit], description: 'Type of card'}, cardStatus: {type: string, enum: [active, blocked, pending, expired], description: 'Current status of the card'}, expiryDate: {type: string, format: date-time, description: 'Card expiry date'}, cardName: {type: string, description: 'Name on the card'}, accountId: {type: string, description: 'Associated account ID'}, isContactless: {type: boolean, description: 'Whether card supports contactless payments'}, cardLimit: {type: number, description: 'Card spending limit (0 for debit cards)'}, availableLimit: {type: number, description: 'Available spending limit'}, createdAt: {type: string, format: date-time, description: 'Card creation date'}, account: {type: object, properties: {accountNumber: {type: string}, accountTitle: {type: string}, balance: {type: number}, formattedBalance: {type: string}}}}
+        CardRequest:
+            type: object
+            required: [accountId, cardType]
+            properties: {accountId: {type: string, description: 'Account ID to link the card to'}, cardType: {type: string, enum: [debit, credit], description: 'Type of card to request'}, cardName: {type: string, description: 'Optional name for the card'}}
+        CardStatusUpdate:
+            type: object
+            required: [status]
+            properties: {status: {type: string, enum: [active, blocked], description: 'New status for the card'}, reason: {type: string, description: 'Optional reason for status change'}}
+        PINUpdate:
+            type: object
+            required: [newPin, confirmPin]
+            properties: {currentPin: {type: string, minLength: 4, maxLength: 4, description: 'Current PIN (optional for first-time setup)'}, newPin: {type: string, minLength: 4, maxLength: 4, description: 'New PIN (4 digits)'}, confirmPin: {type: string, minLength: 4, maxLength: 4, description: 'Confirm new PIN (must match newPin)'}}
+        CardTransaction:
+            type: object
+            properties: {id: {type: string, description: 'Transaction ID'}, date: {type: string, format: date-time, description: 'Transaction date'}, description: {type: string, description: 'Transaction description'}, amount: {type: number, description: 'Transaction amount'}, type: {type: string, enum: [purchase, withdrawal, refund], description: 'Transaction type'}, status: {type: string, enum: [completed, pending, failed], description: 'Transaction status'}, merchant: {type: string, description: 'Merchant name'}, category: {type: string, description: 'Transaction category'}}
+        Notification:
+            type: object
+            properties: {_id: {type: string}, title: {type: string}, message: {type: string}, type: {type: string}, read: {type: boolean}, createdAt: {type: string, format: date-time}}
+        Report:
+            type: object
+            properties: {reportId: {type: string, example: RPT-1234567890-ABC123}, category: {type: string, enum: [account_issue, transaction_problem, card_issue, loan_problem, technical_issue, complaint, suggestion, other]}, subject: {type: string, maxLength: 200}, description: {type: string, maxLength: 2000}, priority: {type: string, enum: [low, medium, high, urgent]}, status: {type: string, enum: [submitted, in_progress, resolved, closed]}, images: {type: array, items: {type: object, properties: {url: {type: string}, publicId: {type: string}, uploadedAt: {type: string, format: date-time}}}}, submittedAt: {type: string, format: date-time}, lastUpdated: {type: string, format: date-time}, resolution: {type: object, properties: {resolvedAt: {type: string, format: date-time}, resolvedBy: {type: string}, resolutionNote: {type: string}}}}
+    responses:
+        Unauthorized:
+            description: 'Unauthorized - Invalid or missing token'
+            content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Unauthorized access'}}}
+        Forbidden:
+            description: 'Forbidden - Insufficient permissions'
+            content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Access forbidden'}}}
+        NotFound:
+            description: 'Resource not found'
+            content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Resource not found'}}}
+        ValidationError:
+            description: 'Validation error'
+            content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Validation failed'}}}
+        InternalServerError:
+            description: 'Internal server error'
+            content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Internal server error'}}}
+security:
+    -
+        bearerAuth: []
+paths:
+    /api/accounts:
+        get:
+            summary: 'Get all accounts for logged in user'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Accounts retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, example: 3}, data: {type: array, items: {$ref: '#/components/schemas/Account'}}}}}}}, '401': {description: Unauthorized}}
+        post:
+            summary: 'Create new account'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [accountType, accountTitle, branchCode, branchName], properties: {accountType: {type: string, enum: [savings, current, fixed_deposit, islamic_savings, salary], example: savings}, accountTitle: {type: string, maxLength: 100, example: 'John Doe Savings'}, branchCode: {type: string, pattern: '^[0-9]{4}$', example: '1234'}, branchName: {type: string, example: 'Karachi Main Branch'}, initialDeposit: {type: number, minimum: 1000, example: 5000}, depositTerm: {type: number, description: 'Term in months (for fixed deposits)', example: 12}, maturityDate: {type: string, format: date, description: 'Maturity date (for fixed deposits)'}}}}}}
+            responses: {'201': {description: 'Account created successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Account created successfully'}, data: {$ref: '#/components/schemas/Account'}}}}}}, '400': {description: 'Validation error'}, '401': {description: Unauthorized}}
+    '/api/accounts/{id}':
+        get:
+            summary: 'Get single account by ID'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Account ID'}]
+            responses: {'200': {description: 'Account retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {$ref: '#/components/schemas/Account'}}}}}}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to access this account'}, '404': {description: 'Account not found'}}
+        put:
+            summary: 'Update account details'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Account ID'}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {accountTitle: {type: string, maxLength: 100, example: 'Updated Account Title'}, dailyTransactionLimit: {type: number, example: 100000}, monthlyTransactionLimit: {type: number, example: 500000}, statementPreference: {type: string, enum: [email, sms, postal], example: email}, flags: {type: object}}}}}}
+            responses: {'200': {description: 'Account updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Account updated successfully'}, data: {$ref: '#/components/schemas/Account'}}}}}}, '400': {description: 'Validation error'}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to update this account'}, '404': {description: 'Account not found'}}
+    '/api/accounts/{id}/balance':
+        get:
+            summary: 'Get account balance'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Account ID'}]
+            responses: {'200': {description: 'Account balance retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {accountNumber: {type: string, example: 1234-5678-9012-3456}, balance: {type: number, example: 75000.5}, availableBalance: {type: number, example: 73000.5}, formattedBalance: {type: string, example: 'PKR 75,000.50'}, currency: {type: string, example: PKR}, lastUpdated: {type: string, format: date-time}}}}}}}}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to view this account balance'}, '404': {description: 'Account not found'}}
+    '/api/accounts/{id}/transactions':
+        get:
+            summary: 'Get account transaction history'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Account ID'}, {in: query, name: page, schema: {type: integer, default: 1}, description: 'Page number'}, {in: query, name: limit, schema: {type: integer, default: 20}, description: 'Number of items per page'}, {in: query, name: startDate, schema: {type: string, format: date}, description: 'Start date filter'}, {in: query, name: endDate, schema: {type: string, format: date}, description: 'End date filter'}, {in: query, name: type, schema: {type: string}, description: 'Transaction type filter'}, {in: query, name: status, schema: {type: string, default: completed}, description: 'Transaction status filter'}]
+            responses: {'200': {description: 'Account transaction history retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, example: 20}, total: {type: number, example: 150}, page: {type: number, example: 1}, pages: {type: number, example: 8}, data: {type: array, items: {allOf: [{$ref: '#/components/schemas/Transaction'}, {type: object, properties: {direction: {type: string, enum: [debit, credit, unknown], example: debit}}}]}}}}}}}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to view this account transactions'}, '404': {description: 'Account not found'}}
+    '/api/accounts/{id}/summary/{year}/{month}':
+        get:
+            summary: 'Get account monthly summary'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Account ID'}, {in: path, name: year, required: true, schema: {type: integer}, description: 'Year (YYYY)', example: 2024}, {in: path, name: month, required: true, schema: {type: integer, minimum: 1, maximum: 12}, description: 'Month (1-12)', example: 6}]
+            responses: {'200': {description: 'Account monthly summary retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {year: {type: number, example: 2024}, month: {type: number, example: 6}, summary: {type: object, description: 'Monthly transaction summary with totals and counts'}}}}}}}}, '400': {description: 'Invalid year or month'}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to view this account summary'}, '404': {description: 'Account not found'}}
+    '/api/accounts/{id}/close':
+        put:
+            summary: 'Close account (Admin only)'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Account ID'}]
+            responses: {'200': {description: 'Account closed successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Account closed successfully'}, data: {$ref: '#/components/schemas/Account'}}}}}}, '400': {description: 'Account already closed or has positive balance'}, '401': {description: Unauthorized}, '403': {description: 'Admin access required'}, '404': {description: 'Account not found'}}
+    '/api/accounts/lookup/{accountNumber}':
+        get:
+            summary: 'Lookup account by account number (for transfer verification)'
+            tags: [Accounts]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: accountNumber, required: true, schema: {type: string}, description: 'Account number to lookup'}]
+            responses: {'200': {description: 'Account found', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {accountNumber: {type: string}, accountTitle: {type: string}, accountType: {type: string}}}}}}}}, '404': {description: 'Account not found'}}
+    /api/admin/stats:
+        get:
+            summary: 'Get dashboard statistics (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Dashboard statistics retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {users: {type: object, properties: {total: {type: number}, active: {type: number}, newThisMonth: {type: number}, activePercentage: {type: string}}}, accounts: {type: object, properties: {total: {type: number}, active: {type: number}, byType: {type: array}}}, transactions: {type: object, properties: {total: {type: number}, today: {type: number}, volume: {type: object}}}, flaggedTransactions: {type: array, items: {$ref: '#/components/schemas/Transaction'}}}}}}}}}, '403': {description: 'Admin access required'}}
+    /api/admin/users:
+        get:
+            summary: 'Get all users with pagination and filters (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}}, {in: query, name: limit, schema: {type: integer, default: 20}}, {in: query, name: search, schema: {type: string}, description: 'Search by name, email, or customer number'}, {in: query, name: role, schema: {type: string, enum: [customer, admin, manager]}}, {in: query, name: status, schema: {type: string, enum: [active, inactive]}}, {in: query, name: sortBy, schema: {type: string, default: createdAt}}, {in: query, name: sortOrder, schema: {type: string, enum: [asc, desc], default: desc}}]
+            responses: {'200': {description: 'Users retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number}, total: {type: number}, page: {type: number}, pages: {type: number}, data: {type: array, items: {$ref: '#/components/schemas/User'}}}}}}}, '403': {description: 'Admin access required'}}
+    '/api/admin/users/{id}':
+        get:
+            summary: 'Get user details with accounts and transactions (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'User ID'}]
+            responses: {'200': {description: 'User details retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {user: {$ref: '#/components/schemas/User'}, accounts: {type: array, items: {$ref: '#/components/schemas/Account'}}, recentTransactions: {type: array, items: {$ref: '#/components/schemas/Transaction'}}}}}}}}}, '403': {description: 'Admin access required'}, '404': {description: 'User not found'}}
+    '/api/admin/users/{id}/status':
+        put:
+            summary: 'Update user status (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'User ID'}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [isActive], properties: {isActive: {type: boolean, example: true}}}}}}
+            responses: {'200': {description: 'User status updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'User status updated successfully'}, data: {$ref: '#/components/schemas/User'}}}}}}, '400': {description: 'Validation error'}, '403': {description: 'Admin access required'}, '404': {description: 'User not found'}}
+    '/api/admin/users/{id}/verify':
+        put:
+            summary: 'Verify user email and/or phone number (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'User ID'}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {verifyEmail: {type: boolean, example: true, description: 'Set to true to verify email'}, verifyPhone: {type: boolean, example: true, description: 'Set to true to verify phone number'}}, anyOf: [{required: [verifyEmail]}, {required: [verifyPhone]}]}}}}
+            responses: {'200': {description: 'User verification status updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'User email and phone verified successfully'}, data: {type: object, properties: {user: {$ref: '#/components/schemas/User'}, verificationChanges: {type: object, properties: {emailVerified: {type: boolean}, phoneVerified: {type: boolean}}}}}}}}}}, '400': {description: 'Validation error - At least one verification field required'}, '403': {description: 'Admin access required'}, '404': {description: 'User not found'}}
+    /api/admin/transactions:
+        get:
+            summary: 'Get all transactions with filters (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}}, {in: query, name: limit, schema: {type: integer, default: 50}}, {in: query, name: status, schema: {type: string, enum: [pending, processing, completed, failed, cancelled]}}, {in: query, name: type, schema: {type: string, enum: [transfer, payment, withdrawal, deposit]}}, {in: query, name: flagged, schema: {type: boolean}}, {in: query, name: startDate, schema: {type: string, format: date}}, {in: query, name: endDate, schema: {type: string, format: date}}, {in: query, name: minAmount, schema: {type: number}}, {in: query, name: maxAmount, schema: {type: number}}]
+            responses: {'200': {description: 'Transactions retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number}, total: {type: number}, page: {type: number}, pages: {type: number}, data: {type: array, items: {$ref: '#/components/schemas/Transaction'}}}}}}}, '403': {description: 'Admin access required'}}
+    '/api/admin/transactions/{id}/flag':
+        put:
+            summary: 'Flag or unflag transaction (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Transaction ID'}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [flagged], properties: {flagged: {type: boolean, example: true}, flagReason: {type: string, example: 'Suspicious activity detected'}}}}}}
+            responses: {'200': {description: 'Transaction flag status updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Transaction flagged successfully'}, data: {$ref: '#/components/schemas/Transaction'}}}}}}, '400': {description: 'Validation error'}, '403': {description: 'Admin access required'}, '404': {description: 'Transaction not found'}}
+    '/api/admin/reports/{type}':
+        get:
+            summary: 'Generate system reports (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: type, required: true, schema: {type: string, enum: [transactions, accounts, users]}, description: 'Report type'}, {in: query, name: startDate, schema: {type: string, format: date}, description: 'Report start date (defaults to 30 days ago)'}, {in: query, name: endDate, schema: {type: string, format: date}, description: 'Report end date (defaults to today)'}]
+            responses: {'200': {description: 'Report generated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, reportType: {type: string, example: transactions}, period: {type: object, properties: {startDate: {type: string, format: date-time}, endDate: {type: string, format: date-time}}}, data: {type: array, description: 'Report data aggregated by the specified criteria'}}}}}}, '400': {description: 'Invalid report type'}, '403': {description: 'Admin access required'}}
+    '/api/admin/users/{userId}/cards/{cardId}/status':
+        put:
+            summary: 'Change card status for any user (Admin only)'
+            description: 'Allow admin to block, unblock, or change the status of any user''s card'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: userId, required: true, schema: {type: string}, description: 'User ID who owns the card', example: 64a1b2c3d4e5f6g7h8i9j0k1}, {in: path, name: cardId, required: true, schema: {type: string}, description: 'Card ID to update', example: 64a1b2c3d4e5f6g7h8i9j0k2}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [status], properties: {status: {type: string, enum: [active, blocked, pending, expired], description: 'New status for the card'}, reason: {type: string, description: 'Admin reason for status change'}, adminNotes: {type: string, description: 'Internal admin notes (not visible to user)'}}}, examples: {block_suspicious: {summary: 'Block card for suspicious activity', value: {status: blocked, reason: 'Suspicious transactions detected', adminNotes: 'Flagged by fraud detection system - Case #12345'}}, activate_card: {summary: 'Activate pending card', value: {status: active, reason: 'Card activation approved', adminNotes: 'Manual verification completed'}}, expire_card: {summary: 'Mark card as expired', value: {status: expired, reason: 'Card expired - replacement issued'}}}}}}
+            responses: {'200': {description: 'Card status updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Card status updated successfully'}, data: {type: object, properties: {user: {type: object, properties: {_id: {type: string}, firstName: {type: string}, lastName: {type: string}, email: {type: string}}}, card: {$ref: '#/components/schemas/Card'}, statusChange: {type: object, properties: {previousStatus: {type: string}, newStatus: {type: string}, changedBy: {type: string}, changedAt: {type: string, format: date-time}}}}}}}}}}, '400': {description: 'Validation error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, examples: {invalid_status: {summary: 'Invalid status value', value: {success: false, error: 'Status must be one of: active, blocked, pending, expired'}}}}}}, '403': {description: 'Admin access required', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Admin access required'}}}}, '404': {description: 'User or card not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, examples: {user_not_found: {summary: 'User not found', value: {success: false, error: 'User not found'}}, card_not_found: {summary: 'Card not found', value: {success: false, error: 'Card not found for this user'}}}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    '/api/admin/users/{userId}/cards':
+        get:
+            summary: 'Get all cards for a specific user (Admin only)'
+            description: 'Retrieve all cards associated with a specific user for admin review'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: userId, required: true, schema: {type: string}, description: 'User ID', example: 64a1b2c3d4e5f6g7h8i9j0k1}]
+            responses: {'200': {description: 'User cards retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, description: 'Number of cards'}, data: {type: object, properties: {user: {type: object, properties: {_id: {type: string}, firstName: {type: string}, lastName: {type: string}, email: {type: string}, customerNumber: {type: string}}}, cards: {type: array, items: {allOf: [{$ref: '#/components/schemas/Card'}, {type: object, properties: {adminNotes: {type: string}, statusChangedBy: {type: string}, adminStatusChange: {type: object, description: 'Admin audit information'}}}]}}}}}}}}}, '403': {description: 'Admin access required'}, '404': {description: 'User not found'}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    '/api/admin/loans/{id}/approve':
+        put:
+            summary: 'Approve or reject a loan (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Loan ID'}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [action], properties: {action: {type: string, enum: [approve, reject], description: 'Approve or reject the loan'}, rejectionReason: {type: string, description: 'Reason for rejection (required if action is reject)'}}}, examples: {approve: {summary: 'Approve a loan', value: {action: approve}}, reject: {summary: 'Reject a loan', value: {action: reject, rejectionReason: 'Insufficient credit score'}}}}}}
+            responses: {'200': {description: 'Loan approved and amount disbursed, or loan rejected', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Loan approved and amount disbursed'}, data: {type: object, properties: {loan: {$ref: '#/components/schemas/Loan'}, transaction: {$ref: '#/components/schemas/Transaction'}}}}}}}}, '400': {description: 'Loan already processed, no active account, or missing rejection reason'}, '403': {description: 'Admin access required'}, '404': {description: 'Loan not found'}}
+    /api/admin/loans:
+        get:
+            summary: 'Get all loan applications from all users (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}}, {in: query, name: limit, schema: {type: integer, default: 20}}, {in: query, name: status, schema: {type: string, enum: [pending, approved, rejected, active, closed]}}, {in: query, name: loanType, schema: {type: string, enum: [personal, home, car, business]}}, {in: query, name: minAmount, schema: {type: number}}, {in: query, name: maxAmount, schema: {type: number}}, {in: query, name: startDate, schema: {type: string, format: date}}, {in: query, name: endDate, schema: {type: string, format: date}}, {in: query, name: search, schema: {type: string}, description: 'Search by loan ID, user name, email, or purpose'}, {in: query, name: sortBy, schema: {type: string, default: applicationDate}}, {in: query, name: sortOrder, schema: {type: string, enum: [asc, desc], default: desc}}]
+            responses: {'200': {description: 'Loans retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number}, total: {type: number}, page: {type: number}, pages: {type: number}, data: {type: array, items: {allOf: [{$ref: '#/components/schemas/Loan'}, {type: object, properties: {user: {type: object, properties: {_id: {type: string}, firstName: {type: string}, lastName: {type: string}, email: {type: string}, customerNumber: {type: string}}}}}]}}}}}}}, '403': {description: 'Admin access required'}}
+    /api/admin/customer-reports:
+        get:
+            summary: 'Get all customer reports (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}}, {in: query, name: limit, schema: {type: integer, default: 20}}, {in: query, name: status, schema: {type: string, enum: [submitted, in_progress, resolved, closed]}}, {in: query, name: category, schema: {type: string, enum: [account_issue, transaction_problem, card_issue, loan_problem, technical_issue, complaint, suggestion, other]}}, {in: query, name: priority, schema: {type: string, enum: [low, medium, high, urgent]}}, {in: query, name: search, schema: {type: string}, description: 'Search by report ID, subject, or user details'}, {in: query, name: startDate, schema: {type: string, format: date}}, {in: query, name: endDate, schema: {type: string, format: date}}, {in: query, name: sortBy, schema: {type: string, default: submittedAt}}, {in: query, name: sortOrder, schema: {type: string, enum: [asc, desc], default: desc}}]
+            responses: {'200': {description: 'Customer reports retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number}, total: {type: number}, page: {type: number}, pages: {type: number}, data: {type: array, items: {allOf: [{$ref: '#/components/schemas/Report'}, {type: object, properties: {user: {type: object, properties: {_id: {type: string}, firstName: {type: string}, lastName: {type: string}, email: {type: string}, customerNumber: {type: string}}}}}]}}}}}}}, '403': {description: 'Admin access required'}}
+    '/api/admin/customer-reports/{userId}/{reportId}/status':
+        put:
+            summary: 'Update customer report status (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: userId, required: true, schema: {type: string}, description: 'User ID'}, {in: path, name: reportId, required: true, schema: {type: string}, description: 'Report ID'}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [status], properties: {status: {type: string, enum: [submitted, in_progress, resolved, closed]}, resolutionNote: {type: string, description: 'Resolution note (required for resolved status)'}, adminNotes: {type: string, description: 'Internal admin notes'}}}}}}
+            responses: {'200': {description: 'Report status updated successfully'}, '400': {description: 'Validation error'}, '403': {description: 'Admin access required'}, '404': {description: 'User or report not found'}}
+    '/api/admin/customer-reports/{userId}/{reportId}':
+        get:
+            summary: 'Get specific customer report details (Admin only)'
+            tags: [Admin]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: userId, required: true, schema: {type: string}, description: 'User ID'}, {in: path, name: reportId, required: true, schema: {type: string}, description: 'Report ID'}]
+            responses: {'200': {description: 'Report details retrieved successfully'}, '403': {description: 'Admin access required'}, '404': {description: 'User or report not found'}}
+    /api/auth/register:
+        post:
+            summary: 'Register a new user with required documents'
+            tags: [Authentication]
+            requestBody: {required: true, content: {multipart/form-data: {schema: {type: object, required: [firstName, lastName, email, password, phone, cnic, dateOfBirth, gender, address, profilePicture, cnicFront, cnicBack], properties: {firstName: {type: string, example: John}, lastName: {type: string, example: Doe}, email: {type: string, format: email, example: john.doe@example.com}, password: {type: string, minLength: 8, example: SecurePass123}, phone: {type: string, pattern: '^(\+92|0)?[0-9]{10}$', example: '03001234567'}, cnic: {type: string, pattern: '^[0-9]{5}-[0-9]{7}-[0-9]$', example: 42101-1234567-1}, dateOfBirth: {type: string, format: date, example: '1990-01-01'}, gender: {type: string, enum: [male, female, other], example: male}, address: {type: string, description: 'JSON string of address object', example: '{"street":"123 Main St","city":"Karachi","state":"Sindh","postalCode":"74000"}'}, profilePicture: {type: string, format: binary, description: 'Profile picture image file (Required - Max 5MB)'}, cnicFront: {type: string, format: binary, description: 'Front side of CNIC image file (Required - Max 5MB)'}, cnicBack: {type: string, format: binary, description: 'Back side of CNIC image file (Required - Max 5MB)'}}}}}}
+            responses: {'201': {description: 'User registered successfully', content: {application/json: {schema: {$ref: '#/components/schemas/AuthResponse'}}}}, '400': {description: 'Bad request - Validation error, user already exists, or missing files', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '500': {description: 'Internal server error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    /api/auth/login:
+        post:
+            summary: 'Login user'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/LoginRequest'}}}}
+            responses: {'200': {description: 'Login successful', content: {application/json: {schema: {$ref: '#/components/schemas/AuthResponse'}}}}, '401': {description: 'Invalid credentials or account locked', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '423': {description: 'Account locked due to too many failed attempts', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    /api/auth/logout:
+        post:
+            summary: 'Logout user'
+            tags: [Authentication]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Logout successful', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Logout successful'}}}}}}, '401': {description: 'Unauthorized - Invalid or missing token', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    /api/auth/me:
+        get:
+            summary: 'Get current user profile'
+            tags: [Authentication]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'User profile retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, user: {$ref: '#/components/schemas/User'}}}}}}, '401': {description: 'Unauthorized - Invalid or missing token', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    /api/auth/updatedetails:
+        put:
+            summary: 'Update user details'
+            tags: [Authentication]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {firstName: {type: string, example: John}, lastName: {type: string, example: Doe}, phone: {type: string, example: '03001234567'}, address: {type: object, properties: {street: {type: string, example: '123 Main Street'}, city: {type: string, example: Karachi}, state: {type: string, example: Sindh}, postalCode: {type: string, example: '75500'}}}}}}}}
+            responses: {'200': {description: 'User details updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'User details updated successfully'}, user: {$ref: '#/components/schemas/User'}}}}}}, '400': {description: 'Bad request - Validation error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '404': {description: 'User not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '500': {description: 'Internal server error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    /api/auth/updatepassword:
+        put:
+            summary: 'Update user password'
+            tags: [Authentication]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {currentPassword: {type: string, example: OldSecurePass123}, newPassword: {type: string, minLength: 8, example: NewSecurePass123}}}}}}
+            responses: {'200': {description: 'Password updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Password updated successfully'}, token: {type: string, example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...}}}}}}, '400': {description: 'Bad request - Validation error or current password incorrect', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '404': {description: 'User not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '500': {description: 'Internal server error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    /api/auth/forgotpassword:
+        post:
+            summary: 'Request password reset'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {email: {type: string, format: email, example: john.doe@example.com}}}}}}
+            responses: {'200': {description: 'Password reset token sent to email', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Password reset token sent to email'}}}}}}, '400': {description: 'Bad request - Validation error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '404': {description: 'User not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '500': {description: 'Internal server error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    '/api/auth/resetpassword/{resettoken}':
+        put:
+            summary: 'Reset password using token'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {password: {type: string, minLength: 8, example: SecurePass123}}}}}}
+            parameters: [{in: path, name: resettoken, required: true, schema: {type: string}}]
+            responses: {'200': {description: 'Password reset successful', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Password reset successful'}, token: {type: string, example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...}}}}}}, '400': {description: 'Bad request - Validation error or invalid/expired token', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '404': {description: 'User not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}, '500': {description: 'Internal server error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}}
+    /api/branches:
+        get:
+            summary: 'Get all branches'
+            description: 'Retrieve a list of all active bank branches with optional filtering'
+            tags: [Branches]
+            parameters: [{in: query, name: city, schema: {type: string}, description: 'Filter branches by city name (case-insensitive partial match)', example: karachi}, {in: query, name: service, schema: {type: string, enum: [account_opening, loans, cash_deposit, cash_withdrawal, foreign_exchange]}, description: 'Filter branches that offer a specific service', example: loans}, {in: query, name: limit, schema: {type: integer, minimum: 1, maximum: 100, default: 50}, description: 'Maximum number of branches to return'}]
+            responses: {'200': {description: 'Branches retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, description: 'Number of branches returned', example: 3}, data: {type: array, items: {$ref: '#/components/schemas/Branch'}}}}, example: {success: true, count: 3, data: [{id: '1001', name: 'HBL Main Branch Karachi', code: '1001', address: {street: 'I.I. Chundrigar Road', city: Karachi, state: Sindh, postalCode: '74000', country: Pakistan}, contact: {phone: +92-21-111-111-425, email: main.karachi@hbl.com}, services: [account_opening, loans, cash_deposit]}]}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    '/api/branches/{id}':
+        get:
+            summary: 'Get branch by ID'
+            description: 'Retrieve detailed information about a specific branch'
+            tags: [Branches]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Branch ID', example: '1001'}]
+            responses: {'200': {description: 'Branch details retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {$ref: '#/components/schemas/Branch'}}}, example: {success: true, data: {id: '1001', name: 'HBL Main Branch Karachi', code: '1001', address: {street: 'I.I. Chundrigar Road', city: Karachi, state: Sindh, postalCode: '74000', country: Pakistan}, contact: {phone: +92-21-111-111-425, email: main.karachi@hbl.com}, coordinates: {latitude: 24.8607, longitude: 67.0011}, services: [account_opening, loans, cash_deposit, cash_withdrawal, foreign_exchange], workingHours: {monday: '9:00 AM - 5:00 PM', tuesday: '9:00 AM - 5:00 PM', wednesday: '9:00 AM - 5:00 PM', thursday: '9:00 AM - 5:00 PM', friday: '9:00 AM - 5:00 PM', saturday: '9:00 AM - 1:00 PM', sunday: Closed}, isActive: true}}}}}, '404': {description: 'Branch not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Branch not found'}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    /api/branches/nearby:
+        get:
+            summary: 'Find nearest branches'
+            description: 'Find branches near a specific location using coordinates and radius'
+            tags: [Branches]
+            parameters: [{in: query, name: lat, required: true, schema: {type: number, format: float}, description: 'Latitude of the location', example: 24.8607}, {in: query, name: lng, required: true, schema: {type: number, format: float}, description: 'Longitude of the location', example: 67.0011}, {in: query, name: radius, schema: {type: number, format: float, default: 10, minimum: 1, maximum: 100}, description: 'Search radius in kilometers', example: 5}]
+            responses: {'200': {description: 'Nearby branches found successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, description: 'Number of branches found within radius', example: 2}, data: {type: array, items: {allOf: [{$ref: '#/components/schemas/Branch'}, {type: object, properties: {distance: {type: number, format: float, description: 'Distance from search location in kilometers'}}}]}}}}, example: {success: true, count: 2, data: [{id: '1001', name: 'HBL Main Branch Karachi', address: {city: Karachi, street: 'I.I. Chundrigar Road'}, distance: 2.3, coordinates: {latitude: 24.8607, longitude: 67.0011}}, {id: '1002', name: 'HBL Clifton Branch', address: {city: Karachi, street: 'Clifton Block 2'}, distance: 4.7, coordinates: {latitude: 24.8138, longitude: 67.0299}}]}}}}, '400': {description: 'Missing required parameters', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Latitude and longitude are required'}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    /api/branches/atms:
+        get:
+            summary: 'Get ATM locations'
+            description: 'Retrieve a list of all available ATM locations with their services and status'
+            tags: [Branches]
+            responses: {'200': {description: 'ATM locations retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, description: 'Number of ATMs returned', example: 2}, data: {type: array, items: {$ref: '#/components/schemas/ATM'}}}}, example: {success: true, count: 2, data: [{id: ATM001, location: 'Dolmen Mall Clifton', address: 'HC-3, Block-4, Marine Drive, Clifton, Karachi', coordinates: {latitude: 24.8138, longitude: 67.0299}, services: [cash_withdrawal, balance_inquiry, mini_statement], isOperational: true, cashAvailable: true}, {id: ATM002, location: 'Packages Mall Lahore', address: 'Walton Road, Lahore Cantt, Lahore', coordinates: {latitude: 31.5096, longitude: 74.3301}, services: [cash_withdrawal, balance_inquiry, mini_statement], isOperational: true, cashAvailable: true}]}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    /api/cards:
+        get:
+            summary: 'Get user''s cards'
+            description: 'Retrieve all cards associated with the authenticated user''s accounts'
+            tags: [Cards]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Cards retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, description: 'Number of cards returned'}, data: {type: array, items: {$ref: '#/components/schemas/Card'}}}}, example: {success: true, count: 2, data: [{_id: 64a1b2c3d4e5f6g7h8i9j0k1, cardNumber: '4532-****-****-1234', cardType: debit, cardStatus: active, cardName: 'John Doe', cardLimit: 0, availableLimit: 0, account: {accountNumber: '001234567890', balance: 25000}}]}}}}, '401': {$ref: '#/components/responses/Unauthorized'}, '500': {$ref: '#/components/responses/InternalServerError'}}
+        post:
+            summary: 'Request a new card'
+            description: 'Submit a request for a new debit or credit card'
+            tags: [Cards]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/CardRequest'}, example: {accountId: 64a1b2c3d4e5f6g7h8i9j0k1, cardType: credit, cardName: 'John Doe Business'}}}}
+            responses: {'201': {description: 'Card request submitted successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Card request submitted successfully. Processing time: 5-7 business days.'}, data: {$ref: '#/components/schemas/Card'}}}}}}, '400': {description: 'Validation error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Card type must be debit or credit'}}}}, '401': {$ref: '#/components/responses/Unauthorized'}, '404': {description: 'Account not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Account not found or not authorized'}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    '/api/cards/{id}/status':
+        put:
+            summary: 'Block or unblock a card'
+            description: 'Change the status of a card to active or blocked'
+            tags: [Cards]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Card ID', example: 64a1b2c3d4e5f6g7h8i9j0k1}]
+            requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/CardStatusUpdate'}, examples: {block_card: {summary: 'Block a card', value: {status: blocked, reason: 'Suspicious activity detected'}}, unblock_card: {summary: 'Unblock a card', value: {status: active, reason: 'Issue resolved'}}}}}}
+            responses: {'200': {description: 'Card status updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Card blocked successfully'}, data: {$ref: '#/components/schemas/Card'}}}}}}, '400': {description: 'Validation error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Status must be active or blocked'}}}}, '401': {$ref: '#/components/responses/Unauthorized'}, '404': {description: 'Card not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Card not found'}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    '/api/cards/{id}/pin':
+        put:
+            summary: 'Set or change card PIN'
+            description: 'Set a new PIN for a card or change existing PIN'
+            tags: [Cards]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Card ID', example: 64a1b2c3d4e5f6g7h8i9j0k1}]
+            requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/PINUpdate'}, examples: {set_new_pin: {summary: 'Set PIN for new card', value: {newPin: '1234', confirmPin: '1234'}}, change_existing_pin: {summary: 'Change existing PIN', value: {currentPin: '1234', newPin: '5678', confirmPin: '5678'}}}}}}
+            responses: {'200': {description: 'PIN updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'PIN updated successfully'}}}}}}, '400': {description: 'Validation error', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, examples: {pin_mismatch: {summary: 'PIN confirmation mismatch', value: {success: false, error: 'New PIN and confirm PIN do not match'}}, invalid_pin: {summary: 'Invalid PIN format', value: {success: false, error: 'New PIN must be 4 digits'}}}}}}, '401': {$ref: '#/components/responses/Unauthorized'}, '404': {description: 'Card not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Card not found'}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    '/api/cards/{id}/transactions':
+        get:
+            summary: 'Get card transactions'
+            description: 'Retrieve transaction history for a specific card with pagination'
+            tags: [Cards]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Card ID', example: 64a1b2c3d4e5f6g7h8i9j0k1}, {in: query, name: page, schema: {type: integer, minimum: 1, default: 1}, description: 'Page number for pagination'}, {in: query, name: limit, schema: {type: integer, minimum: 1, maximum: 100, default: 20}, description: 'Number of transactions per page'}]
+            responses: {'200': {description: 'Card transactions retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, description: 'Number of transactions in current page'}, total: {type: number, description: 'Total number of transactions'}, page: {type: number, description: 'Current page number'}, pages: {type: number, description: 'Total number of pages'}, data: {type: array, items: {$ref: '#/components/schemas/CardTransaction'}}}}, example: {success: true, count: 3, total: 3, page: 1, pages: 1, data: [{id: '1', date: '2025-06-13T10:30:00Z', description: 'Online Purchase - Amazon', amount: 2500, type: purchase, status: completed, merchant: Amazon.com, category: Shopping}]}}}}, '401': {$ref: '#/components/responses/Unauthorized'}, '404': {description: 'Card not found', content: {application/json: {schema: {$ref: '#/components/schemas/Error'}, example: {success: false, error: 'Card not found'}}}}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    /api/loans:
+        get:
+            summary: 'Get user''s loans'
+            tags: [Loans]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Loans retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, example: 2}, data: {type: array, items: {$ref: '#/components/schemas/Loan'}}}}}}}, '401': {description: Unauthorized}}
+        post:
+            summary: 'Apply for a loan'
+            tags: [Loans]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [loanType, amount, tenure, purpose], properties: {loanType: {type: string, enum: [personal, home, car, business], example: personal}, amount: {type: number, example: 500000}, tenure: {type: integer, example: 36}, purpose: {type: string, example: 'Home renovation'}, collateral: {type: string, example: 'Property documents'}}}}}}
+            responses: {'201': {description: 'Loan application submitted successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Loan application submitted successfully'}, data: {$ref: '#/components/schemas/Loan'}}}}}}, '400': {description: 'Validation error'}, '401': {description: Unauthorized}}
+    '/api/loans/{id}':
+        get:
+            summary: 'Get loan details'
+            tags: [Loans]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Loan ID'}]
+            responses: {'200': {description: 'Loan details retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {$ref: '#/components/schemas/Loan'}}}}}}, '401': {description: Unauthorized}, '404': {description: 'Loan not found'}}
+    /api/loans/calculate:
+        post:
+            summary: 'Calculate loan EMI'
+            tags: [Loans]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [amount, tenure, loanType], properties: {amount: {type: number, example: 500000}, tenure: {type: integer, example: 36}, loanType: {type: string, enum: [personal, home, car, business], example: personal}}}}}}
+            responses: {'200': {description: 'EMI calculation successful', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {loanAmount: {type: number, example: 500000}, tenure: {type: integer, example: 36}, interestRate: {type: number, example: 18.5}, monthlyInstallment: {type: number, example: 18000}, totalAmount: {type: number, example: 648000}, totalInterest: {type: number, example: 148000}}}}}}}}, '400': {description: 'Validation error'}, '401': {description: Unauthorized}}
+    /api/notifications:
+        get:
+            summary: 'Get user notifications'
+            tags: [Notifications]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}, description: 'Page number'}, {in: query, name: limit, schema: {type: integer, default: 20}, description: 'Number of notifications per page'}, {in: query, name: type, schema: {type: string}, description: 'Filter by notification type'}]
+            responses: {'200': {description: 'List of notifications', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, count: {type: integer}, total: {type: integer}, page: {type: integer}, pages: {type: integer}, data: {type: array, items: {$ref: '#/components/schemas/Notification'}}}}}}}, '401': {description: Unauthorized}}
+    '/api/notifications/{id}/read':
+        put:
+            summary: 'Mark a notification as read'
+            tags: [Notifications]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Notification ID'}]
+            responses: {'200': {description: 'Notification marked as read', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, message: {type: string}}}}}}, '401': {description: Unauthorized}, '404': {description: 'Notification not found'}}
+    /api/notifications/read-all:
+        put:
+            summary: 'Mark all notifications as read'
+            tags: [Notifications]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'All notifications marked as read', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, message: {type: string}}}}}}, '401': {description: Unauthorized}}
+    '/api/notifications/{id}':
+        delete:
+            summary: 'Delete a notification'
+            tags: [Notifications]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Notification ID'}]
+            responses: {'200': {description: 'Notification deleted', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, message: {type: string}}}}}}, '401': {description: Unauthorized}, '404': {description: 'Notification not found'}}
+    /api/notifications/unread-count:
+        get:
+            summary: 'Get unread notification count'
+            tags: [Notifications]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Unread notification count', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, data: {type: object, properties: {unreadCount: {type: integer}}}}}}}}, '401': {description: Unauthorized}}
+    /api/reports:
+        get:
+            summary: 'Get user reports'
+            tags: [Reports]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}, description: 'Page number'}, {in: query, name: limit, schema: {type: integer, default: 20}, description: 'Number of reports per page'}, {in: query, name: status, schema: {type: string, enum: [submitted, in_progress, resolved, closed]}, description: 'Filter by report status'}, {in: query, name: category, schema: {type: string}, description: 'Filter by report category'}]
+            responses: {'200': {description: 'List of user reports', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, count: {type: integer}, total: {type: integer}, page: {type: integer}, pages: {type: integer}, data: {type: array, items: {$ref: '#/components/schemas/Report'}}}}}}}, '401': {description: Unauthorized}}
+        post:
+            summary: 'Submit a new report'
+            tags: [Reports]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {multipart/form-data: {schema: {type: object, required: [category, subject, description], properties: {category: {type: string, enum: [account_issue, transaction_problem, card_issue, loan_problem, technical_issue, complaint, suggestion, other]}, subject: {type: string, maxLength: 200}, description: {type: string, maxLength: 2000}, priority: {type: string, enum: [low, medium, high, urgent], default: medium}, images: {type: array, items: {type: string, format: binary}, maxItems: 3}}}}}}
+            responses: {'201': {description: 'Report submitted successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, message: {type: string}, data: {$ref: '#/components/schemas/Report'}}}}}}, '400': {description: 'Validation error'}, '401': {description: Unauthorized}}
+    '/api/reports/{reportId}':
+        get:
+            summary: 'Get specific report by ID'
+            tags: [Reports]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: reportId, required: true, schema: {type: string}, description: 'Report ID'}]
+            responses: {'200': {description: 'Report details', content: {application/json: {schema: {type: object, properties: {success: {type: boolean}, data: {$ref: '#/components/schemas/Report'}}}}}}, '401': {description: Unauthorized}, '404': {description: 'Report not found'}}
+        put:
+            summary: 'Update report (add comments/update description)'
+            tags: [Reports]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: reportId, required: true, schema: {type: string}, description: 'Report ID'}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {description: {type: string, maxLength: 2000}, priority: {type: string, enum: [low, medium, high, urgent]}}}}}}
+            responses: {'200': {description: 'Report updated successfully'}, '401': {description: Unauthorized}, '404': {description: 'Report not found'}}
+        delete:
+            summary: 'Delete report'
+            tags: [Reports]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: reportId, required: true, schema: {type: string}, description: 'Report ID'}]
+            responses: {'200': {description: 'Report deleted successfully'}, '401': {description: Unauthorized}, '404': {description: 'Report not found'}}
+    /api/transactions:
+        post:
+            summary: 'Create a new transaction (Transfer/Payment/Withdrawal)'
+            tags: [Transactions]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [type, fromAccountId, amount, description], properties: {type: {type: string, enum: [transfer, payment, withdrawal], example: transfer}, fromAccountId: {type: string, format: objectId, example: 60f7b3b3e1b3c12a3c4d5e6f}, toAccountId: {type: string, format: objectId, description: 'Required for transfers', example: 60f7b3b3e1b3c12a3c4d5e70}, amount: {type: number, minimum: 0.01, example: 5000.5}, description: {type: string, maxLength: 200, example: 'Monthly rent payment'}, channel: {type: string, enum: [online, mobile, atm, branch], default: online, example: online}, thirdParty: {type: object, description: 'Third party payment details', properties: {name: {type: string}, accountNumber: {type: string}, bankCode: {type: string}}}, billPayment: {type: object, description: 'Bill payment details', properties: {billType: {type: string}, billNumber: {type: string}, dueDate: {type: string, format: date}}}}}}}}
+            responses: {'201': {description: 'Transaction completed successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Transaction completed successfully'}, data: {$ref: '#/components/schemas/Transaction'}}}}}}, '400': {description: 'Validation error, insufficient funds, or limit exceeded'}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to use this account'}, '404': {description: 'Account not found'}}
+        get:
+            summary: 'Get user''s transactions with filters'
+            tags: [Transactions]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}, description: 'Page number'}, {in: query, name: limit, schema: {type: integer, default: 20}, description: 'Number of items per page'}, {in: query, name: type, schema: {type: string, enum: [transfer, payment, withdrawal, deposit]}, description: 'Transaction type filter'}, {in: query, name: status, schema: {type: string, enum: [pending, processing, completed, failed, cancelled]}, description: 'Transaction status filter'}, {in: query, name: startDate, schema: {type: string, format: date}, description: 'Start date filter'}, {in: query, name: endDate, schema: {type: string, format: date}, description: 'End date filter'}, {in: query, name: accountId, schema: {type: string}, description: 'Filter by specific account'}]
+            responses: {'200': {description: 'Transactions retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, example: 20}, total: {type: number, example: 150}, page: {type: number, example: 1}, pages: {type: number, example: 8}, data: {type: array, items: {$ref: '#/components/schemas/Transaction'}}}}}}}, '401': {description: Unauthorized}}
+    '/api/transactions/{id}':
+        get:
+            summary: 'Get single transaction by ID'
+            tags: [Transactions]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Transaction ID'}]
+            responses: {'200': {description: 'Transaction retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {$ref: '#/components/schemas/Transaction'}}}}}}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to view this transaction'}, '404': {description: 'Transaction not found'}}
+    '/api/transactions/{id}/receipt':
+        get:
+            summary: 'Get transaction receipt'
+            tags: [Transactions]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Transaction ID'}]
+            responses: {'200': {description: 'Transaction receipt retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {transactionId: {type: string, example: TXN-20240612-001234}, date: {type: string, format: date-time}, type: {type: string, example: transfer}, subType: {type: string, example: online_transfer}, amount: {type: string, example: 'PKR 5,000.50'}, fees: {type: object, properties: {transactionFee: {type: number}, processingFee: {type: number}, otherCharges: {type: number}}}, description: {type: string, example: 'Monthly rent payment'}, status: {type: string, example: completed}, fromAccount: {type: object, properties: {accountNumber: {type: string}, accountTitle: {type: string}}}, toAccount: {type: object, properties: {accountNumber: {type: string}, accountTitle: {type: string}}}, referenceNumber: {type: string}, channel: {type: string, example: online}}}}}}}}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to view this transaction'}, '404': {description: 'Transaction not found'}}
+    '/api/transactions/{id}/cancel':
+        put:
+            summary: 'Cancel pending transaction'
+            tags: [Transactions]
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'Transaction ID'}]
+            responses: {'200': {description: 'Transaction cancelled successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Transaction cancelled successfully'}, data: {$ref: '#/components/schemas/Transaction'}}}}}}, '400': {description: 'Only pending transactions can be cancelled'}, '401': {description: Unauthorized}, '403': {description: 'Not authorized to cancel this transaction'}, '404': {description: 'Transaction not found'}}
+    /api/users/profile:
+        get:
+            summary: 'Get current user profile'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'User profile retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {$ref: '#/components/schemas/User'}}}}}}, '401': {description: Unauthorized}}
+        put:
+            summary: 'Update user profile'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {firstName: {type: string, example: John}, lastName: {type: string, example: Doe}, phone: {type: string, pattern: '^(\+92|0)?[0-9]{10}$', example: '03001234567'}, address: {type: object, properties: {street: {type: string, example: '123 Main Street'}, city: {type: string, example: Karachi}, state: {type: string, example: Sindh}, postalCode: {type: string, example: '75500'}}}, profilePicture: {type: string, example: 'https://example.com/profile.jpg'}, preferences: {type: object}}}}}}
+            responses: {'200': {description: 'Profile updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Profile updated successfully'}, data: {$ref: '#/components/schemas/User'}}}}}}, '400': {description: 'Validation error'}, '401': {description: Unauthorized}}
+    /api/users/dashboard:
+        get:
+            summary: 'Get comprehensive user dashboard data'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Dashboard data retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {user: {type: object, properties: {id: {type: string, example: 60f7b3b3e1b3c12a3c4d5e6f}, fullName: {type: string, example: 'John Doe'}, email: {type: string, example: john.doe@example.com}, customerNumber: {type: string, example: HBL123456789}, profilePicture: {type: string, nullable: true, example: 'https://res.cloudinary.com/yourcloud/image/upload/v1234567890/profile_pictures/profile_123_456.jpg'}, isEmailVerified: {type: boolean, example: true, description: 'Email verification status'}, isPhoneVerified: {type: boolean, example: true, description: 'Phone number verification status'}, role: {type: string, example: customer}}}, accounts: {type: array, items: {type: object, properties: {id: {type: string}, accountNumber: {type: string}, accountTitle: {type: string}, accountType: {type: string}, balance: {type: number}, formattedBalance: {type: string}, status: {type: string}, interestRate: {type: number}, dailyLimit: {type: number}, monthlyLimit: {type: number}}}}, totalBalance: {type: number, example: 150000.5}, formattedTotalBalance: {type: string, example: 'PKR 150,000.50'}, recentTransactions: {type: array, items: {$ref: '#/components/schemas/Transaction'}}, monthlyStats: {type: array, items: {type: object, properties: {_id: {type: string}, totalAmount: {type: number}, count: {type: number}}}}, spendingByCategory: {type: array, items: {type: object, properties: {_id: {type: string}, totalAmount: {type: number}, count: {type: number}}}}, weeklyTrend: {type: array, items: {type: object, properties: {_id: {type: object, properties: {week: {type: number}, year: {type: number}}}, totalAmount: {type: number}, count: {type: number}}}}, quickStats: {type: object, properties: {totalAccounts: {type: number, example: 3}, activeAccounts: {type: number, example: 3}, todayTransactions: {type: number, example: 5}, pendingTransactions: {type: number, example: 2}}}, pendingTransactions: {type: array, items: {$ref: '#/components/schemas/Transaction'}}, summary: {type: object, properties: {totalAccounts: {type: number}, activeAccounts: {type: number}, recentTransactionsCount: {type: number}}}}}}}}}}, '401': {description: Unauthorized}}
+    /api/users/accounts-summary:
+        get:
+            summary: 'Get user''s accounts summary'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Accounts summary retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {totalAccounts: {type: number, example: 3}, accountsByType: {type: object, additionalProperties: {type: object, properties: {count: {type: number}, totalBalance: {type: number}, formattedTotalBalance: {type: string}}}}, totalBalance: {type: number, example: 250000}, averageBalance: {type: number, example: 83333.33}, formattedTotalBalance: {type: string, example: 'PKR 250,000.00'}}}}}}}}, '401': {description: Unauthorized}}
+    /api/users/notifications:
+        put:
+            summary: 'Update notification preferences'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {preferences: {type: object, properties: {notifications: {type: object, properties: {email: {type: boolean, example: true}, sms: {type: boolean, example: false}, push: {type: boolean, example: true}}}}}}}}}}
+            responses: {'200': {description: 'Notification preferences updated successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Notification preferences updated successfully'}, data: {type: object}}}}}}, '400': {description: 'Validation error'}, '401': {description: Unauthorized}}
+    /api/users/beneficiaries:
+        get:
+            summary: 'Get user''s beneficiaries (frequent transfer recipients)'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Beneficiaries retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, example: 5}, data: {type: array, items: {type: object, properties: {accountNumber: {type: string, example: '1234567890'}, accountTitle: {type: string, example: 'Jane Doe'}, recipientName: {type: string, example: 'Jane Doe'}, transferCount: {type: number, example: 5}, lastTransfer: {type: string, format: date-time}, totalAmount: {type: number, example: 50000}}}}}}}}}, '401': {description: Unauthorized}}
+    /api/users/analytics:
+        get:
+            summary: 'Get user analytics data'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: period, schema: {type: string, enum: [1month, 3months, 6months, 1year], default: 6months}, description: 'Time period for analytics'}]
+            responses: {'200': {description: 'Analytics data retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: object, properties: {period: {type: string, example: 6months}, spendingByCategory: {type: array, items: {type: object, properties: {_id: {type: string}, totalAmount: {type: number}, count: {type: number}, avgAmount: {type: number}}}}, monthlyTrend: {type: array}, incomeExpenses: {type: object, properties: {totalIncome: {type: number}, totalExpenses: {type: number}}}, accounts: {type: number}, totalBalance: {type: number}}}}}}}}, '401': {description: Unauthorized}}
+    /api/users/transactions:
+        get:
+            summary: 'Get user''s transaction history with filters'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: page, schema: {type: integer, default: 1}, description: 'Page number'}, {in: query, name: limit, schema: {type: integer, default: 20}, description: 'Number of items per page'}, {in: query, name: type, schema: {type: string}, description: 'Transaction type filter'}, {in: query, name: status, schema: {type: string}, description: 'Transaction status filter'}, {in: query, name: startDate, schema: {type: string, format: date}, description: 'Start date filter'}, {in: query, name: endDate, schema: {type: string, format: date}, description: 'End date filter'}, {in: query, name: minAmount, schema: {type: number}, description: 'Minimum amount filter'}, {in: query, name: maxAmount, schema: {type: number}, description: 'Maximum amount filter'}, {in: query, name: accountId, schema: {type: string}, description: 'Specific account ID filter'}]
+            responses: {'200': {description: 'Transaction history retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, count: {type: number, example: 20}, total: {type: number, example: 150}, page: {type: number, example: 1}, pages: {type: number, example: 8}, data: {type: array, items: {$ref: '#/components/schemas/Transaction'}}}}}}}, '401': {description: Unauthorized}}
+    /api/users/export-transactions:
+        get:
+            summary: 'Export transaction data'
+            tags: [Users]
+            security: [{bearerAuth: []}]
+            parameters: [{in: query, name: format, schema: {type: string, enum: [csv, json], default: csv}, description: 'Export format'}, {in: query, name: startDate, schema: {type: string, format: date}, description: 'Start date for export'}, {in: query, name: endDate, schema: {type: string, format: date}, description: 'End date for export'}]
+            responses: {'200': {description: 'Transaction data exported successfully', content: {text/csv: {schema: {type: string}}, application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: array, items: {$ref: '#/components/schemas/Transaction'}}}}}}}, '401': {description: Unauthorized}}
+tags:
+    -
+        name: Loans
+        description: 'Loan management and application'
+    -
+        name: Notifications
+        description: 'User notification management'
+    -
+        name: Reports
+        description: 'User report management system'

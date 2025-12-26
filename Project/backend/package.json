@@ -1,0 +1,62 @@
+{
+    "name": "hbl-banking-backend",
+    "version": "1.0.0",
+    "description": "Backend API for HBL Banking Application",
+    "main": "src/app.js",
+    "type": "module",
+    "scripts": {
+        "start": "node src/app.js",
+        "dev": "nodemon src/app.js",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "lint": "eslint src/",
+        "lint:fix": "eslint src/ --fix",
+        "seed": "node src/scripts/seedDatabase.js",
+        "docs:generate": "node src/scripts/generateDocs.js",
+        "docs:serve": "swagger-ui-serve swagger.json"
+    },
+    "keywords": [
+        "banking",
+        "api",
+        "nodejs",
+        "express",
+        "mongodb"
+    ],
+    "author": "M. Junaid Afzal",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^3.0.2",
+        "cloudinary": "^2.6.1",
+        "compression": "^1.8.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "express-rate-limit": "^7.5.0",
+        "express-validator": "^7.2.1",
+        "helmet": "^8.1.0",
+        "joi": "^17.13.3",
+        "jsonwebtoken": "^9.0.2",
+        "moment": "^2.30.1",
+        "mongoose": "^8.15.1",
+        "multer": "^2.0.1",
+        "nodemailer": "^7.0.3",
+        "redis": "^5.5.6",
+        "socket.io": "^4.8.1",
+        "uuid": "^11.1.0",
+        "winston": "^3.17.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
+        "yamljs": "^0.3.0"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.27.2",
+        "babel-jest": "^30.0.0",
+        "eslint": "^9.28.0",
+        "jest": "^30.0.0",
+        "nodemon": "^3.1.10",
+        "supertest": "^7.1.1"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}
