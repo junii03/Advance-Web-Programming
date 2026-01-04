@@ -40,7 +40,7 @@ jobs:
                   timeout: 30s
                   command_timeout: 10m
                   script: |
-                      cd "/home/ubuntu/Advance Web Programming/Project/backend" || exit 1
+                      cd /home/ubuntu/Advance-Web-Programming/Project/backend || exit 1
 
                       # Pull latest changes
                       git pull origin main || echo "Git pull failed, continuing..."
