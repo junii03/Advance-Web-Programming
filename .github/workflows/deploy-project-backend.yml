@@ -40,9 +40,6 @@ jobs:
                   timeout: 30s
                   command_timeout: 10m
                   script: |
-                      # Source shell profile to load nvm, npm, pm2
-                      source ~/.bashrc || source ~/.bash_profile || true
-
                       cd /home/ubuntu/Advance-Web-Programming/Project/backend || exit 1
 
                       # Pull latest changes
