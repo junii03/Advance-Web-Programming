@@ -37,7 +37,7 @@ jobs:
                   username: ubuntu
                   key: ${{ secrets.EC2_SSH_KEY }}
                   script: |
-                      cd /home/ubuntu/backend  # Your backend path on EC2
+                      cd "/home/ubuntu/Advance Web Programming/backend"
                       git pull
                       npm install
 
