@@ -6,11 +6,17 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerConfig from './config/swagger.js';
+import fs from 'fs';
+import YAML from 'yamljs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Load environment variables first
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Import configurations and utilities (after dotenv)
 import { connectDB } from './config/database.js';
 import { connectRedis } from './config/redis.js';
@@ -50,17 +56,9 @@ const io = initializeSocket(server);
 setupSocketHandlers(io);
 initializeSocketNotificationService(io);
 
-// Swagger configuration with dynamic API scanning
-const swaggerOptions = {
-    definition: swaggerConfig,
-    apis: [
-        './src/routes/*.js',
-        './src/models/*.js',
-        './src/config/swagger.js'
-    ]
-};
-
-const swaggerSpecs = swaggerJsdoc(swaggerOptions);
+// Load Swagger specs from YAML file
+const swaggerFilePath = path.join(__dirname, '../swagger.yaml');
+const swaggerSpecs = YAML.load(swaggerFilePath);
 
 // Security middleware
 app.use(helmet({
