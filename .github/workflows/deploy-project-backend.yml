@@ -36,12 +36,19 @@ jobs:
                   host: ${{ secrets.EC2_HOST }}
                   username: ubuntu
                   key: ${{ secrets.EC2_SSH_KEY }}
+                  port: 22
+                  timeout: 30s
+                  command_timeout: 10m
                   script: |
-                      cd "/home/ubuntu/Advance Web Programming/backend/src"
-                      git pull
+                      cd "/home/ubuntu/Advance Web Programming/Project/backend" || exit 1
+
+                      # Pull latest changes
+                      git pull origin main || echo "Git pull failed, continuing..."
+
+                      # Install dependencies
                       npm install
 
-                      # Export env variables from GitHub secrets
+                      # Set environment variables from GitHub secrets
                       export NODE_ENV=${{ secrets.NODE_ENV }}
                       export PORT=${{ secrets.PORT }}
                       export MONGODB_URI=${{ secrets.MONGODB_URI }}
