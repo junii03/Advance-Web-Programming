@@ -37,7 +37,7 @@ jobs:
                   username: ubuntu
                   key: ${{ secrets.EC2_SSH_KEY }}
                   script: |
-                      cd "/home/ubuntu/Advance Web Programming/backend"
+                      cd "/home/ubuntu/Advance Web Programming/backend/src"
                       git pull
                       npm install
 
@@ -56,5 +56,5 @@ jobs:
                       export SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
 
                       # Restart backend with PM2
-                      pm2 restart backend-api || pm2 start server.js --name backend-api
+                      pm2 restart backend-api || pm2 start app.js --name backend-api
                       pm2 save
