@@ -11,7 +11,6 @@ import swaggerConfig from './config/swagger.js';
 
 // Load environment variables first
 dotenv.config();
-
 // Import configurations and utilities (after dotenv)
 import { connectDB } from './config/database.js';
 import { connectRedis } from './config/redis.js';
