@@ -480,3 +480,6 @@ router.post('/test/send-test', protect, async (req, res, next) => {
         next(error);
     }
 });
+
+export default router;
+
