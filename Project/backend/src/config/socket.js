@@ -61,6 +61,14 @@ export function initializeSocket(server) {
         pingInterval: 25000, // Send ping every 25 seconds
         pingTimeout: 60000,  // Wait 60 seconds for pong response
         upgradeTimeout: 10000, // Timeout for upgrading connection
+        // Additional settings for production/proxy compatibility
+        allowUpgrades: true, // Allow upgrades from polling to WebSocket
+        httpCompression: {
+            level: -1,
+            memLevel: 7,
+            strategy: 3,
+            threshold: 1024,
+        },
     });
 
     // Optional: Add Redis adapter for horizontal scaling
