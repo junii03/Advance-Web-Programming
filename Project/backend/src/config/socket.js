@@ -28,30 +28,39 @@ export function initializeSocket(server) {
             origin: function (origin, callback) {
                 // Allow requests with no origin (mobile apps, curl requests, etc.)
                 if (!origin) {
+                    logger.info('WebSocket: Accepting connection with no origin header');
                     return callback(null, true);
                 }
 
                 const isAllowed = allowedOrigins.some(allowed => {
                     if (allowed === 'exp://') {
-                        return origin.startsWith('exp://');
+                        // Allow all Expo/React Native apps
+                        return origin.startsWith('exp://') || origin === 'exp://';
                     }
                     return origin === allowed;
                 });
 
                 if (isAllowed) {
+                    logger.info(`WebSocket: CORS allowed for origin: ${origin}`);
                     callback(null, true);
                 } else {
-                    callback(new Error('Not allowed by CORS'));
+                    logger.warn(`WebSocket CORS: Origin not allowed: ${origin}`);
+                    callback(new Error(`Not allowed by CORS: ${origin}`));
                 }
             },
             credentials: true,
             methods: ['GET', 'POST'],
+            allowEIO3: true, // Support engine.io v3 for compatibility
         },
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
         reconnectionAttempts: 5,
+        maxHttpBufferSize: 10e6, // 10MB buffer for large messages
+        pingInterval: 25000, // Send ping every 25 seconds
+        pingTimeout: 60000,  // Wait 60 seconds for pong response
+        upgradeTimeout: 10000, // Timeout for upgrading connection
     });
 
     // Optional: Add Redis adapter for horizontal scaling

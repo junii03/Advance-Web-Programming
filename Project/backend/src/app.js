@@ -168,6 +168,17 @@ app.get('/health', (req, res) => {
     });
 });
 
+// WebSocket connectivity diagnostic endpoint
+app.get('/socket-test', (req, res) => {
+    res.status(200).json({
+        status: 'WebSocket server is ready',
+        socketIoPath: '/socket.io/',
+        supportedTransports: ['websocket', 'polling'],
+        message: 'Try connecting to /socket.io/ with auth token',
+        timestamp: new Date().toISOString()
+    });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
