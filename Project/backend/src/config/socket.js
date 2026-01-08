@@ -32,19 +32,28 @@ export function initializeSocket(server) {
                     return callback(null, true);
                 }
 
+                // Normalize origin by removing default ports (80 for http, 443 for https)
+                let normalizedOrigin = origin;
+                if (origin.startsWith('https://') && origin.endsWith(':443')) {
+                    normalizedOrigin = origin.replace(':443', '');
+                } else if (origin.startsWith('http://') && origin.endsWith(':80')) {
+                    normalizedOrigin = origin.replace(':80', '');
+                }
+
                 const isAllowed = allowedOrigins.some(allowed => {
                     if (allowed === 'exp://') {
                         // Allow all Expo/React Native apps
                         return origin.startsWith('exp://') || origin === 'exp://';
                     }
-                    return origin === allowed;
+                    // Compare normalized origins
+                    return normalizedOrigin === allowed || origin === allowed;
                 });
 
                 if (isAllowed) {
-                    logger.info(`WebSocket: CORS allowed for origin: ${origin}`);
+                    logger.info(`WebSocket: CORS allowed for origin: ${origin} (normalized: ${normalizedOrigin})`);
                     callback(null, true);
                 } else {
-                    logger.warn(`WebSocket CORS: Origin not allowed: ${origin}`);
+                    logger.warn(`WebSocket CORS: Origin not allowed: ${origin} (normalized: ${normalizedOrigin})`);
                     callback(new Error(`Not allowed by CORS: ${origin}`));
                 }
             },

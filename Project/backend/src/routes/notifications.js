@@ -411,4 +411,72 @@ router.get('/unread-count', protect, async (req, res, next) => {
  *           format: date-time
  */
 
-export default router;
+/**
+ * @swagger
+ * /api/notifications/test/send-test:
+ *   post:
+ *     summary: Send a test notification (for development/testing only)
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Test notification sent
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ */
+
+// @desc    Send a test notification for WebSocket testing
+// @route   POST /api/notifications/test/send-test
+// @access  Private
+router.post('/test/send-test', protect, async (req, res, next) => {
+    try {
+        const notificationService = getSocketNotificationService();
+
+        if (!notificationService) {
+            return res.status(500).json({
+                success: false,
+                message: 'Notification service not initialized'
+            });
+        }
+
+        const testNotification = {
+            userId: req.user._id.toString(),
+            title: 'Test Notification',
+            message: `This is a test notification sent at ${new Date().toLocaleTimeString()}`,
+            type: 'test',
+            data: {
+                testData: 'This confirms WebSocket is working!'
+            }
+        };
+
+        // Send the notification via WebSocket
+        notificationService.notifyUser(
+            req.user._id.toString(),
+            testNotification.title,
+            testNotification.message,
+            testNotification.type,
+            testNotification.data
+        );
+
+        logger.info(`Test notification sent to user ${req.user._id}`);
+
+        res.status(200).json({
+            success: true,
+            message: 'Test notification sent via WebSocket',
+            data: testNotification
+        });
+    } catch (error) {
+        logger.error('Error sending test notification:', error);
+        next(error);
+    }
+});
