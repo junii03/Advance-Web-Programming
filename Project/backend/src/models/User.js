@@ -259,10 +259,17 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 // Instance method to generate JWT token
 userSchema.methods.getSignedJwtToken = function () {
+    const expiresIn = process.env.JWT_EXPIRE || '24h';
+
+    // Validate expiresIn is either a number or valid string format
+    if (typeof expiresIn !== 'string' && typeof expiresIn !== 'number') {
+        throw new Error('JWT_EXPIRE must be a number (seconds) or string (e.g., "24h", "1d")');
+    }
+
     return jwt.sign(
         { id: this._id, role: this.role },
         process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRE }
+        { expiresIn }
     );
 };
 
