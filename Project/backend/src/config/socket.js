@@ -83,22 +83,30 @@ export function initializeSocket(server) {
      */
     io.use(async (socket, next) => {
         try {
-            const token = socket.handshake.auth.token;
+            // Token can come from auth object (preferred) or query params (fallback)
+            const token = socket.handshake.auth.token || socket.handshake.query.token;
 
             if (!token) {
-                logger.warn(`Socket connection attempt without token: ${socket.id}`);
+                logger.error(`Socket connection attempt without token: ${socket.id}`, {
+                    auth: !!socket.handshake.auth,
+                    query: socket.handshake.query,
+                    transport: socket.handshake.headers['upgrade']
+                });
                 return next(new Error('Authentication error: No token provided'));
             }
 
+            logger.info(`Socket ${socket.id}: Attempting auth with token (length: ${token.length})`);
+
             // Verify JWT token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            logger.info(`Socket ${socket.id}: Token verified for user ${decoded.id}`);
 
             // Check if token is blacklisted in Redis
             const redisClient = getRedisClient();
             if (redisClient && redisClient.isOpen) {
                 const isBlacklisted = await redisClient.get(`blacklist_${token}`);
                 if (isBlacklisted) {
-                    logger.warn(`Socket connection with revoked token: ${socket.id}`);
+                    logger.warn(`Socket ${socket.id}: Connection with revoked token`);
                     return next(new Error('Authentication error: Token has been revoked'));
                 }
             }
@@ -106,12 +114,12 @@ export function initializeSocket(server) {
             // Verify user exists and is active
             const user = await User.findById(decoded.id).select('-password');
             if (!user) {
-                logger.warn(`Socket connection with non-existent user: ${socket.id}`);
+                logger.warn(`Socket ${socket.id}: User not found: ${decoded.id}`);
                 return next(new Error('Authentication error: User not found'));
             }
 
             if (!user.isActive) {
-                logger.warn(`Socket connection attempt from inactive user: ${user._id}`);
+                logger.warn(`Socket ${socket.id}: Inactive user attempt: ${user._id}`);
                 return next(new Error('Authentication error: Account is deactivated'));
             }
 
@@ -120,12 +128,26 @@ export function initializeSocket(server) {
             socket.user = user;
             socket.token = token;
 
-            logger.info(`Socket authenticated for user: ${user._id}`);
+            logger.info(`Socket ${socket.id}: Authentication successful for user ${user._id}`);
             next();
         } catch (error) {
-            logger.error('Socket authentication error:', error.message);
+            logger.error(`Socket ${socket.id}: Auth middleware error - ${error.message}`, error);
             next(new Error(`Authentication error: ${error.message}`));
         }
+    });
+
+    // Log server-level errors
+    io.on('error', (error) => {
+        logger.error('Socket.IO server error:', error);
+    });
+
+    // Log connection errors from clients
+    io.engine.on('connection_error', (err) => {
+        logger.error('Socket.IO engine connection error:', {
+            code: err.code,
+            message: err.message,
+            context: err.context
+        });
     });
 
     return io;
