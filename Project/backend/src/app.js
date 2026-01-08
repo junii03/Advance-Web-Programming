@@ -73,8 +73,41 @@ app.use(helmet({
 }));
 
 // CORS configuration
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://hbl-clone-project.vercel.app',
+    'https://hbl.junaidafzal.dev',
+    'exp://',  // Expo mobile app
+];
+
+// If CORS_ORIGIN env var is set, add it to allowed origins
+if (process.env.CORS_ORIGIN && process.env.CORS_ORIGIN !== '0.0.0.0') {
+    allowedOrigins.push(process.env.CORS_ORIGIN);
+}
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: function (origin, callback) {
+        // Allow requests with no origin (mobile apps, curl requests, etc.)
+        if (!origin) {
+            return callback(null, true);
+        }
+
+        // Check if origin matches any allowed origin exactly
+        const isAllowed = allowedOrigins.some(allowed => {
+            if (allowed === 'exp://') {
+                // Special case for Expo mobile apps
+                return origin.startsWith('exp://');
+            }
+            return origin === allowed;
+        });
+
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']

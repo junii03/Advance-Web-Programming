@@ -10,9 +10,40 @@ import logger from '../utils/logger.js';
  * @returns {Server} Socket.IO server instance
  */
 export function initializeSocket(server) {
+    // Same allowed origins as main CORS config
+    const allowedOrigins = [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://hbl-clone-project.vercel.app',
+        'https://hbl.junaidafzal.dev',
+        'exp://',  // Expo mobile app
+    ];
+
+    if (process.env.CORS_ORIGIN && process.env.CORS_ORIGIN !== '0.0.0.0') {
+        allowedOrigins.push(process.env.CORS_ORIGIN);
+    }
+
     const io = new Server(server, {
         cors: {
-            origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+            origin: function (origin, callback) {
+                // Allow requests with no origin (mobile apps, curl requests, etc.)
+                if (!origin) {
+                    return callback(null, true);
+                }
+
+                const isAllowed = allowedOrigins.some(allowed => {
+                    if (allowed === 'exp://') {
+                        return origin.startsWith('exp://');
+                    }
+                    return origin === allowed;
+                });
+
+                if (isAllowed) {
+                    callback(null, true);
+                } else {
+                    callback(new Error('Not allowed by CORS'));
+                }
+            },
             credentials: true,
             methods: ['GET', 'POST'],
         },
