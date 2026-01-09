@@ -32,7 +32,7 @@ class WebSocketService {
 
   /**
    * Initialize WebSocket connection
-   * @param {string} serverUrl - Server URL (e.g., 'http://localhost:5000')
+   * @param {string} serverUrl - Server URL (e.g., 'http://localhost:5000' or 'https://example.com')
    * @param {string} token - JWT authentication token
    * @returns {Promise<void>}
    */
@@ -48,18 +48,64 @@ class WebSocketService {
     }
 
     try {
-      logger.info(`WebSocket: Connecting to ${serverUrl}`);
+      // First, test if the server is reachable
+      logger.info(`WebSocket: Testing server connectivity to ${serverUrl}`);
+      try {
+        const testResponse = await fetch(`${serverUrl}/socket-test`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (testResponse.ok) {
+          const testData = await testResponse.json();
+          logger.info('WebSocket: Server connectivity test passed', testData);
+        } else {
+          logger.warn('WebSocket: Server returned status', testResponse.status);
+        }
+      } catch (testError) {
+        logger.warn('WebSocket: Connectivity test failed (server may be unreachable)', testError);
+      }
 
-      this.socket = io.io(serverUrl, {
+      // Convert HTTP/HTTPS URLs to WS/WSS for WebSocket
+      let wsUrl = serverUrl;
+      if (serverUrl.startsWith('https://')) {
+        wsUrl = serverUrl.replace('https://', 'wss://');
+      } else if (serverUrl.startsWith('http://')) {
+        wsUrl = serverUrl.replace('http://', 'ws://');
+      }
+
+      const tokenPreview = token ? `${token.substring(0, 20)}...` : 'UNDEFINED';
+      logger.info(`WebSocket: Connecting to ${wsUrl} with token: ${tokenPreview}`);
+
+      if (!token || token.trim() === '') {
+        throw new Error('WebSocket: Token is empty or undefined');
+      }
+
+      // Try polling first (more reliable over proxies), then attempt WebSocket upgrade
+      // This is better for production deployments with ALBs/CloudFront that may block WebSocket
+      logger.info('WebSocket: Attempting transports in order: polling, websocket');
+      this.socket = io.io(wsUrl, {
         auth: {
-          token,
+          token: token, // For Socket.IO auth middleware
         },
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
-        reconnectionAttempts: 5,
-        transports: ['websocket', 'polling'],
-        forceNew: true,
+        reconnectionAttempts: 10,
+        // Prioritize polling over WebSocket for production reliability
+        transports: ['polling', 'websocket'],
+        forceNew: false,
+        secure: wsUrl.startsWith('wss://'),
+        rejectUnauthorized: false,
+        path: '/socket.io/', // Explicit path for socket.io
+        query: {
+          // Send token in query params as backup (for both polling and websocket)
+          token: token,
+        },
+        upgrade: true, // Allow upgrade from polling to websocket
+        // Ensure headers/auth are sent with every request
+        withCredentials: true,
       });
 
       // Setup event listeners
@@ -68,17 +114,40 @@ class WebSocketService {
       // Wait for connection to establish
       await new Promise<void>((resolve, reject) => {
         const timeout = setTimeout(() => {
-          reject(new Error('WebSocket connection timeout'));
-        }, 10000);
+          if (this.socket) {
+            this.socket.disconnect();
+          }
+          reject(new Error('WebSocket connection timeout after 15s'));
+        }, 15000);
 
-        this.socket.on('connect:success', () => {
+        this.socket.on('connect', () => {
+          logger.info('WebSocket: Connected event received');
           clearTimeout(timeout);
           resolve();
         });
 
         this.socket.on('connect_error', (error: any) => {
+          const errorDetail = {
+            message: error?.message,
+            type: error?.type,
+            description: error?.description,
+            code: error?.code,
+            context: error?.context,
+            data: error?.data,
+          };
+          logger.error('WebSocket: Connect error details:', JSON.stringify(errorDetail));
           clearTimeout(timeout);
           reject(error);
+        });
+
+        this.socket.on('error', (error: any) => {
+          const errorDetail = {
+            message: error?.message,
+            type: error?.type,
+            description: error?.description,
+            code: error?.code,
+          };
+          logger.error('WebSocket: Socket error details:', JSON.stringify(errorDetail));
         });
       });
 
@@ -107,10 +176,13 @@ class WebSocketService {
       this.emitLocal('connectionStatusChanged', { connected: true });
     });
 
-    // Connection successful with authentication
-    this.socket.on('connect:success', (data: any) => {
-      logger.info('WebSocket: Authentication successful', data);
-      this.emitLocal('authSuccess', data);
+    // Transport changed (useful for debugging WebSocket vs polling)
+    this.socket.on('upgrade', (transport: any) => {
+      logger.info(`WebSocket: Upgraded to ${transport}`);
+    });
+
+    this.socket.on('downgrade', (transport: any) => {
+      logger.warn(`WebSocket: Downgraded to ${transport}`);
     });
 
     // Disconnected

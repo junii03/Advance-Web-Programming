@@ -1,7 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Pressable,  ScrollView, Text, View, Image } from 'react-native';
+import { FlatList, Image, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card } from '@/src/components/ui/card';
@@ -38,113 +38,119 @@ export default function ProfileScreen() {
         </Text>
       </View>
 
-      <ScrollView
+      <FlatList
+        data={profileOptions}
+        keyExtractor={(item) => item.label}
         showsVerticalScrollIndicator={false}
-        style={{ flex: 1 }}
         contentContainerStyle={{ padding: 16 }}
-      >
-        {/* Profile Header */}
-        <Card className="mb-6 flex-col items-center">
-            {user?.profileImage ? (
-              <Image
-                source={{ uri: getProfileImageUrl(user.profileImage) || '' }}
-                className="w-20 h-20 rounded-full mb-4"
-              />
-            ) : (
-              <View className="w-20 h-20 rounded-full mb-4 bg-gray-200 dark:bg-surface-alt-dark flex-center">
-                <MaterialCommunityIcons
-                  name="account"
-                  size={40}
-                  color="#9CA3AF"
+        ListHeaderComponent={
+          <>
+            {/* Profile Header */}
+            <Card className="mb-6 flex-col items-center">
+              {user?.profileImage ? (
+                <Image
+                  source={{ uri: getProfileImageUrl(user.profileImage) || '' }}
+                  className="w-20 h-20 rounded-full mb-4"
                 />
-              </View>
-            )}
-          <Text className="text-lg font-bold text-gray-900 dark:text-white">
-            {user?.name}
-          </Text>
-          <Text className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-            ID: {user?.id}
-          </Text>
-          <Text className="text-xs text-gray-600 dark:text-gray-400">
-            {user?.email}
-          </Text>
-        </Card>
-
-        {/* Personal Information */}
-        <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-          Personal Information
-        </Text>
-        <Card className="mb-6">
-          <View className="gap-3">
-            <View className="pb-3 border-b border-gray-200 dark:border-gray-700">
-              <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                Full Name
-              </Text>
-              <Text className="text-sm font-semibold text-gray-900 dark:text-white">
+              ) : (
+                <View className="w-20 h-20 rounded-full mb-4 bg-gray-200 dark:bg-surface-alt-dark flex-center">
+                  <MaterialCommunityIcons
+                    name="account"
+                    size={40}
+                    color="#9CA3AF"
+                  />
+                </View>
+              )}
+              <Text className="text-lg font-bold text-gray-900 dark:text-white">
                 {user?.name}
               </Text>
-            </View>
-            <View className="pb-3 border-b border-gray-200 dark:border-gray-700">
-              <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                Email
+              <Text className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                ID: {user?.id}
               </Text>
-              <Text className="text-sm font-semibold text-gray-900 dark:text-white">
+              <Text className="text-xs text-gray-600 dark:text-gray-400">
                 {user?.email}
               </Text>
-            </View>
-            <View>
-              <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                Customer ID
-              </Text>
-              <Text className="text-sm font-semibold text-gray-900 dark:text-white">
-                {user?.id}
-              </Text>
-            </View>
-          </View>
-        </Card>
+            </Card>
 
-        {/* Settings */}
-        <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-          Settings
-        </Text>
-        <Card className="mb-6">
-          {profileOptions.map((option, index) => (
-            <Pressable
-              key={option.label}
-              onPress={option.onPress}
-              className={`flex-row items-center py-3 active:opacity-70 ${
-                index < profileOptions.length - 1
-                  ? 'border-b border-gray-200 dark:border-gray-700'
-                  : ''
-              }`}
-            >
-              <View className="h-9 w-9 flex-center mr-3 rounded-lg bg-gray-100 dark:bg-surface-alt-dark">
-                <MaterialCommunityIcons
-                  name={option.icon as any}
-                  size={18}
-                  color="#DC143C"
-                />
+            {/* Personal Information */}
+            <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+              Personal Information
+            </Text>
+            <Card className="mb-6">
+              <View className="gap-3">
+                <View className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                    Full Name
+                  </Text>
+                  <Text className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {user?.name}
+                  </Text>
+                </View>
+                <View className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                    Email
+                  </Text>
+                  <Text className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {user?.email}
+                  </Text>
+                </View>
+                <View>
+                  <Text className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                    Customer ID
+                  </Text>
+                  <Text className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {user?.id}
+                  </Text>
+                </View>
               </View>
-              <Text className="flex-1 text-sm font-medium text-gray-900 dark:text-white">
-                {option.label}
-              </Text>
-              <MaterialCommunityIcons
-                name="chevron-right"
-                size={20}
-                color="#9CA3AF"
-              />
-            </Pressable>
-          ))}
-        </Card>
+            </Card>
 
-        {/* Logout Button */}
-        <Pressable
-          onPress={handleLogout}
-          className="py-3 px-4 rounded-lg bg-red-500/10 items-center mb-6 active:opacity-70"
-        >
-          <Text className="text-sm font-semibold text-red-500">Sign Out</Text>
-        </Pressable>
-      </ScrollView>
+            {/* Settings */}
+            <Text className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+              Settings
+            </Text>
+          </>
+        }
+        renderItem={({ item: option, index }) => (
+          <Pressable
+            onPress={option.onPress}
+            className={`flex-row items-center py-3 active:opacity-70 ${
+              index < profileOptions.length - 1
+                ? 'border-b border-gray-200 dark:border-gray-700'
+                : ''
+            }`}
+          >
+            <View className="h-9 w-9 flex-center mr-3 rounded-lg bg-gray-100 dark:bg-surface-alt-dark">
+              <MaterialCommunityIcons
+                name={option.icon as any}
+                size={18}
+                color="#DC143C"
+              />
+            </View>
+            <Text className="flex-1 text-sm font-medium text-gray-900 dark:text-white">
+              {option.label}
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={20}
+              color="#9CA3AF"
+            />
+          </Pressable>
+        )}
+        ListFooterComponent={
+          <View className="mt-6">
+            <Card>
+              <Pressable
+                onPress={handleLogout}
+                className="py-3 px-4 items-center active:opacity-70"
+              >
+                <Text className="text-sm font-semibold text-red-500">Sign Out</Text>
+              </Pressable>
+            </Card>
+            <View className="h-6" />
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }

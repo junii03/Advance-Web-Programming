@@ -1,15 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  Text,
-  View,
+    ActivityIndicator,
+    FlatList,
+    Pressable,
+    RefreshControl,
+    Text,
+    View,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -296,93 +296,95 @@ export default function CardsScreen() {
         </View>
       </View>
 
-      <ScrollView
+      <FlatList
+        data={filteredCards}
+        keyExtractor={(item) => item._id}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#006747" />
         }
-      >
-        {/* Stats */}
-        <View className="pt-4">
-          <CardStats cards={cards} />
-        </View>
+        ListHeaderComponent={
+          <>
+            {/* Stats */}
+            <View className="pt-4">
+              <CardStats cards={cards} />
+            </View>
 
-        {/* Filter Tabs */}
-        <View className="flex-row px-4 mb-4 gap-2">
-          {(['all', 'credit', 'debit'] as const).map((f) => (
-            <Pressable
-              key={f}
-              onPress={() => setFilter(f)}
-              className={`px-4 py-2 rounded-full ${
-                filter === f
-                  ? 'bg-hbl-green'
-                  : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700'
-              }`}
-            >
-              <Text
-                className={`text-sm font-medium capitalize ${
-                  filter === f ? 'text-white' : 'text-gray-700 dark:text-gray-300'
-                }`}
-              >
-                {f}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+            {/* Filter Tabs */}
+            <View className="flex-row px-4 mb-4 gap-2">
+              {(['all', 'credit', 'debit'] as const).map((f) => (
+                <Pressable
+                  key={f}
+                  onPress={() => setFilter(f)}
+                  className={`px-4 py-2 rounded-full ${
+                    filter === f
+                      ? 'bg-hbl-green'
+                      : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700'
+                  }`}
+                >
+                  <Text
+                    className={`text-sm font-medium capitalize ${
+                      filter === f ? 'text-white' : 'text-gray-700 dark:text-gray-300'
+                    }`}
+                  >
+                    {f}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
 
-        {/* Error Message */}
-        {error && (
-          <View className="mx-4 mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
-            <Text className="text-red-600 text-sm">{error}</Text>
+            {/* Error Message */}
+            {error && (
+              <View className="mx-4 mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
+                <Text className="text-red-600 text-sm">{error}</Text>
+              </View>
+            )}
+          </>
+        }
+        renderItem={({ item: card }) => (
+          <View className="px-4">
+            <CardItem
+              key={card._id}
+              card={card}
+              showDetails={showDetails}
+              onPress={() => {
+                // Pass card data as JSON string to optimize - only fetch if not available
+                const cardDataJson = JSON.stringify(card);
+                router.push({
+                  pathname: '/(customer)/card-details' as never,
+                  params: {
+                    id: card._id,
+                    cardData: cardDataJson,
+                  },
+                });
+              }}
+            />
           </View>
         )}
-
-        {/* Cards List */}
-        <View className="px-4">
-          {filteredCards.length === 0 ? (
-            <View className="bg-white dark:bg-surface-dark rounded-xl p-8 items-center">
-              <Ionicons name="card-outline" size={48} color="#9CA3AF" />
-              <Text className="text-gray-900 dark:text-white font-semibold mt-4">
-                No Cards Found
-              </Text>
-              <Text className="text-gray-500 dark:text-gray-400 text-sm text-center mt-2">
-                {filter === 'all'
-                  ? "You don't have any cards yet. Request a new card to get started."
-                  : `No ${filter} cards found.`}
-              </Text>
-              {filter === 'all' && (
-                <Pressable
-                  onPress={() => router.push('/(customer)/request-card' as never)}
-                  className="mt-4 bg-hbl-green px-6 py-3 rounded-lg"
-                >
-                  <Text className="text-white font-semibold">Request Card</Text>
-                </Pressable>
-              )}
-            </View>
-          ) : (
-            filteredCards.map((card) => (
-              <CardItem
-                key={card._id}
-                card={card}
-                showDetails={showDetails}
-                onPress={() => {
-                  // Pass card data as JSON string to optimize - only fetch if not available
-                  const cardDataJson = JSON.stringify(card);
-                  router.push({
-                    pathname: '/(customer)/card-details' as never,
-                    params: { 
-                      id: card._id,
-                      cardData: cardDataJson,
-                    },
-                  });
-                }}
-              />
-            ))
-          )}
-        </View>
-
-        <View className="h-6" />
-      </ScrollView>
+        ListEmptyComponent={
+          <View className="bg-white dark:bg-surface-dark rounded-xl p-8 items-center mx-4 mt-4">
+            <Ionicons name="card-outline" size={48} color="#9CA3AF" />
+            <Text className="text-gray-900 dark:text-white font-semibold mt-4">
+              No Cards Found
+            </Text>
+            <Text className="text-gray-500 dark:text-gray-400 text-sm text-center mt-2">
+              {filter === 'all'
+                ? "You don't have any cards yet. Request a new card to get started."
+                : `No ${filter} cards found.`}
+            </Text>
+            {filter === 'all' && (
+              <Pressable
+                onPress={() => router.push('/(customer)/request-card' as never)}
+                className="mt-4 bg-hbl-green px-6 py-3 rounded-lg"
+              >
+                <Text className="text-white font-semibold">Request Card</Text>
+              </Pressable>
+            )}
+          </View>
+        }
+        ListFooterComponent={<View className="h-6" />}
+        contentContainerStyle={{ paddingHorizontal: 0 }}
+      />
     </SafeAreaView>
   );
 }

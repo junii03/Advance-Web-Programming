@@ -2,12 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  Text,
-  View,
+    ActivityIndicator,
+    FlatList,
+    Pressable,
+    RefreshControl,
+    Text,
+    View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -252,65 +252,69 @@ export default function AccountsScreen() {
         </View>
       </View>
 
-      <ScrollView
+      <FlatList
+        data={accounts}
+        keyExtractor={(item) => item._id}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#006747" />
         }
-      >
-        {/* Summary */}
-        <View className="pt-4">
-          <SummaryCard accounts={accounts} showBalance={showBalance} />
-        </View>
+        ListHeaderComponent={
+          <>
+            {/* Summary */}
+            <View className="pt-4">
+              <SummaryCard accounts={accounts} showBalance={showBalance} />
+            </View>
 
-        {/* Error Message */}
-        {error && (
-          <View className="mx-4 mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
-            <Text className="text-red-600 text-sm">{error}</Text>
+            {/* Error Message */}
+            {error && (
+              <View className="mx-4 mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
+                <Text className="text-red-600 text-sm">{error}</Text>
+              </View>
+            )}
+
+            {/* Accounts List Header */}
+            <View className="px-4">
+              <Text className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">
+                {accounts.length} Account{accounts.length !== 1 ? 's' : ''}
+              </Text>
+            </View>
+          </>
+        }
+        renderItem={({ item: account }) => (
+          <View className="px-4">
+            <AccountCard
+              key={account._id}
+              account={account}
+              showBalance={showBalance}
+              onPress={() =>
+                router.push({
+                  pathname: '/(customer)/account-details' as never,
+                  params: { id: account._id },
+                })
+              }
+            />
           </View>
         )}
-
-        {/* Accounts List */}
-        <View className="px-4">
-          <Text className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">
-            {accounts.length} Account{accounts.length !== 1 ? 's' : ''}
-          </Text>
-
-          {accounts.length === 0 ? (
-            <View className="bg-white dark:bg-surface-dark rounded-xl p-8 items-center">
-              <Ionicons name="wallet-outline" size={48} color="#9CA3AF" />
-              <Text className="text-gray-900 dark:text-white font-semibold mt-4">
-                No Accounts Found
-              </Text>
-              <Text className="text-gray-500 dark:text-gray-400 text-sm text-center mt-2">
-                You don&apos;t have any accounts yet. Add your first account to get started.
-              </Text>
-              <Pressable
-                onPress={() => router.push('/(customer)/add-account' as never)}
-                className="mt-4 bg-hbl-green px-6 py-3 rounded-lg"
-              >
-                <Text className="text-white font-semibold">Add Account</Text>
-              </Pressable>
-            </View>
-          ) : (
-            accounts.map((account) => (
-              <AccountCard
-                key={account._id}
-                account={account}
-                showBalance={showBalance}
-                onPress={() =>
-                  router.push({
-                    pathname: '/(customer)/account-details' as never,
-                    params: { id: account._id },
-                  })
-                }
-              />
-            ))
-          )}
-        </View>
-
-        <View className="h-6" />
-      </ScrollView>
+        ListEmptyComponent={
+          <View className="bg-white dark:bg-surface-dark rounded-xl p-8 items-center mx-4 mt-4">
+            <Ionicons name="wallet-outline" size={48} color="#9CA3AF" />
+            <Text className="text-gray-900 dark:text-white font-semibold mt-4">
+              No Accounts Found
+            </Text>
+            <Text className="text-gray-500 dark:text-gray-400 text-sm text-center mt-2">
+              You don&apos;t have any accounts yet. Add your first account to get started.
+            </Text>
+            <Pressable
+              onPress={() => router.push('/(customer)/add-account' as never)}
+              className="mt-4 bg-hbl-green px-6 py-3 rounded-lg"
+            >
+              <Text className="text-white font-semibold">Add Account</Text>
+            </Pressable>
+          </View>
+        }
+        ListFooterComponent={<View className="h-6" />}
+      />
     </SafeAreaView>
   );
 }

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import {  ScrollView, Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card } from '@/src/components/ui/card';
@@ -93,12 +93,12 @@ export default function TransactionsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
-      <ScrollView
+      <FlatList
+        data={transactions}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        style={{ flex: 1 }}
         contentContainerStyle={{ padding: 16 }}
-      >
-        {transactions.map((transaction) => (
+        renderItem={({ item: transaction }) => (
           <Card key={transaction.id} className="mb-3">
             <View className="flex-row items-center gap-3">
               <View
@@ -144,8 +144,8 @@ export default function TransactionsScreen() {
               </View>
             </View>
           </Card>
-        ))}
-      </ScrollView>
+        )}
+      />
     </SafeAreaView>
   );
 }

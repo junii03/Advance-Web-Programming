@@ -16,31 +16,44 @@ export const useWebSocket = () => {
 
   // Initialize WebSocket on mount if authenticated
   useEffect(() => {
-    if (!isAuthenticated || !user) return;
+    if (!isAuthenticated || !user) {
+      console.warn('WebSocket: User not authenticated');
+      return;
+    }
 
     let isMounted = true;
 
     const setupWebSocket = async () => {
       try {
         const token = await api.getToken();
-        if (!token) {
-          console.warn('No token available for WebSocket connection');
+        console.log('Token from storage:', token ? `${token.substring(0, 20)}...` : 'null/undefined');
+
+        if (!token || token.trim() === '') {
+          console.error('No token available for WebSocket connection - token is empty or null');
+          if (isMounted) {
+            setError('Authentication token missing. Please log in again.');
+            setIsConnected(false);
+          }
           return;
         }
 
+        console.log('Token retrieved successfully (length: ' + token.length + '), connecting to WebSocket');
         const serverUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
+        console.log('WebSocket server URL:', serverUrl);
+
         await initializeWebSocket(serverUrl, token);
 
         if (isMounted) {
           setIsConnected(true);
           setError(null);
+          console.log('WebSocket connected successfully');
         }
       } catch (err) {
         if (isMounted) {
           const errorMessage = err instanceof Error ? err.message : 'Failed to connect to notification service';
           setError(errorMessage);
           setIsConnected(false);
-          console.error('WebSocket connection error:', err);
+          console.error('WebSocket connection error:', errorMessage, err);
         }
       }
     };
