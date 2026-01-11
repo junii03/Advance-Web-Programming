@@ -1,3 +1,3 @@
-import DestinationsScreen from '../screens/DestinationsScreen';
+import DestinationFeedScreen from '../../screens/DestinationFeedScreen';
 
-export default DestinationsScreen;
+export default DestinationFeedScreen;

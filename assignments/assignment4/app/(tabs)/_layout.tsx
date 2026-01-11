@@ -1,68 +1,101 @@
-import { Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import DashboardScreen from '../screens/DashboardScreen';
-import DestinationsScreen from '../screens/DestinationsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import { StyleSheet, View } from 'react-native';
+import { Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { colors } from '../../styles/colors';
+import { spacing } from '../../styles/spacing';
 
-const Tab = createBottomTabNavigator();
-
+/**
+ * Tab Layout Configuration
+ * Bottom Tab Navigation with Home, Explore, and Profile tabs
+ * Using Ionicons for professional tab icons
+ */
 export default function TabLayout() {
+  // Custom tab bar background with elevation
+  const tabBarBackground = () => (
+    <View
+      style={styles.tabBarBackground}
+    />
+  );
+
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap;
-
-          if (route.name === 'index') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'explore') {
-            iconName = focused ? 'compass' : 'compass-outline';
-          } else if (route.name === 'profile') {
-            iconName = focused ? 'person' : 'person-outline';
-          } else {
-            iconName = 'home-outline';
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: '#4CAF50',
-        tabBarInactiveTintColor: '#999',
-        tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopColor: '#e0e0e0',
-          paddingBottom: 8,
-          paddingTop: 8,
-          height: 60,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          marginBottom: 4,
-        },
+    <Tabs
+      screenOptions={({ route }: { route: any }): BottomTabNavigationOptions => ({
+        // Hide headers for clean tab navigation
         headerShown: false,
+
+        // Tab bar styling
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.tabInactive,
+        tabBarStyle: styles.tabBar,
+        tabBarBackground,
+        tabBarLabelStyle: styles.tabBarLabel,
+        tabBarIconStyle: styles.tabBarIcon,
+
+        // Screen options
+        sceneStyle: { backgroundColor: colors.background },
       })}
     >
-      <Tab.Screen
+      {/* Home Tab */}
+      <Tabs.Screen
         name="index"
-        component={DashboardScreen}
         options={{
           title: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" size={size} color={color} />
+          ),
         }}
       />
-      <Tab.Screen
+
+      {/* Explore Tab */}
+      <Tabs.Screen
         name="explore"
-        component={DestinationsScreen}
         options={{
           title: 'Explore',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="compass" size={size} color={color} />
+          ),
         }}
       />
-      <Tab.Screen
+
+      {/* Profile Tab */}
+      <Tabs.Screen
         name="profile"
-        component={ProfileScreen}
         options={{
           title: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={size} color={color} />
+          ),
         }}
       />
-    </Tab.Navigator>
+    </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: colors.surface,
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    paddingBottom: spacing.xs,
+    paddingTop: spacing.xs,
+    height: 60,
+  },
+  tabBarBackground: {
+    backgroundColor: colors.surface,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  tabBarLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: spacing.xs,
+  },
+  tabBarIcon: {
+    marginTop: spacing.xs,
+  },
+});

@@ -1,17 +1,23 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { colors } from '../styles/colors';
 
+/**
+ * Root Layout
+ * Configures stack navigation for the entire app
+ * Includes tab navigation, plan trip modal, trip details, and destination details screens
+ */
 export default function RootLayout() {
-  const router = useRouter();
-
   return (
     <Stack
       screenOptions={{
-        headerTintColor: '#fff',
+        headerTintColor: colors.surface,
         headerTitleStyle: {
           fontWeight: 'bold',
+          fontSize: 18,
+        },
+        contentStyle: {
+          backgroundColor: colors.background,
         },
       }}
     >
@@ -24,42 +30,36 @@ export default function RootLayout() {
         }}
       />
 
-      {/* Plan Trip Screen */}
+      {/* Trip Navigation Stack */}
+      <Stack.Screen
+        name="(trip)"
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      {/* Plan Trip Screen - Modal presentation */}
       <Stack.Screen
         name="plan-trip"
         options={{
           presentation: 'modal',
           title: 'Plan a Trip',
           headerStyle: {
-            backgroundColor: '#9C27B0',
+            backgroundColor: colors.secondary,
           },
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={styles.headerButton}
-            >
-              <Ionicons name="close" size={24} color="white" />
-            </TouchableOpacity>
-          ),
         }}
       />
 
-      {/* Trip Details with parameter */}
+      {/* Destination Details Screen */}
       <Stack.Screen
-        name="trip/[id]"
+        name="destination-details"
         options={{
-          title: 'Trip Details',
+          title: 'Destination Details',
           headerStyle: {
-            backgroundColor: '#00BCD4',
+            backgroundColor: colors.primary,
           },
         }}
       />
     </Stack>
   );
 }
-
-const styles = StyleSheet.create({
-  headerButton: {
-    marginRight: 16,
-  },
-});

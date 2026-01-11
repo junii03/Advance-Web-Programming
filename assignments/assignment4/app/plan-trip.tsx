@@ -1,3 +1,3 @@
-import PlanTripScreen from './screens/PlanTripScreen';
+import PlanTripScreen from '../screens/PlanTripScreen';
 
 export default PlanTripScreen;
